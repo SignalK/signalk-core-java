@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: nz.co.fortytwo.signalk.handler.NMEAHandlerTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.322 sec
