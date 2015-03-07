@@ -187,6 +187,7 @@ public class FullToDeltaConverter {
 			}
 			
 			if ( js.isPrimitive() || js.has(VALUE)) {
+				if(js.getParentKey().equals(SOURCE))continue;
 				logger.debug("Process value: "+js);
 				String path = js.getPath().substring(prefix);
 
