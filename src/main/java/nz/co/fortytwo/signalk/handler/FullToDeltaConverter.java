@@ -102,7 +102,7 @@ public class FullToDeltaConverter {
 
 			// add values
 			Json updates = Json.array();
-			getEntries(updates, null, ctx, context.length() + 1);
+			getEntries(updates, null, null, ctx, context.length() + 1);
 
 			if (updates.asList().size() == 0)
 				return null;
@@ -136,13 +136,11 @@ public class FullToDeltaConverter {
 		return node;
 	}
 
-	private void getEntries(Json updates, Json values, Json j, int prefix) {
+	private void getEntries(Json updates, Json values, String jsSrcRef, Json j, int prefix) {
 		if (!j.isObject())
 			return;
 		
 		Json entry = null;
-		String jsSrcRef=null;
-		
 		
 		for (Json js : j.asJsonMap().values()) {
 			logger.debug("Process : "+js+", is primitive:"+js.isPrimitive());
@@ -152,25 +150,21 @@ public class FullToDeltaConverter {
 			if (js.isObject() && js.has(SOURCE)) {
 				logger.debug("Process source : "+js);
 				Json jsSrc = js.at(SOURCE);
-				//existing entry
-				if(entry!=null){
-					updates.add(entry);
+				//has it changed
+				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.asString())){
+						
+					//existing entry
+					if(entry!=null){
+						updates.add(entry);
+					}
+					
+					//new entry
+					entry=Json.object();
+					values = Json.array();
+					entry.set(VALUES, values);
+					entry.set(SOURCE, jsSrc.getValue());
 				}
 				
-				//new entry
-				entry=Json.object();
-				values = Json.array();
-				entry.set(VALUES, values);
-				entry.set(SOURCE, jsSrc.getValue());
-				if (jsSrc.isString()) {
-					// recurse
-					jsSrcRef = jsSrc.asString();
-					Json ref = js.at(jsSrcRef);
-					if (ref != null) {
-						ref.delAt(VALUE);
-						entry.set(jsSrcRef, ref);
-					}
-				}
 			}
 			
 			if (js.isArray()){
@@ -180,9 +174,7 @@ public class FullToDeltaConverter {
 				value.set(PATH, path);
 				value.set(VALUE, js);
 
-				//Json values = Json.array();
 				values.add(value);
-				//entry.set(VALUES, values);
 				continue;
 			}
 			
@@ -198,19 +190,14 @@ public class FullToDeltaConverter {
 				}else{
 					value.set(VALUE, js.at(VALUE).getValue());
 				}
-
-				//Json values = Json.array();
 				values.add(value);
-				//entry.set(VALUES, values);
-				//updates.add(entry);
 			} 
 			if (js.isObject()) {
 				logger.debug("Recurse : "+js);
-				getEntries(updates, values, js, prefix);
+				getEntries(updates, values, jsSrcRef, js, prefix);
 			}
 		}
 		if(entry!=null){
-			//entry.set(VALUES, values);
 			updates.add(entry);
 		}
 
