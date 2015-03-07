@@ -305,7 +305,22 @@ public class Util {
 		
 	}
 
-
+	/**
+	 * Recursive findNode()
+	 * @param node
+	 * @param fullPath
+	 * @return
+	 */
+	public static Json findNode(Json node, String fullPath) {
+		String[] paths = fullPath.split("\\.");
+		//Json endNode = null;
+		for(String path : paths){
+			logger.debug("findNode:"+path);
+			node = node.at(path);
+			if(node==null)return null;
+		}
+		return node;
+	}
 	public static void addNodeToTemp(SignalKModel temp, Json node) {
 		Json n = temp.addNode((Json) temp, node.up().getPath());
 		if (node.isPrimitive()) {

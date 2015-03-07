@@ -526,8 +526,8 @@ public class TSAGeoMag
             //InputStream is;
             Reader is;
                         
-            InputStream input = getClass().getResourceAsStream("WMM.COF");
-            if(input == null) throw new FileNotFoundException("WMM.COF not found");
+            InputStream input = getClass().getResourceAsStream("WMMX.COF");
+            if(input == null) throw new FileNotFoundException("WMMX.COF not found");
             is = new InputStreamReader(input);
             StreamTokenizer str = new StreamTokenizer(is);
             
@@ -588,8 +588,8 @@ public class TSAGeoMag
             		"The input file WMM.COF was not found in the same\n" +
             		"directory as the application.\n" +
             		"The magnetic field components are set to internal values.\n";
-            logger.warn(msg, e);
-            		
+            logger.warn(msg);
+            logger.warn(e.getMessage());	
 /*            String message = new String(e.toString());
             		
             System.out.println("\nNOTICE      NOTICE      NOTICE      ");

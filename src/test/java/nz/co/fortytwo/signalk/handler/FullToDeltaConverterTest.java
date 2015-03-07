@@ -26,9 +26,15 @@
 package nz.co.fortytwo.signalk.handler;
 
 import mjson.Json;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
+import nz.co.fortytwo.signalk.util.JsonConstants;
+import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
+
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,5 +58,32 @@ public class FullToDeltaConverterTest {
 		Json out = processor.handle(data);
 		logger.debug(out);
 	}
-
+	
+	@Test
+	public void shouldGetContext() {
+		
+		Json data = Json.read("{\"vessels\":{\"366982330\":{\"navigation\":{\"position\":{\"timestamp\":\"2015-03-07T11:51:57.904+13:00\",\"longitude\":173.1693,\"latitude\":-41.156426,\"source\":\"sources.gps_0183_RMC\",\"altitude\":0.0,\"_attr\":{\"_mode\":644,\"_owner\":\"self\",\"_group\":\"self\"}},\"courseOverGroundTrue\":{\"timestamp\":\"2015-03-07T11:51:57.723+13:00\",\"meta\":{\"zones\":[[250,260,\"warn\"],[260,360,\"alarm\"],[220,230,\"warn\"],[0,220,\"alarm\"],[220,260,\"normal\"]],\"shortName\":\"COG\",\"alarmMethod\":\"sound\",\"warnMethod\":\"visual\",\"displayName\":\"COG (True)\"},\"source\":\"sources.gps_0183_RMC\",\"_attr\":{\"_mode\":644,\"_owner\":\"self\",\"_group\":\"self\"},\"value\":245.69}}}},\"sources\":{\"gps_0183_RMC\":{\"timestamp\":\"2015-03-07T11:51:57.904+13:00\",\"src\":\"$GPRMC,033025.000,A,4115.6426,S,17316.9300,E,0.05,245.69,090113,,*15\",\"bus\":\"/dev/ttyUSB1\"},\"_attr\":{\"_mode\":644,\"_owner\":\"self\",\"_group\":\"self\"}}}");
+		
+		FullToDeltaConverter processor = new FullToDeltaConverter();
+		Json context = processor.getContext(data.at(JsonConstants.VESSELS));
+		
+		logger.debug(context);
+		logger.debug(context.getPath());
+		assertEquals("vessels.366982330.navigation", context.getPath());
+	}
+	
+	@Test
+	public void shouldHandleArray() {
+		
+		Json data = Json.read("{\"vessels\":{\"366982330\":{\"navigation\":{\"position\":{\"timestamp\":\"2015-03-07T11:51:57.904+13:00\",\"longitude\":173.1693,\"latitude\":-41.156426,\"source\":\"sources.gps_0183_RMC\",\"altitude\":0.0,\"_attr\":{\"_mode\":644,\"_owner\":\"self\",\"_group\":\"self\"}},\"courseOverGroundTrue\":{\"timestamp\":\"2015-03-07T11:51:57.723+13:00\",\"meta\":{\"zones\":[[250,260,\"warn\"],[260,360,\"alarm\"],[220,230,\"warn\"],[0,220,\"alarm\"],[220,260,\"normal\"]],\"shortName\":\"COG\",\"alarmMethod\":\"sound\",\"warnMethod\":\"visual\",\"displayName\":\"COG (True)\"},\"source\":\"sources.gps_0183_RMC\",\"_attr\":{\"_mode\":644,\"_owner\":\"self\",\"_group\":\"self\"},\"value\":245.69}}}},\"sources\":{\"gps_0183_RMC\":{\"timestamp\":\"2015-03-07T11:51:57.904+13:00\",\"src\":\"$GPRMC,033025.000,A,4115.6426,S,17316.9300,E,0.05,245.69,090113,,*15\",\"bus\":\"/dev/ttyUSB1\"},\"_attr\":{\"_mode\":644,\"_owner\":\"self\",\"_group\":\"self\"}}}");
+		
+		FullToDeltaConverter processor = new FullToDeltaConverter();
+		Json context = processor.handle(data);
+		
+		logger.debug(context);
+		assertTrue(context.toString().indexOf("zones")>0);
+		
+	}
+	
+	
 }

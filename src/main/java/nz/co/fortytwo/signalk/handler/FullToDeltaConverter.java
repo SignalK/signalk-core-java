@@ -29,6 +29,9 @@ import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+
+import java.util.HashMap;
+
 import mjson.Json;
 
 import org.apache.log4j.Logger;
@@ -92,13 +95,14 @@ public class FullToDeltaConverter {
 		if (node.has(VESSELS)) {
 			if(logger.isDebugEnabled())logger.debug("processing full format  " + node);
 			// find the first branch that splits
-			Json ctx = getContext(node);
+			Json ctx = getContext(node.at(VESSELS));
+		
 			String context = ctx.getPath();
 			// process it
 
 			// add values
 			Json updates = Json.array();
-			getEntries(updates, ctx, context.length() + 1);
+			getEntries(updates, null, ctx, context.length() + 1);
 
 			if (updates.asList().size() == 0)
 				return null;
@@ -119,30 +123,48 @@ public class FullToDeltaConverter {
 	 * @param node
 	 * @return
 	 */
-	private Json getContext(Json node) {
+	protected Json getContext(Json node) {
 		// look down the tree until we get more than one branch, thats the context
-		if (node.asJsonMap().size() > 1)
+		if (node.asJsonMap().size() > 1){
+			logger.debug("Context is :"+node.asJsonMap().size()+", "+ node);
 			return node;
+		}
 		for (Json j : node.asJsonMap().values()) {
+			logger.debug("Context recurse :"+ j);
 			return getContext(j);
 		}
 		return node;
 	}
 
-	private void getEntries(Json updates, Json j, int prefix) {
+	private void getEntries(Json updates, Json values, Json j, int prefix) {
 		if (!j.isObject())
 			return;
-
+		
+		Json entry = null;
+		String jsSrcRef=null;
+		
+		
 		for (Json js : j.asJsonMap().values()) {
+			logger.debug("Process : "+js+", is primitive:"+js.isPrimitive());
 			if (js == null)
 				continue;
-			Json entry = Json.object();
-			if (js.has(SOURCE)) {
+			
+			if (js.isObject() && js.has(SOURCE)) {
+				logger.debug("Process source : "+js);
 				Json jsSrc = js.at(SOURCE);
+				//existing entry
+				if(entry!=null){
+					updates.add(entry);
+				}
+				
+				//new entry
+				entry=Json.object();
+				values = Json.array();
+				entry.set(VALUES, values);
 				entry.set(SOURCE, jsSrc.getValue());
 				if (jsSrc.isString()) {
 					// recurse
-					String jsSrcRef = jsSrc.asString();
+					jsSrcRef = jsSrc.asString();
 					Json ref = js.at(jsSrcRef);
 					if (ref != null) {
 						ref.delAt(VALUE);
@@ -150,20 +172,45 @@ public class FullToDeltaConverter {
 					}
 				}
 			}
-			if (js.has(VALUE)) {
+			
+			if (js.isArray()){
+				logger.debug("Process array : "+js);
+				String path = js.getPath().substring(prefix);
+				Json value = Json.object();
+				value.set(PATH, path);
+				value.set(VALUE, js);
+
+				//Json values = Json.array();
+				values.add(value);
+				//entry.set(VALUES, values);
+				continue;
+			}
+			
+			if ( js.isPrimitive() || js.has(VALUE)) {
+				logger.debug("Process value: "+js);
 				String path = js.getPath().substring(prefix);
 
 				Json value = Json.object();
 				value.set(PATH, path);
-				value.set(VALUE, js.at(VALUE).getValue());
+				if(js.isPrimitive()){
+					value.set(VALUE, js.getValue());
+				}else{
+					value.set(VALUE, js.at(VALUE).getValue());
+				}
 
-				Json values = Json.array();
+				//Json values = Json.array();
 				values.add(value);
-				entry.set(VALUES, values);
-				updates.add(entry);
-			} else if (js.isObject()) {
-				getEntries(updates, js, prefix);
+				//entry.set(VALUES, values);
+				//updates.add(entry);
+			} 
+			if (js.isObject()) {
+				logger.debug("Recurse : "+js);
+				getEntries(updates, values, js, prefix);
 			}
+		}
+		if(entry!=null){
+			//entry.set(VALUES, values);
+			updates.add(entry);
 		}
 
 	}
