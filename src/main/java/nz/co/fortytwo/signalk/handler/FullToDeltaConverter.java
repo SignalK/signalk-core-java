@@ -151,13 +151,13 @@ public class FullToDeltaConverter {
 				logger.debug("Process source : "+js);
 				Json jsSrc = js.at(SOURCE);
 				//has it changed
-				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.asString())){
+				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())){
 						
 					//existing entry
 					if(entry!=null){
 						updates.add(entry);
 					}
-					
+					jsSrcRef=jsSrc.toString();
 					//new entry
 					entry=Json.object();
 					values = Json.array();
@@ -191,6 +191,7 @@ public class FullToDeltaConverter {
 					value.set(VALUE, js.at(VALUE).getValue());
 				}
 				values.add(value);
+				//continue;
 			} 
 			if (js.isObject()) {
 				logger.debug("Recurse : "+js);
