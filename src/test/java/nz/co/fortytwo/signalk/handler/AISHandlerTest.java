@@ -24,9 +24,9 @@
 
 package nz.co.fortytwo.signalk.handler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import mjson.Json;
+import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 
 import org.apache.log4j.Logger;
@@ -50,9 +50,9 @@ public class AISHandlerTest{
 		 String jStr = "{\"vessels\":{\""+JsonConstants.SELF+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
 		 AISHandler processor = new AISHandler();
 		
-		 String json = (String) processor.handle(jStr);
-		 log.debug(json);
-		 assertEquals(jStr, json);
+		 SignalKModel model =  processor.handle(jStr);
+		 log.debug(model);
+		 assertNull(model);
 	}
 	@Test
 	//@Ignore
@@ -63,8 +63,9 @@ public class AISHandlerTest{
 		msg += "\\2G2:0125*7B";
 		msg += "\\!AIVDM,2,2,4,A,R0EQCP000000000,2*45";
 		AISHandler processor = new AISHandler();
-		Object obj = processor.handle(msg);
-		assertEquals(msg,obj);
+		SignalKModel model =  processor.handle(msg);
+		 log.debug(model);
+		 assertNull(model);
 
 	}
 
@@ -73,10 +74,11 @@ public class AISHandlerTest{
 	public void shouldParseSingleMessage() throws Exception{
 		String msg = "!AIVDM,1,1,,B,15MwkRUOidG?GElEa<iQk1JV06Jd,0*6D";
 		AISHandler processor = new AISHandler();
-		Json json = (Json) processor.handle(msg);
-		assertNotNull(json);
+		SignalKModel model =  processor.handle(msg);
+		assertNotNull(model);
 		
 		log.debug(msg);
+		log.debug(model);
 	}
 
 	@Test
@@ -87,14 +89,14 @@ public class AISHandlerTest{
 		String msg2 = "\\g:1-2-0136,c:1363174860*24\\!BSVDM,2,1,4,B,53B>2V000000uHH4000@T4p4000000000000000S30C6340006h00000,0*4C\r\n";
 		String msg3 = "\\g:2-2-0136*59\\!BSVDM,2,2,4,B,000000000000000,2*3A";
 		AISHandler processor = new AISHandler();
-		Object json = processor.handle(msg1);
-		assertEquals(msg1,json);
+		SignalKModel model = processor.handle(msg1);
+		assertNull(model);
 
-		json = processor.handle(msg2);
-		assertEquals(msg2,json);
+		model = processor.handle(msg2);
+		assertNull(model);
 
-		json = processor.handle(msg3);
-		assertEquals(msg3,json);
+		model = processor.handle(msg3);
+		assertNull(model);
 		// assertEquals(map.get("TEST"), 5);
 	}
 
@@ -104,14 +106,14 @@ public class AISHandlerTest{
 
 		String msg1 = "!AIVDM,1,1,,A,15MvJw5P0NG?Us6EaDVTTOvR06Jd,0*22";
 		AISHandler processor = new AISHandler();
-		Json json = (Json)processor.handle(msg1);
-		assertNotNull(json);
+		SignalKModel model = processor.handle(msg1);
+		assertNotNull(model);
 		//assertTrue(map.get(Constants.AIS) instanceof AisVesselInfo);
 
 		String msg = "!AIVDM,1,1,,B,15Mtu:0000o@05tE`?Ctn@6T06Jd,0*40";
-		json=null;
-		json = (Json)processor.handle(msg);
-		assertNotNull(json);
+		model=null;
+		model = processor.handle(msg);
+		assertNotNull(model);
 		//assertTrue(map.get(Constants.AIS) instanceof AisVesselInfo);
 	}
 
@@ -123,23 +125,23 @@ public class AISHandlerTest{
 		String msg2 = "\\g:1-2-0136,c:1363174860*24\\!BSVDM,2,1,4,B,53B>2V000000uHH4000@T4p4000000000000000S30C6340006h00000,0*4C\r\n";
 		String msg3 = "\\g:2-2-0136*59\\!BSVDM,2,2,4,B,000000000000000,2*3A";
 		AISHandler processor = new AISHandler();
-		Object json = processor.handle(msg1);
-		assertEquals(msg1,json);
+		SignalKModel model = processor.handle(msg1);
+		assertNull(model);
 
-		json = processor.handle(msg2);
-		assertEquals(msg2,json);
+		model = processor.handle(msg2);
+		assertNull(model);
 
-		json = processor.handle(msg3);
-		assertEquals(msg3,json);
-		json=null;
+		model = processor.handle(msg3);
+		assertNull(model);
+		model=null;
 		String msg = "$PGHP,1,2010,6,11,11,46,11,929,244,0,,1,72*21\r\n";
 		msg += "\\1G2:0125,c:1354719387*0D";
 		msg += "\\!AIVDM,2,1,4,A,539LiHP2;42`@pE<000<tq@V1<TpL4000000001?1SV@@73R0J0TQCAD,0*1E\r\n";
 		msg += "\\2G2:0125*7B";
 		msg += "\\!AIVDM,2,2,4,A,R0EQCP000000000,2*45";
 
-		json = processor.handle(msg);
-		assertEquals(msg,json);
+		model = processor.handle(msg);
+		assertNull(model);
 		// assertEquals(map.get("TEST"), 5);
 	}
 

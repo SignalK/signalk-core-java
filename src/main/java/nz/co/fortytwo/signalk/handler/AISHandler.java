@@ -100,13 +100,13 @@ public class AISHandler {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Object handle(String bodyStr) throws Exception {
+	public SignalKModel handle(String bodyStr) throws Exception {
 
 		if (logger.isDebugEnabled())
 			logger.debug("Processing AIS:" + bodyStr);
 
 		if (StringUtils.isBlank(bodyStr) || !bodyStr.startsWith("!AIVDM")) {
-			return bodyStr;
+			return null;
 		}
 
 		try {
@@ -144,7 +144,7 @@ public class AISHandler {
 						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS");
 						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS");
 						model.put(aisVessel+ nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, "AIS");
-						model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), "AIS");
+						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), "AIS");
 					}
 				}
 			}
