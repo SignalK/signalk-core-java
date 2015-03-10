@@ -28,9 +28,11 @@ public class PathEvent {
 	public enum EventType  { ADD, DEL};
 	private String path;
 	private EventType type;
+	private int revision;
 
-	public PathEvent(String path, EventType type) {
+	public PathEvent(String path, int revision, EventType type) {
 		this.path=path;
+		this.revision=revision;
 		this.type=type;
 	}
 
@@ -44,6 +46,12 @@ public class PathEvent {
 
 	public String getPath() {
 		return path;
+	}
+
+
+
+	public int getRevision() {
+		return revision;
 	}
 
 

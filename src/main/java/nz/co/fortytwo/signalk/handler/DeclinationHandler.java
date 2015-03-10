@@ -25,8 +25,8 @@ package nz.co.fortytwo.signalk.handler;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.util.JsonConstants;
-import nz.co.fortytwo.signalk.util.SignalKConstants;
+
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import nz.co.fortytwo.signalk.util.TSAGeoMag;
 import nz.co.fortytwo.signalk.util.Util;
 
@@ -47,17 +47,17 @@ public class DeclinationHandler {
 
 	public void handle(SignalKModel signalkModel ) {
 		logger.debug("Declination  calculation fired " );
-		Json lat = signalkModel.findNode(signalkModel.self(), SignalKConstants.nav_position_latitude);
-		Json lon = signalkModel.findNode(signalkModel.self(), SignalKConstants.nav_position_longitude);
+		Double lat = (Double) signalkModel.get(vessels_dot_self_dot+nav_position_latitude);
+		Double lon = (Double) signalkModel.get(vessels_dot_self_dot+nav_position_longitude);
 		
 		if (lat!=null && lon!=null) {
-			if(logger.isDebugEnabled())logger.debug("Declination  for "+lat.at("value")+", "+lon.at("value") );
+			if(logger.isDebugEnabled())logger.debug("Declination  for "+lat+", "+lon );
 			
-			double declination = geoMag.getDeclination(lat.at("value").asDouble(), lon.at("value").asDouble(), DateTime.now().getYear(), 0.0d);
+			double declination = geoMag.getDeclination(lat, lon, DateTime.now().getYear(), 0.0d);
 			
 			declination = Util.round(declination, 1);
 			if(logger.isDebugEnabled())logger.debug("Declination = " + declination);
-			signalkModel.putWith(signalkModel.self(), SignalKConstants.nav_magneticVariation, declination, JsonConstants.SELF);	
+			signalkModel.putValue(vessels_dot_self_dot+nav_magneticVariation, declination);	
 		}
 		
 	}

@@ -144,12 +144,12 @@ public class JsonGetHandler {
 	 */
 	public List<String> getMatchingPaths(SignalKModel signalkModel, String regex) {
 		if (StringUtils.isBlank(regex)) {
-			return ImmutableList.copyOf(signalkModel.getFullPaths());
+			return ImmutableList.copyOf(signalkModel.getKeys());
 		}
 		regex = Util.sanitizePath(regex);
 		Pattern pattern = Util.regexPath(regex);
 		List<String> paths = new ArrayList<String>();
-		for (String p : signalkModel.getFullPaths()) {
+		for (String p : signalkModel.getKeys()) {
 			if (pattern.matcher(p).matches()) {
 				if (logger.isDebugEnabled())
 					logger.debug("Adding path:" + p);

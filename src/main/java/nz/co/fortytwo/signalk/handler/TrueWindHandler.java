@@ -24,11 +24,7 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.Util;
@@ -58,23 +54,23 @@ public class TrueWindHandler {
 	public  void handle(SignalKModel signalkModel) {
 		try {
 
-			Json vesselSpeed =  signalkModel.findValue(signalkModel.self(), nav_speedOverGround);
-			Json apparentDirection = signalkModel.findValue(signalkModel.self(), env_wind_angleApparent);
-			Json apparentWindSpeed =signalkModel.findValue(signalkModel.self(), env_wind_speedApparent);
+			Double vesselSpeed =  (Double) signalkModel.get(vessels_dot_self_dot+ nav_speedOverGround);
+			Double apparentDirection = (Double) signalkModel.get(vessels_dot_self_dot+env_wind_angleApparent);
+			Double apparentWindSpeed =(Double) signalkModel.get(vessels_dot_self_dot+env_wind_speedApparent);
 			if (apparentWindSpeed !=null && apparentDirection!=null && vesselSpeed!=null) {
 				// now calc and add to body
 				// 0-360 from bow clockwise
 				
-				double[] windCalc = calcTrueWindDirection(apparentWindSpeed.asDouble(), apparentDirection.asDouble(), vesselSpeed.asDouble());
+				double[] windCalc = calcTrueWindDirection(apparentWindSpeed, apparentDirection, vesselSpeed);
 				if(windCalc!=null){
 					
 					if (!Double.isNaN(windCalc[1])) {
 						//map.put(Constants.WIND_DIR_TRUE, round(trueDirection, 2));
-						signalkModel.putWith(signalkModel.self(), env_wind_directionTrue, Util.round(windCalc[1], 2), SELF);
+						signalkModel.put(vessels_dot_self_dot+ env_wind_directionTrue, Util.round(windCalc[1], 2), SELF);
 					}
 					if (!Double.isNaN(windCalc[0])) {
 						//map.put(Constants.WIND_SPEED_TRUE, round(trueWindSpeed, 2));
-						signalkModel.putWith(signalkModel.self(), env_wind_speedTrue, Util.round(windCalc[0], 2), SELF);
+						signalkModel.put(vessels_dot_self_dot+env_wind_speedTrue, Util.round(windCalc[0], 2), SELF);
 					}
 				}
 

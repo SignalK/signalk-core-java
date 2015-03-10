@@ -23,6 +23,8 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
+import java.util.NavigableMap;
+
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
 /**
@@ -48,5 +50,13 @@ public class SignalKModelFactory {
 	 */
 	public static synchronized SignalKModel getCleanInstance(){
 		return new SignalKModelImpl();
+	}
+	
+	/**
+	 * Returns a different clean instance - only needed for testing!
+	 * @return
+	 */
+	public static synchronized SignalKModel getWrappedInstance(NavigableMap<String, Object> root){
+		return new SignalKModelImpl(root);
 	}
 }

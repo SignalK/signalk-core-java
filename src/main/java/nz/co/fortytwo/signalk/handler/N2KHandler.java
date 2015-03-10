@@ -127,7 +127,7 @@ public class N2KHandler {
 			for (N2KHolder entry : entries) {
 				Object var = n2k.read(entry.path);
 				// put in signalk tree
-				temp.putWith(self + entry.node, resolve(var));
+				temp.put(self + entry.node, resolve(var));
 			}
 			if (logger.isDebugEnabled())
 				logger.debug("N2KHandler output  " + temp);

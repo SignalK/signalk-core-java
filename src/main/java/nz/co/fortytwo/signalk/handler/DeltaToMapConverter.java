@@ -40,18 +40,19 @@ import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 /**
- * Converts SignalK delta format to full (tree) format
+ * Converts SignalK delta format to map format
  * 
  * @author robert
  * 
  */
-public class DeltaToFullConverter {
+public class DeltaToMapConverter {
 
-	private static Logger logger = Logger.getLogger(DeltaToFullConverter.class);
+	private static Logger logger = Logger.getLogger(DeltaToMapConverter.class);
 	private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	
 	
@@ -91,13 +92,14 @@ public class DeltaToFullConverter {
 	 
 	
 	/**
-	 * Convert Delta JSON to full tree json
+	 * Convert Delta JSON to full tree map.
+	 * Returns null if the json is not an update, otherwise return a SignalKModel
 	 * @param node
 	 * @return
 	 */
-	public Json  handle(Json node) {
+	public SignalKModel  handle(Json node) {
 		//avoid full signalk syntax
-		if(node.has(VESSELS))return node;
+		if(node.has(VESSELS))return null;
 		//deal with diff format
 		if(node.has(CONTEXT)){
 			if(logger.isDebugEnabled())logger.debug("processing delta  "+node );
@@ -106,25 +108,25 @@ public class DeltaToFullConverter {
 			
 			//go to context
 			String path = node.at(CONTEXT).asString();
-			Json pathNode = temp.addNode(path);
+			//Json pathNode = temp.addNode(path);
 			Json updates = node.at(UPDATES);
-			if(updates==null)return (Json) temp;
+			if(updates==null)return temp;
 			if(updates.isArray()){
 				for(Json update: updates.asJsonList()){
-					parseUpdate(temp, update, pathNode);
+					parseUpdate(temp, update, path);
 				}
 			}else{
-				parseUpdate(temp, updates.at(UPDATES), pathNode);
+				parseUpdate(temp, updates.at(UPDATES), path);
 			}
 			
 			if(logger.isDebugEnabled())logger.debug("SignalkModelProcessor processed diff  "+temp );
-			return (Json) temp;
+			return  temp;
 		}
-		return node;
+		return null;
 		
 	}
 
-	private void parseUpdate(SignalKModel temp, Json update, Json pathNode) {
+	private void parseUpdate(SignalKModel temp, Json update, String path) {
 		String device = update.at(SOURCE).at(DEVICE).asString();
 		String ts = update.at(SOURCE).at(TIMESTAMP).asString();
 		
@@ -136,12 +138,7 @@ public class DeltaToFullConverter {
 		Json array = update.at(VALUES);
 		for(Json e : array.asJsonList()){
 			String key = e.at(PATH).asString();
-			Json n = temp.addNode(pathNode, key);
-			int pos = key.lastIndexOf(".");
-			if(pos>0){
-				key = key.substring(pos+1);
-			}
-			temp.putWith(n.up(),key, e.at(VALUE).getValue(),device,timestamp);
+			temp.put(path+"."+key, e.at(VALUE).getValue(),device,timestamp.withZone(DateTimeZone.UTC).toDateTimeISO().toString());
 		}
 		
 	}

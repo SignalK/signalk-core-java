@@ -24,6 +24,7 @@
  */
 package nz.co.fortytwo.signalk.util;
 
+
 public class SignalKConstants {
 
 	public static final String resources = "resources";
@@ -67,6 +68,8 @@ public class SignalKConstants {
 	public static final String vessels = "vessels";
 	public static final String vessels_id = "vessels.*";
 	public static final String alarms = "alarms";
+	public static final String dot = ".";
+	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
 	public static final String alarms_anchorAlarmMethod = "alarms.anchorAlarmMethod";
 	public static final String alarms_anchorAlarmState = "alarms.anchorAlarmState";
 	public static final String alarms_autopilotAlarmMethod = "alarms.autopilotAlarmMethod";

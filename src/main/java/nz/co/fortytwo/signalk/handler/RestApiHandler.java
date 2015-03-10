@@ -23,13 +23,13 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import java.util.Arrays;
+import java.util.NavigableMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 
 import org.apache.log4j.Logger;
@@ -46,8 +46,6 @@ public class RestApiHandler {
 
 	private static Logger logger = Logger.getLogger(RestApiHandler.class);
 	
-
-
 	/**
 	 * Process a signalk GET message. The method will recover the appropriate json object at the urls path from 
 	 * the provided SignalKModel. 
@@ -61,7 +59,7 @@ public class RestApiHandler {
 	 * @param signalkModel
 	 * @return
 	 */
-	public Json processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) {
+	public SignalKModel processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) {
 		// use Restlet API to create the response
 		String path = request.getPathInfo();
 		//String path =  exchange.getIn().getHeader(Exchange.HTTP_URI, String.class);
@@ -73,22 +71,21 @@ public class RestApiHandler {
         	return null;
         }
         path=path.substring(JsonConstants.SIGNALK_API.length());
-        if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+Arrays.toString(path.split("/")));
+        if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path.split("/"));
+        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace("/", "."));
         
-        Json json = signalkModel.atPath(path.split("/"));
-        if(json==null){
+        if(keys.size()==0){
         	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         	return null;
         }
-        
-        if(logger.isDebugEnabled())logger.debug("Returning:"+json);
+    
+        if(logger.isDebugEnabled())logger.debug("Returning:"+keys);
         
         response.setContentType("application/json");
         
         // SEND RESPONSE
-        
         response.setStatus(HttpServletResponse.SC_OK);
-        return json;
+        return SignalKModelFactory.getWrappedInstance(keys);
 		
 	}
 

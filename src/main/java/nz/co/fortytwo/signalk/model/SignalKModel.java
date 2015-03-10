@@ -23,7 +23,11 @@
  */
 package nz.co.fortytwo.signalk.model;
 
+import java.util.Date;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import mjson.Json;
@@ -34,196 +38,92 @@ import com.google.common.eventbus.EventBus;
 
 public interface SignalKModel{
 		
-		/**
-		 * Shortcut for this.at(VESSELS).at(SELF)
-		 * @return
-		 */
-		public Json self();
-		/**
-		 * Merge tempNode into rootNode
-		 * @param tempNode
-		 * @return
-		 */
-		public Json merge(Json tempNode);
-		
-		/**
-		 * Merge tempNode into parentNode as a child of parentNode
-		 * @param parentNode
-		 * @param tempNode
-		 * @return
-		 */
-		public Json mergeAtPath(Json parentNode, String key, Json tempNode);
-		
-		/**
-		 *  Merge tempNode into parentNode as a child of parentPath
-		 * @param path
-		 * @param key
-		 * @param tempNode
-		 * @return
-		 */
-		public Json mergeAtPath(String path, String key, Json tempNode);
-		
-		/**
-		 *  Merge tempNode into parentNode as a child of parentPath, using the last part as the element key.
-		 *  eg "vessels.self.environment.wind" add the Json to "environment" as key "wind"
-		 * @param path
-		 * @param tempNode
-		 * @return
-		 */
-		public Json mergeAtPath(String path,  Json tempNode);
-		/**
-		 * Get the Json node at "person.address.city"
-		 * @param path
-		 * @return
-		 */
-		public Json atPath(String path);
-		/**
-		 * Get the json node at {"person","address","city"}
-		 * Convenient when using CONSTANTS, atPath(PERSON,ADDRESS,CITY)
-		 * @param path
-		 * @return
-		 */
-		public Json atPath(String ... path );
-		/**
-		 * Sets the value, adding "source":"self" and "timestamp":now()
-		 * @param key
-		 * @param value
-		 * @return
-		 */
-		public Json setKey(String key, Object value);
-		
-		/**
-		 * Sets the value, adding "source":"self"
-		 * @param key
-		 * @param value
-		 * @param timestamp
-		 * @return
-		 */
-		public Json setKey(String key,Object value, DateTime timestamp);
-		
-		/**
-		 * Sets the value, adding "timestamp":now()
-		 * @param key
-		 * @param value
-		 * @param source
-		 * @return
-		 */
-		public Json setKey(String key,Object value, String source);
-		
-		/**
-		 * 
-		 * Set the value, timestamp and source
-		 * @param key
-		 * @param value
-		 * @param timestamp
-		 * @param source
-		 * @return
-		 */
-		public Json setKey(String key,Object value, DateTime timestamp, String source);
+	/**
+	 * Lock the model for writing.
+	 */
+	public abstract void lock();
 
-		/**
-		 * Delete the key from the parent path
-		 * @param path
-		 * @param key
-		 */
-		public void delete(String path, String key) ;
-		/**
-		 * Delete the key from the parent node
-		 * @param parentNode
-		 * @param key
-		 */
-		public void delete(Json parentNode, String key) ;
-		
-		/**
-		 * Return a Json node which is a deep copy of the signalk model root node
-		 * @return
-		 */
-		public SignalKModel duplicate();
-		
-		/**
-		 * Return a Json node which is a deep copy of the signalk model root node
-		 * and has the keys starting with _ removed.
-		 * @return
-		 */
-		public SignalKModel safeDuplicate();
-		public ConcurrentHashMap<String, Json> getNodeMap();
-		/**
-		 * Recursive addNode()
-		 * Same as findNode, but will make a new node if any node on the path is empty
-		 * Assumes path is relative from 'node'.
-		 * @param node
-		 * @param fullPath
-		 * @param value 
-		 * @return
-		 */
-		public  Json addNode(Json node, String fullPath) ;
-		public  Json putWith(Json node, String fullPath, Object value);
-		public  Json putWith(Json node, String fullPath, Object value, String source);
-		public  Json putWith(Json node, String fullPath, Object value, String source, DateTime dateTime);
-		
-		
-		/**
-		 * Recursive addNode()
-		 * Same as findNode, but will make a new node if any node on the path is empty
-		 * Assumes path is relative from root node
-		 * @param fullPath
-		 * @return
-		 */
-		public  Json addNode(String fullPath) ;
-		public  Json putWith(String fullPath, Object value);
-		public  Json putWith(String fullPath, Object value, String source);
-		public  Json putWith(String fullPath, Object value, String source, DateTime dateTime);
-		/**
-		 * Recursive findNode(), which returns the "value" object
-		 * @param fullPath
-		 * @return
-		 */
-		public Json findValue( String fullPath) ;
-		/**
-		 * Recursive findNode()
-		 * @param fullPath
-		 * @return
-		 */
-		public Json findNode( String fullPath) ;
-		
-		/**
-		 * Recursive findNode(), which returns the "value" object
-		 * @param node
-		 * @param fullPath
-		 * @return
-		 */
-		public Json findValue(Json node, String fullPath) ;
-		/**
-		 * Recursive findNode()
-		 * @param node
-		 * @param fullPath
-		 * @return
-		 */
-		public Json findNode(Json node, String fullPath) ;
-		
-		public EventBus getEventBus();
+	/**
+	 * Lock the model for reading
+	 */
+	public abstract void readLock();
+
+	/**
+	 * Unlock the model for reading
+	 */
+	public abstract void readUnlock();
+
+	/**
+	 * Get a value from the Model
+	 */
+	public abstract Object get(String key);
+
+	/**
+	 * Return a subtree from the Model - the tree is read-only, but is live
+	 * and wil be updated as the Model changes.
+	 * @param key the key to retrieve - for example, "vessels.self" will return
+	 * a subtree that may contain keys beginning "navigation", "environment" and so on.
+	 */
+	public abstract NavigableSet<String> getTree(String key);
+
+	/**
+	 * Release the write lock, update the revision (assuming the model
+	 * has changed) and call {@link #modelChanged}
+	 */
+	public abstract boolean unlock();
+
+	public abstract EventBus getEventBus();
+
+	/**
+	 * Return the full set of keys from this Model. The returned set
+	 * is read-only and guaranteed to be the full set at the time this method is called,
+	 * but as the model may be updated in another thread immediately after it's accuracy
+	 * is no longer guaranteed after that. It can be iterated over without synchronization.
+	 */
+	public abstract NavigableSet<String> getKeys();
+
+	/**
+	 * Return the underlying data model. Note this is the live object,
+	 * and should not be read without a {@link #readLock} being acquired, or
+	 * modified at all.
+	 */
+	public abstract SortedMap<String, Object> getData();
+
+	/**
+	 * Add all values to the model
+	 * @param map
+	 * @return
+	 */
+	public boolean putAll(SortedMap<String, Object> map);
+	/**
+	 * Generic put that accepts only null, boolean, Number, String
+	 * @param key
+	 * @param value
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public boolean put(String key, Object value) throws IllegalArgumentException;
 	
-		/**
-		 * Retrieve the node by fullPath.
-		 * @param node
-		 */
-		public Json getFromNodeMap(String fullPath) ;
-		
-		/**
-		 * Get a full list of paths.
-		 * @param node
-		 */
-		public Set<String> getFullPaths() ;
-		
-		/**
-		 * Remove the node by fullPath.
-		 * @param node
-		 */
-		public void removeFromNodeMap(String fullPath) ;
-		/**
-		 * Adds the given node to the nodeMap, so we can retrieve by fullPath.
-		 * @param node
-		 */
-		public void addToNodeMap(Json node) ;
+	public boolean put(String key, Object value, String source) throws IllegalArgumentException;
+	public boolean put(String key, Object value, String source, String timestamp) throws IllegalArgumentException;
+
+	/**
+	 * Return a submap from the Model - the tree is read-only, but is live
+	 * and will be updated as the Model changes.
+	 * @param key the key to retrieve - for example, "vessels.self" will return
+	 * a submap that may contain keys beginning "navigation", "environment" and so on.
+	 */
+	 
+	public NavigableMap<String, Object> getSubMap(String key);
+
+	public Object getValue(String key);
+
+	/**
+	 * Same as put, but it adds the suffix '.value' to the key
+	 * @param string
+	 * @param value
+	 * @return
+	 */
+	public boolean putValue(String string, Object value);
 
 }

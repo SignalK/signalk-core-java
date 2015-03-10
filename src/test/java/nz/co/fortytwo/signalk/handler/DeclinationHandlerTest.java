@@ -23,12 +23,14 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_magneticVariation;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.SignalKConstants;
 
 import org.junit.After;
 import org.junit.Test;
@@ -44,10 +46,10 @@ public class DeclinationHandlerTest {
 	public void shouldGetDeclination() {
 		DeclinationHandler p = new DeclinationHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
-		model.putWith(model.self(), SignalKConstants.nav_position_latitude, -41.5);
-		model.putWith(model.self(), SignalKConstants.nav_position_longitude, 172.5);
+		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
+		model.put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
 		p.handle(model);
-		double decl = model.findValue(model.self(),SignalKConstants.nav_magneticVariation).asDouble();
+		double decl = (double) model.getValue(vessels_dot_self_dot+nav_magneticVariation);
 		assertEquals(22.1, decl, 001);
 	}
 	
@@ -55,10 +57,10 @@ public class DeclinationHandlerTest {
 	public void shouldNotGetDeclination() {
 		DeclinationHandler p = new DeclinationHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
-		model.putWith(model.self(), SignalKConstants.nav_position_latitude, -41.5);
+		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
 		//model.putWith(model.self(), JsonConstants.nav_position_longitude, 172.5);
 		p.handle(model);
-		Json decl = model.findValue(model.self(),SignalKConstants.nav_magneticVariation);
+		Object decl = model.getValue(vessels_dot_self_dot+nav_magneticVariation);
 		assertNull( decl);
 	}
 

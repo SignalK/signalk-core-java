@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.NavigableSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -41,6 +42,7 @@ import java.util.regex.Pattern;
 import mjson.Json;
 import net.sf.marineapi.nmea.sentence.RMCSentence;
 import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -297,7 +299,7 @@ public class Util {
 	
 
 	public static void populateTree(SignalKModel signalkModel, SignalKModel temp, String p) {
-		Json node = signalkModel.findNode(p);
+		NavigableSet<String> node = signalkModel.getTree(p);
 		if(logger.isDebugEnabled())logger.debug("Found node:" + p + " = " + node);
 		if (node != null) {
 			addNodeToTemp(temp, node);
@@ -321,12 +323,11 @@ public class Util {
 		}
 		return node;
 	}
-	public static void addNodeToTemp(SignalKModel temp, Json node) {
-		Json n = temp.addNode((Json) temp, node.up().getPath());
-		if (node.isPrimitive()) {
-			n.set(node.getParentKey(), node.getValue());
-		} else {
-			n.set(node.getParentKey(),node.getValue());
+	
+	public static void addNodeToTemp(SignalKModel temp, NavigableSet<String> node) {
+		SignalKModel model = SignalKModelFactory.getInstance();
+		for(String key:node){
+			temp.put(key, model.get(key));
 		}
 	}
 }

@@ -22,16 +22,8 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.communication_callsignVhf;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_headingTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -120,7 +112,7 @@ public class AISHandler {
 		try {
 			List<AisPacket> packets = handleLine(bodyStr);
 			AisVesselInfo vInfo = null;
-			SignalKModel json = SignalKModelFactory.getCleanInstance();
+			SignalKModel model = SignalKModelFactory.getCleanInstance();
 			for (AisPacket packet : packets) {
 				if (packet != null && packet.isValidMessage()) {
 					// process message here
@@ -140,23 +132,23 @@ public class AISHandler {
 					}
 					if (vInfo != null) {
 
-						Json aisVessel = json.addNode(VESSELS + "." + String.valueOf(vInfo.getUserId()));
+						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
 
-						aisVessel.set(name, vInfo.getName());
-						aisVessel.set(mmsi, String.valueOf(vInfo.getUserId()));
-						json.putWith(aisVessel, nav_state, navStatusMap.get(vInfo.getNavStatus()), "AIS");
+						model.put(aisVessel+name, vInfo.getName());
+						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()));
+						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), "AIS");
 						if (vInfo.getPosition() != null) {
-							json.putWith(aisVessel, nav_position_latitude, vInfo.getPosition().getLatitude(), "AIS");
-							json.putWith(aisVessel, nav_position_longitude, vInfo.getPosition().getLongitude(), "AIS");
+							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude(), "AIS");
+							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude(), "AIS");
 						}
-						json.putWith(aisVessel, nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS");
-						json.putWith(aisVessel, nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS");
-						json.putWith(aisVessel, nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, "AIS");
-						json.putWith(aisVessel, communication_callsignVhf, vInfo.getCallsign(), "AIS");
+						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS");
+						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS");
+						model.put(aisVessel+ nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, "AIS");
+						model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), "AIS");
 					}
 				}
 			}
-			return json;
+			return model;
 
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);

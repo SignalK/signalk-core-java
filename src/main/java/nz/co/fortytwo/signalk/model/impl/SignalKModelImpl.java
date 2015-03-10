@@ -23,490 +23,475 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.*;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.SortedMap;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import mjson.Json;
-import mjson.Json.ObjectJson;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.event.JsonEvent;
-import nz.co.fortytwo.signalk.model.event.JsonEvent.EventType;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-
-import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.EventBus;
 
-public class SignalKModelImpl extends ObjectJson implements SignalKModel{
-	
-	private static Logger logger = Logger.getLogger(SignalKModelImpl.class);
-	private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-	private ConcurrentHashMap<String, Json> nodeMap = new ConcurrentHashMap<String, Json>();
-	//private Json this;
-	private EventBus eventBus = new EventBus();
-	
-	protected SignalKModelImpl(){
-		super();
-		this.set(VESSELS,Json.object().set(SELF,Json.object()));
-		addToNodeMap(this);
-	}
-	
-	public Json self(){
-		return this.at(VESSELS).at(SELF);
-	}
-	
-	/**
-	 * Merge tempNode into this
-	 * @param tempNode
-	 * @return
-	 */
-	public Json merge(Json tempNode){
-		//only vessels subtree
-		if(!(tempNode.has(VESSELS)))return this;
-		if(tempNode.asJsonMap().size()>1)return this;
-		return merge(this, tempNode);
-	}
-	
-	/**
-	 * Merge two json treemaps 
-	 * @param mainNode
-	 * @param updateNode
-	 * @return
-	 */
-	private Json merge(Json mainNode, Json updateNode) {
-		//logger.debug("Merge objects");
-		if(updateNode==null)return mainNode;
-		if (mainNode != null && mainNode.isArray() && updateNode != null && updateNode.isArray()) {
-			//mergeArrays( mainNode, updateNode);
-		}
-		Iterator<String> fieldNames = updateNode.asMap().keySet().iterator();
-		while (fieldNames.hasNext()) {
-
-			String fieldName = fieldNames.next();
-			logger.debug("Merge " + fieldName);
-			Json json = mainNode.at(fieldName);
-			// if field exists and is an embedded object
-			if (json != null && json.isArray()) {
-				//mergeArrays( json,  updateNode.at(fieldName));
-			} else if (json != null && json.isObject()) {
-				json = merge(json, updateNode.at(fieldName));
-			} else {
-				if (mainNode.isObject()) {
-					// Overwrite field
-					Json value = updateNode.at(fieldName);
-					logger.debug(fieldName + "=" + value);
-					mainNode.set(fieldName, value);
-					addToNodeMap(value);
-					//eventBus.post(new JsonEvent(mainNode, EventType.EDIT));
-					logger.debug(fieldName + "=" + value);
-				}
-			}
-
-		}
-
-		return mainNode;
-	}
-	
-	/**
-	 * Recursive findNode(), which returns the "value" object
-	 * @param node
-	 * @param fullPath
-	 * @return
-	 */
-	public Json findValue( String fullPath) {
-		return findValue(this, fullPath);
-	}
-	/**
-	 * Recursive findNode(), which returns the "value" object
-	 * @param node
-	 * @param fullPath
-	 * @return
-	 */
-	public Json findValue(Json node, String fullPath) {
-		node=findNode(node, fullPath);
-		if(node==null)return null;
-		
-		return node.at(VALUE);
-	}
-	/**
-	 * Recursive findNode()
-	 * @param fullPath
-	 * @return
-	 */
-	public Json findNode(String fullPath) {
-		return nodeMap.get(fullPath);
-	}
-	/**
-	 * Recursive findNode()
-	 * @param node
-	 * @param fullPath
-	 * @return
-	 */
-	public Json findNode(Json node, String fullPath) {
-		String[] paths = fullPath.split("\\.");
-		//Json endNode = null;
-		for(String path : paths){
-			logger.debug("findNode:"+path);
-			node = node.at(path);
-			if(node==null)return null;
-		}
-		return node;
-	}
-	/**
-	 * Merge tempNode into parentNode as a child of parentNode
-	 * @param parentNode
-	 * @param tempNode
-	 * @return
-	 */
-	public Json mergeAtPath(Json parentNode, String key, Json tempNode){
-		Json newNode = parentNode.at(key);
-		if(newNode==null){
-			Json tmp = parentNode.set(key, tempNode);
-			addToNodeMap(tmp);
-		}else{
-			merge(newNode, tempNode);
-		}
-		return parentNode;
-	}
-	
-	/**
-	 *  Merge tempNode into parentNode as a child of parentPath
-	 * @param path
-	 * @param key
-	 * @param tempNode
-	 * @return
-	 */
-	public Json mergeAtPath(String path, String key, Json tempNode){
-		Json parentNode = findNode(this, path);
-		return mergeAtPath(parentNode, key, tempNode);
-	}
-	
-	/**
-	 *  Merge tempNode into parentNode as a child of parentPath, using the last part as the element key.
-	 *  eg "vessels.self.environment.wind" add the Json to "environment" as key "wind"
-	 * @param path
-	 * @param tempNode
-	 * @return
-	 */
-	public Json mergeAtPath(String path,  Json tempNode){
-		if(path.indexOf(".")>0){
-			String key=path.substring(path.lastIndexOf(".")+1, path.length());
-			path=path.substring(0,path.lastIndexOf("."));
-			Json parentNode = findNode(this, path);
-			return mergeAtPath(parentNode, key, tempNode);
-		}else{
-			return mergeAtPath(this, path, tempNode);
-		}
-		
-	}
-	/**
-	 * Get the Json node at "person.address.city"
-	 * @param path
-	 * @return
-	 */
-	public Json atPath(String path){
-		return findNode(this, path);
-	}
-	/**
-	 * Get the json node at {"person","address","city"}
-	 * Convenient when using CONSTANTS, atPath(PERSON,ADDRESS,CITY)
-	 * @param path
-	 * @return
-	 */
-	public Json atPath(String ... path ){
-		//Json json=this;
-		StringBuffer fullPath = new StringBuffer() ;
-		for(String k:path){
-			if(StringUtils.isBlank(k))continue;
-			fullPath.append("."+k);
-			//json=findNode(json, k);
-			//if(json==null) return null;
-		}
-		if(fullPath.charAt(0)=='.')fullPath.deleteCharAt(0);
-		logger.debug("atPath:"+fullPath.toString());
-		return findNode(fullPath.toString());
-	}
-	/**
-	 * Sets the value, adding "source":"self" and "timestamp":now()
-	 * @param key
-	 * @param value
-	 * @return
-	 */
-	public Json setKey(String key, Object value){
-		return setKey(key,value, new DateTime(), SELF);
-	}
-	
-	/**
-	 * Sets the value, adding "source":"self"
-	 * @param key
-	 * @param value
-	 * @param timestamp
-	 * @return
-	 */
-	public Json setKey(String key,Object value, DateTime timestamp){
-		return setKey(key,value, timestamp, SELF);
-	}
-	
-	/**
-	 * Sets the value, adding "timestamp":now()
-	 * @param key
-	 * @param value
-	 * @param source
-	 * @return
-	 */
-	public Json setKey(String key,Object value, String source){
-		return setKey(key,value, new DateTime(), source);
-	}
-	
-	/**
-	 * 
-	 * Set the value, timestamp and source
-	 * @param key
-	 * @param value
-	 * @param timestamp
-	 * @param source
-	 * @return
-	 */
-	public Json setKey(String key,Object value, DateTime timestamp, String source){
-		Json json = atPath(key);
-		if(json==null) return null;
-		json.set(TIMESTAMP,timestamp.toString());
-		json.set(SOURCE,source);
-		json.set(VALUE,value);
-		addToNodeMap(json);
-		//eventBus.post(new JsonEvent(json, EventType.EDIT));
-		return json;
-	}
-
-	/**
-	 * Delete the key from the parent path
-	 * @param path
-	 * @param key
-	 */
-	public void delete(String path, String key) {
-		Json parentNode = findNode(this, path);
-		delete(parentNode, key);
-		//eventBus.post(new JsonEvent(json, EventType.DEL));
-	}
-	/**
-	 * Delete the key from the parent node
-	 * @param parentNode
-	 * @param key
-	 */
-	public void delete(Json parentNode, String key) {
-		if(parentNode!=null ){
-			String fullPath = parentNode.getPath()+"."+key;
-			nodeMap.remove(fullPath);
-			parentNode.delAt(key);
-		}
-	}
-	
-	/**
-	 * Return a Json node which is a deep copy of the signalk model root node
-	 * @return
-	 */
-	public SignalKModel duplicate(){
-		return this.dup();
-	}
-	
-	/**
-	 * Return a Json node which is a deep copy of the signalk model root node
-	 * and has the keys starting with _ removed.
-	 * @return
-	 */
-	public SignalKModel safeDuplicate(){
-		SignalKModel safe = this.duplicate();
-		ImmutableList<String> fieldNames = ImmutableList.copyOf(safe.getNodeMap().keySet().iterator());
-		for (String fieldName:fieldNames) {
-			if(logger.isTraceEnabled())logger.trace("Safe parse " + fieldName);
-			// if field exists and starts with _, delete it
-			if(fieldName.contains("._")){
-				//logger.debug("Remove "+fieldName);
-				Json tmp = safe.getNodeMap().get(fieldName);
-				tmp.up().delAt(tmp.getParentKey());
-				safe.getNodeMap().remove(fieldName);
-			}
-			
-		}
-		return safe;
-	}
-
-	/**
-	 * Iterate through the object and remove all keys starting with _
-	 * @param mainNode
-	 * @return
-	 */
-	public Json safe(Json mainNode) {
-		ImmutableList<String> fieldNames = ImmutableList.copyOf(nodeMap.keySet().iterator());
-		for (String fieldName:fieldNames) {
-			if(logger.isTraceEnabled())logger.trace("Safe parse " + fieldName);
-			// if field exists and starts with _, delete it
-			if(fieldName.contains("._")){
-				Json tmp = nodeMap.get(fieldName);
-				tmp.up().delAt(tmp.getParentKey());
-				nodeMap.remove(fieldName);
-			}
-			
-		}
-		return mainNode;
-	}
-	
-	public  Json addNode(String fullPath) {
-		return addNode(this,fullPath);
-	}
-	public  Json putWith(String fullPath, Object value){
-		return putWith(this,fullPath, value);
-	}
-	public  Json putWith(String fullPath, Object value, String source){
-		return putWith(this,fullPath, value, source);
-	}
-	public  Json putWith(String fullPath, Object value, String source, DateTime dateTime){
-		return putWith(this,fullPath, value,source,dateTime);
-	}
-
-	/*public  Json addNode(Json node, String fullPath) {
-		
-		String path = node.getPath()+"."+fullPath;
-		Json newNode = nodeMap.get(path);
-		int x = path.length();
-		while(newNode==null&& x>node.getPath().length()){
-			int i = path.lastIndexOf(".",x);
-			if(i>0){
-				//trim and lookup
-				node=nodeMap.get(path.substring(0,path.indexOf(i)));
-			}else{
-				newNode = addNode0(node, path.substring(i+1));
-			}
-			x=i;
-		}
-		return newNode;
-	}*/
 /**
- * Recursive addNode()
- * Same as findNode, but will make a new node if any node on the path is empty
- * @param node
- * @param fullPath
- * @param value 
- * @return
+ * <p>
+ * A thread-safe datamodel. Objects are stored with hierarchical keys, eg "a.b"
+ * or "a.b.c", and a node in the tree can be a leaf or an intermediate, not both.
+ * Nodes are always stored alphabetically.  Objects can be inserted or deleted
+ * on any thread so long as a lock is acquired, and any thread can retrieve the
+ * list of keys modified for that revision, or for the whole model or a subtree
+ * of it without locking and without needing to synchronized on the returned tree.
+ * </p><p>
+ * To update, the model lock should be acquired, then fields set, and finally the
+ * model unlocked, e.g.
+ * </p><pre>
+ * model.lock();
+ * model.put("vessels.self.navigation.position.latitude", 57.9);
+ * model.put("vessels.self.navigation.position.longitude", 17.2);
+ * model.put("vessels.self.navigation.position.source", "gps");
+ * model.put("vessels.self.navigation.position.teimstamp", model.timestamp());
+ * model.unlock();
+ * </pre>
+ * <p>
+ * On unlock, provided the model has been updated the revision will be
+ * incremented. Any objects that want to be notified of this change should
+ * wait on the model from another thread; either directly, or by calling {@link #watch}.
+ * When notified they can retrieve the current state of the model by calling
+ * {@link #getRevision}, and {@link #getRevisionKeys}, or they can get the same
+ * data from {@link ModelEvent} if they called watch. For example:
+ * </p><pre>
+ * ModelEvent event = model.watch(1000, watchtest);
+ * if (event == null) {
+ *    // 1000ms without a matching event reached
+ * } else {
+ *    // event is now an event that was "watched" by watchtest
+ * }
+ * </pre>
  */
-	public  Json addNode(Json node, String fullPath) {
-		String[] paths = fullPath.split("\\.");
-		Json lastNode=node;
-		for(String path : paths){
-			if(logger.isDebugEnabled())logger.debug("findValue:"+path);
-			//if(node.isObject()){
-				node = node.at(path);
-			//}
-			if(node==null){
-				node = lastNode.set(path,Json.object());
-				node = node.at(path);
-				addToNodeMap(node);
-			}
-			lastNode=node;
+public class SignalKModelImpl implements SignalKModel {
+    
+    private final char separator;
+    private final NavigableMap<String,Object> root;
+    private final int numrevisions;
+    private final NavigableSet[] mark;
+    private final DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private boolean alive;
+    private volatile int revision;
+    private int nextrevision;
+    private long touch;
+    private String formattouch, revisionkey;
+  //private Json this;
+  	private EventBus eventBus = new EventBus();
+    
+  	 /**
+     * Create a new Model
+     * @param numrevisions = 100, the number of revisions to record a list of changed keys. The only
+     * storage overhead here is one Set per revision, so more is not expensive.
+     * @param separator = '.', the hierarchy separator, eg '.' or '/'
+     */
+    public SignalKModelImpl() {
+    	this.numrevisions = 1000;
+        this.separator = '.';
+        root = new ConcurrentSkipListMap<String,Object>();
+        mark = new NavigableSet[numrevisions];
+        alive = true;
+    }
+    
+    /**
+     * Create a new model from the provided sublist.
+     * @param root
+     */
+    public SignalKModelImpl(NavigableMap<String,Object> root) {
+    	this.numrevisions = 1000;
+        this.separator = '.';
+        this.root = new ConcurrentSkipListMap<String,Object>(root);
+        mark = new NavigableSet[numrevisions];
+        alive = true;
+    }
+    
+    /**
+     * Create a new Model
+     * @param numrevisions the number of revisions to record a list of changed keys. The only
+     * storage overhead here is one Set per revision, so more is not expensive.
+     * @param separator the hierarchy separator, eg '.' or '/'
+     */
+    public SignalKModelImpl(int numrevisions, char separator) {
+        this.numrevisions = numrevisions;
+        this.separator = separator;
+        root = new ConcurrentSkipListMap<String,Object>();
+        mark = new NavigableSet[numrevisions];
+        alive = true;
+    }
+
+    /**
+     * Return the hierarchy separator
+     */
+    public char getSeparator() {
+        return separator;
+    }
+
+    /**
+     * Set the key against which to store the current revision number in the
+     * model, or null to not store it
+     */
+    public void setRevisionKey(String key) {
+        this.revisionkey = key;
+    }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#lock()
+	 */
+    @Override
+	public void lock() {
+        lock.writeLock().lock();
+        nextrevision++;
+        // Create a new one here because it's possible for a slow thread
+        // still to have a handle on an old one. This will eliminate
+        // any concurrency problems.
+        setmark(nextrevision % numrevisions, new TreeSet<String>());
+    }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#readLock()
+	 */
+    @Override
+	public void readLock() {
+        lock.readLock().lock();
+    }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#readUnlock()
+	 */
+    @Override
+	public void readUnlock() {
+        lock.readLock().unlock();
+    }
+
+    /**
+     * Return an ISO-8601 timestamp for the current time. This method
+     * caches its return value so can be called whenever a timestamp
+     * is required.
+     */
+    public String timestamp() {
+        long s = System.currentTimeMillis() / 1000;
+        if (touch != s) {
+            formattouch = iso8601.format(new Date());
+            touch = s;
+        }
+        return formattouch;
+    }
+
+    private boolean doPut(String key, Object value) {
+        // If value = "aa.bb.cc", fail if map contains "aa.bb" or "aa.bb.cc.dd"
+        String othkey = root.lowerKey(key);
+        if (othkey != null && key.startsWith(othkey) && key.charAt(othkey.length()) == separator) {
+            throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
+        }
+        othkey = root.higherKey(key);
+        if (othkey != null && othkey.startsWith(key) && othkey.charAt(key.length()) == separator) {
+            throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
+        }
+        if (!value.equals(root.put(key, value))) {
+        	eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
+            //mark(key);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean doDelete(String key) {
+        NavigableMap<String,Object> map = root.tailMap(key, true);
+        boolean found = false;
+        for (Iterator<String> i = map.keySet().iterator();i.hasNext();) {
+            String mapkey = i.next();
+            if (mapkey.startsWith(key) && (mapkey.length() == key.length() || mapkey.charAt(key.length()) == separator)) {
+            	eventBus.post(new PathEvent(mapkey, nextrevision ,PathEvent.EventType.DEL));
+                //mark(mapkey);
+                i.remove();
+                found = true;
+            } else {
+                break;
+            }
+        }
+        return found;
+    }
+
+ 
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#put(java.lang.String, boolean)
+	 */
+    @Override
+	public boolean put(String key, Object value) throws IllegalArgumentException{
+    	if(value == null){
+    		return doDelete(key);
 		}
-		return node;
-	}
-	
-	public  Json putWith(Json node, String fullPath, Object value) {
-		return putWith(node, fullPath,value,SELF);
-		
-	}
-	public  Json putWith(Json node, String fullPath, Object value, String source) {
-		return putWith(node,fullPath,value, source, new DateTime());
-	}
-	public  Json putWith(Json node, String fullPath, Object value, String source, DateTime dateTime) {
-		node=addNode(node,fullPath);
-		node.set(VALUE,value);
-		node.set(TIMESTAMP,dateTime.toDateTime(DateTimeZone.UTC).toString(fmt));
-		node.set(SOURCE,source);
-		addToNodeMap(node);
-		//eventBus.post(new JsonEvent(node, EventType.EDIT));
-		return node;
-		
-	}
-	
-	/**
-	 * Retrieve the node by fullPath.
-	 * @param node
-	 */
-	public Json getFromNodeMap(String fullPath) {
-		Json json = nodeMap.get(fullPath);
-		if(json==null)removeFromNodeMap(fullPath);
-		return json;
-	}
-	
-	/**
-	 * Get a full list of paths.
-	 * @param node
-	 */
-	public Set<String> getFullPaths() {
-		return nodeMap.keySet();
-	}
-	
-	/**
-	 * Remove the node by fullPath.
-	 * @param node
-	 */
-	public void removeFromNodeMap(String fullPath) {
-		nodeMap.remove(fullPath);
-	}
-	/**
-	 * Adds the given node to the nodeMap, so we can retrieve by fullPath.
-	 * @param node
-	 */
-	public void addToNodeMap(Json node) {
-		//recursively add to nodeMap
-		if(node==null)return;
-		nodeMap.put(node.getPath(), node);
-		eventBus.post(new PathEvent(node.getPath(), PathEvent.EventType.ADD));
-		if(logger.isDebugEnabled())logger.debug("Add to nodeMap:"+node.getPath());
-		if(!node.isObject())return;
-		List<String> keys = ImmutableList.copyOf(node.asJsonMap().keySet());
-		for(String key : keys){
-			addToNodeMap(node.at(key));
-		}
+    	if(value instanceof Boolean || value instanceof Number || value instanceof String){
+    		return doPut(key, value);
+    	}
+    	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value);
+    }
+
+    @Override
+	public boolean put(String key, Object value, String source) throws IllegalArgumentException {
+    	if(source==null)return (doPut(key, value));
+		return (doPut(key+".value", value)&& doPut(key+".source", source));
 	}
 
+	@Override
+	public boolean put(String key, Object value, String source, String timestamp) throws IllegalArgumentException {
+		if(source!=null&& timestamp!=null)return (doPut(key+".value", value)&& doPut(key+".source", source)&& doPut(key+".timestamp", timestamp));
+		if(source!=null&& timestamp==null)return (doPut(key+".value", value)&& doPut(key+".source", source));
+		if(source==null&& timestamp!=null)return (doPut(key+".value", value)&& doPut(key+".timestamp", timestamp));
+		return (doPut(key+".value", value));
+	}
+    
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#get(java.lang.String)
+	 */
+    @Override
+	public Object get(String key) {
+        try {
+            lock.readLock().lock();
+            return root.get(key);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+    
+    /* (non-Javadoc)
+   	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#get(java.lang.String)
+   	 */
+       @Override
+   	public Object getValue(String key) {
+           try {
+               lock.readLock().lock();
+               return root.get(key+".value");
+           } finally {
+               lock.readLock().unlock();
+           }
+       }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getTree(java.lang.String)
+	 */
+    @Override
+	public NavigableSet<String> getTree(String key) {
+        try {
+            lock.readLock().lock();
+            //return Collections.unmodifiableNavigableSet(getKeys().subSet(key+".", true, key+".\uFFFD", true));
+            return getKeys().subSet(key+".", true, key+".\uFFFD", true);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+    
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getTree(java.lang.String)
+	 */
+    @Override
+	public NavigableMap<String, Object> getSubMap(String key) {
+        try {
+            lock.readLock().lock();
+            //return Collections.unmodifiableNavigableSet(getKeys().subSet(key+".", true, key+".\uFFFD", true));
+            return root.subMap(key+".", true, key+".\uFFFD", true);
+            
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+  
+
+    @SuppressWarnings("unchecked")
+    private NavigableSet<String> getmark(int i) {
+        return mark[i];
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setmark(int i, NavigableSet<String> v) {
+        mark[i] = v;
+    }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#unlock()
+	 */
+    @Override
+	public boolean unlock() {
+        NavigableSet<String> m = getmark(nextrevision % numrevisions);
+        if (m.isEmpty()) {
+            lock.writeLock().unlock();
+            return false;
+        } else {
+            revision = nextrevision; 
+            if (revisionkey != null) {
+                put(revisionkey, revision);
+            }
+            lock.writeLock().unlock();
+            //setmark(revision % numrevisions, m = Collections.unmodifiableNavigableSet(m));
+            setmark(revision % numrevisions, m );
+            modelChanged();
+            return true;
+        }
+    }
+
+    /**
+     * Called when the Model has changed, the default implementation
+     * will notify any object that called Object.wait on this object.
+     */
+    protected void modelChanged() {
+        //event = new ModelEvent(this, revision, getRevisionKeys(revision));
+        synchronized(this) {
+            notifyAll();
+        }
+    }
+
+  
+    /**
+     * Close the model - all this will do is interrupt any Objects waiting on this
+     */
+    public synchronized void close() {
+        alive = false;
+        notifyAll();
+    }
+    
+    /**
+     * Return true if the model is alive (i.e. not closed).
+     */
+    public synchronized boolean isAlive() {
+        return alive;
+    }
+
+
+    /**
+     * Return the current revision - this increased by one every time
+     * {@link #unlock} is called after changes have been made.
+     */
+    public int getRevision() {
+        return revision;
+    }
+
+    /**
+     * Return the oldest revision number that can be passed into {@link #getRevisionKeys}
+     */
+    public int getOldestRevision() {
+        return Math.max(0, nextrevision - numrevisions + 1);
+    }
+
+    /** 
+     * Return a list of all keys modified between the specified revision
+     * and the current revision, inclusive. If the specified revision has
+     * expired, this method returns null - it can't be determined what has
+     * changed between the specified revision and now.
+     * Returned set is read-only and is guaranteed to remain unchanged
+     * during its lifetime - there is no need to synchronize.
+     */
+    public NavigableSet<String> getRevisionKeys(int revision) {
+        if (revision < getOldestRevision()) {
+            return null;
+        } else if (revision == this.revision) {
+            return getmark(revision % numrevisions);
+        } else {
+            NavigableSet<String> s = new TreeSet<String>();
+            for (int i=revision;i<=this.revision;i++) {
+                Set<String> ss = getmark(i % numrevisions);
+                if (ss != null) {
+                    s.addAll(ss);
+                }
+            }
+            //return Collections.unmodifiableNavigableSet(s);     // Java 8 method
+            return s;
+        }
+    }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getEventBus()
+	 */
+    @Override
 	public EventBus getEventBus() {
 		return eventBus;
 	}
-	
-	SignalKModelImpl(Json e) { super(e); }
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getKeys()
+	 */
+    @Override
+	public NavigableSet<String> getKeys() {
+        //return Collections.unmodifiableNavigableSet(root.navigableKeySet());      // Java 8 method
+    	return root.navigableKeySet();
+    }
+
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getData()
+	 */
+    @Override
+	public SortedMap<String,Object> getData() {
+        return root;
+    }
+
+    public String toString() {
+        try {
+            lock.readLock().lock();
+            return root.toString();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+	@Override
+	public boolean putAll(SortedMap<String, Object> map) {
+		root.putAll(map);
+		return true;
+	}
+
+	@Override
+	public boolean putValue(String key, Object value) {
+		return put(key+".value", value);
+	}
+
 	
 
-	public SignalKModelImpl dup() 
-	{ 
-		//TODO: this can be faster
-		SignalKModelImpl j = (SignalKModelImpl) SignalKModelFactory.getCleanInstance();
-	    for (Map.Entry<String, Json> e : object.entrySet())
-	    {
-	        Json v = e.getValue().dup();
-	        v.attachTo(j);
-	        if(v.isObject())((ObjectJson)v).setParentKey(e.getKey()) ;
-	        j.object.put(e.getKey(), v);
-	        j.addToNodeMap(v);
-	    }
-	    
-	    return j;
-	}
-	
-	public boolean equals(Object x)
-	{			
-		return x instanceof SignalKModelImpl && ((SignalKModelImpl)x).object.equals(object); 
-	}
+    /*
+    public static void main(String[] args) throws Exception {
+        Appendable out = System.out;
 
-	public ConcurrentHashMap<String, Json> getNodeMap() {
-		return nodeMap;
-	}
+        Model model = new Model(5, '.');
+        model.lock();
+        model.put("navigation.heading.magnetic", 29.1);
+        model.unlock();
+        model.lock();
+        model.put("navigation.heading.magnetic2", "b");
+        model.unlock();
+        Set x = model.getTree("navigation.heading");
+        System.out.println(x);
+        model.lock();
+        model.put("navigation.depth", "c");
+        model.unlock();
+        model.lock();
+        model.put("navigation.wind.angle", "c");
+        model.put("navigation.wind.direction", "c");
+        model.unlock();
+        model.lock();
+        model.put("navigation.heading.true", null);
+        model.unlock();
+        model.lock();
+        model.put("navigation.heading.magnetic", null);
+        model.unlock();
+        System.out.println(x);
+        model.lock();
+        model.put("navigation", null);
+        model.unlock();
+    }
+    */
+
+
 }
+
