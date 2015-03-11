@@ -129,6 +129,7 @@ public class JsonGetHandler {
 		List<String> rslt = getMatchingPaths(signalkModel, regexKey);
 		// add to tree
 		for (String p : rslt) {
+			//TODO: this may be calling recursive paths, need to do each path only once
 			Util.populateTree(signalkModel, tree, p);
 		}
 

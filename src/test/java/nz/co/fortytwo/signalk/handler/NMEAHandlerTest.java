@@ -91,8 +91,8 @@ public class NMEAHandlerTest {
 		
 		 SignalKModel model = processor.handle(nmea1);
 		 logger.debug("Returned signalk tree:"+model);
-		 assertEquals(51.9485185d,(double)model.getValue(vessels_dot_self_dot +nav_position_latitude),0.00001);
-		 logger.debug("Lat :"+model.getValue(vessels_dot_self_dot +nav_position_latitude));
+		 assertEquals(51.9485185d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.00001);
+		 logger.debug("Lat :"+model.get(vessels_dot_self_dot +nav_position_latitude));
 	}
 	@Test
 	@Ignore

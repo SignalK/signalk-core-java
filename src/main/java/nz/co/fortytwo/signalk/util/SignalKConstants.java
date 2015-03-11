@@ -63,8 +63,11 @@ public class SignalKConstants {
 	public static final String resources_waypoints_id_position_latitude = "resources.waypoints.*.position.latitude";
 	public static final String resources_waypoints_id_position_longitude = "resources.waypoints.*.position.longitude";
 	public static final String resources_waypoints_id_type = "resources.waypoints.*.type";
-	public static final String self = "self";
+	public static final String self =  Util.getConfigProperty(Constants.SELF);
 	public static final String version = "version";
+	public static final String timestamp = "timestamp";
+	public static final String source = "source";
+	public static final String value = "value";
 	public static final String vessels = "vessels";
 	public static final String vessels_id = "vessels.*";
 	public static final String alarms = "alarms";
@@ -193,6 +196,7 @@ public class SignalKConstants {
 	public static final String nav_position_altitude = "navigation.position.altitude";
 	public static final String nav_position_latitude = "navigation.position.latitude";
 	public static final String nav_position_longitude = "navigation.position.longitude";
+	public static final String nav_position_source = "navigation.position.source";
 	public static final String nav_rateOfTurn = "navigation.rateOfTurn";
 	public static final String nav_roll = "navigation.roll";
 	public static final String nav_speedOverGround = "navigation.speedOverGround";

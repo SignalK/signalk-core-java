@@ -24,8 +24,8 @@
 
 package nz.co.fortytwo.signalk.handler;
 
-import static org.junit.Assert.*;
-import mjson.Json;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 

@@ -54,9 +54,9 @@ public class TrueWindHandler {
 	public  void handle(SignalKModel signalkModel) {
 		try {
 
-			Double vesselSpeed =  (Double) signalkModel.get(vessels_dot_self_dot+ nav_speedOverGround);
-			Double apparentDirection = (Double) signalkModel.get(vessels_dot_self_dot+env_wind_angleApparent);
-			Double apparentWindSpeed =(Double) signalkModel.get(vessels_dot_self_dot+env_wind_speedApparent);
+			Double vesselSpeed =  (Double) signalkModel.getValue(vessels_dot_self_dot+ nav_speedOverGround);
+			Double apparentDirection = (Double) signalkModel.getValue(vessels_dot_self_dot+env_wind_angleApparent);
+			Double apparentWindSpeed =(Double) signalkModel.getValue(vessels_dot_self_dot+env_wind_speedApparent);
 			if (apparentWindSpeed !=null && apparentDirection!=null && vesselSpeed!=null) {
 				// now calc and add to body
 				// 0-360 from bow clockwise

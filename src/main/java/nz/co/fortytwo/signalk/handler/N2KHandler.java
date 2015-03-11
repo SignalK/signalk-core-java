@@ -111,7 +111,7 @@ public class N2KHandler {
 	 * @param n2kmsg
 	 * @return
 	 */
-	public Json handle(String n2kmsg) {
+	public SignalKModel handle(String n2kmsg) {
 		// get the pgn value
 		DocumentContext n2k = JsonPath.parse(n2kmsg);
 		String pgn = n2k.read(pgnPath);
@@ -131,7 +131,7 @@ public class N2KHandler {
 			}
 			if (logger.isDebugEnabled())
 				logger.debug("N2KHandler output  " + temp);
-			return (Json) temp;
+			return temp;
 		}
 		return null;
 

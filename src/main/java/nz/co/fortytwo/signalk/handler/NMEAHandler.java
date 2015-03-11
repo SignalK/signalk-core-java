@@ -29,7 +29,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparen
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
@@ -245,14 +245,16 @@ public class NMEAHandler{
 						}
 						previousLat = Util.movingAverage(ALPHA, previousLat, sen.getPosition().getLatitude());
 						if(logger.isDebugEnabled())logger.debug("lat position:" + sen.getPosition().getLatitude() + ", hemi=" + sen.getPosition().getLatitudeHemisphere());
-						sk.put(selfname + nav_position_latitude , previousLat, "output");
+						sk.put(selfname + nav_position_latitude , previousLat);
 	
 						if (startLon) {
 							previousLon = sen.getPosition().getLongitude();
 							startLon = false;
 						}
 						previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
-						sk.put(selfname + nav_position_longitude , previousLon, "output");
+						sk.put(selfname + nav_position_longitude , previousLon);
+						sk.put(selfname + nav_position_source , selfname+"nmea0183"+dot+sen.getSentenceId());
+						sk.put(selfname+"nmea0183"+dot+sen.getSentenceId()+dot+"src",sen.toSentence());
 					}
 	
 					if (evt.getSentence() instanceof HeadingSentence) {
@@ -263,15 +265,14 @@ public class NMEAHandler{
 							
 							if (sen.isTrue()) {
 								try {
-									
-									sk.put(selfname + nav_courseOverGroundTrue , sen.getHeading(), "output");
+									sk.put(selfname+"nmea0183"+dot+sen.getSentenceId()+dot+"src",sen.toSentence());
+									sk.put(selfname + nav_courseOverGroundTrue , sen.getHeading(),selfname+"nmea0183"+dot+sen.getSentenceId());
 									
 								} catch (Exception e) {
 									logger.error(e.getMessage());
 								}
 							} else {
-								
-								sk.put(selfname + nav_courseOverGroundMagnetic , sen.getHeading(), "output");
+								sk.put(selfname + nav_courseOverGroundMagnetic , sen.getHeading(),selfname+"nmea0183"+dot+sen.getSentenceId());
 							}
 						}
 					}
@@ -280,21 +281,22 @@ public class NMEAHandler{
 						RMCSentence sen = (RMCSentence) evt.getSentence();
 						Util.checkTime(sen);
 						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeed()));
-						sk.put(selfname + nav_speedOverGround , Util.kntToMs(sen.getSpeed()), "output");
+						sk.put(selfname + nav_speedOverGround , Util.kntToMs(sen.getSpeed()), selfname+"nmea0183"+dot+sen.getSentenceId());
+						sk.put(selfname+"nmea0183"+dot+sen.getSentenceId()+dot+"src",sen.toSentence());
 					}
 					if (evt.getSentence() instanceof VHWSentence) {
 						VHWSentence sen = (VHWSentence) evt.getSentence();
 						//VHW sentence types have both, but true can be empty
 						try {
-							sk.put(selfname + nav_courseOverGroundMagnetic , sen.getMagneticHeading(), "output");
-							sk.put(selfname + nav_courseOverGroundTrue , sen.getHeading(), "output");
+							sk.put(selfname + nav_courseOverGroundMagnetic , sen.getMagneticHeading(), selfname+"nmea0183"+dot+sen.getSentenceId());
+							sk.put(selfname + nav_courseOverGroundTrue , sen.getHeading(), selfname+"nmea0183"+dot+sen.getSentenceId());
 							
 						} catch (DataNotAvailableException e) {
 							logger.error(e.getMessage());
 						}
 						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeedKnots()));
-						sk.put(selfname + nav_speedOverGround , previousSpeed, "output");
-						
+						sk.put(selfname + nav_speedOverGround , previousSpeed, selfname+"nmea0183"+dot+sen.getSentenceId());
+						sk.put(selfname+"nmea0183"+dot+sen.getSentenceId()+dot+"src",sen.toSentence());
 					}
 	
 					// MWV wind
@@ -305,9 +307,9 @@ public class NMEAHandler{
 						//TODO: check relative to bow or compass + sen.getSpeedUnit()
 						// relative to bow
 						double angle = sen.getAngle();
-						sk.put(selfname + env_wind_angleApparent , angle, "output");
-						sk.put(selfname + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), "output");
-						
+						sk.put(selfname + env_wind_angleApparent , angle, selfname+"nmea0183"+dot+sen.getSentenceId());
+						sk.put(selfname + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), selfname+"nmea0183"+dot+sen.getSentenceId());
+						sk.put(selfname+"nmea0183"+dot+sen.getSentenceId()+dot+"src",sen.toSentence());
 					}
 					// Cruzpro BVE sentence
 					// TODO: how to deal with multiple engines??
@@ -347,8 +349,8 @@ public class NMEAHandler{
 					if (evt.getSentence() instanceof DepthSentence) {
 						DepthSentence sen = (DepthSentence) evt.getSentence();
 						// in meters
-						sk.put(selfname + env_depth_belowTransducer , sen.getDepth(), "output");
-						
+						sk.put(selfname + env_depth_belowTransducer , sen.getDepth(), selfname+"nmea0183"+dot+sen.getSentenceId());
+						sk.put(selfname+"nmea0183"+dot+sen.getSentenceId()+dot+"src",sen.toSentence());
 					}
 				}catch (DataNotAvailableException e){
 					logger.error(e.getMessage()+":"+evt.getSentence().toSentence());

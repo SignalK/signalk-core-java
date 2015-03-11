@@ -138,8 +138,9 @@ public class AISHandler {
 						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()));
 						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), "AIS");
 						if (vInfo.getPosition() != null) {
-							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude(), "AIS");
-							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude(), "AIS");
+							model.put(aisVessel+ nav_position_source, "AIS");
+							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
+							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
 						}
 						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS");
 						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS");

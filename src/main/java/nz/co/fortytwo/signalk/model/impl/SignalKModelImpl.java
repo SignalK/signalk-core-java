@@ -80,7 +80,7 @@ public class SignalKModelImpl implements SignalKModel {
     private final char separator;
     private final NavigableMap<String,Object> root;
     private final int numrevisions;
-    private final NavigableSet[] mark;
+    private final NavigableSet<String>[] mark;
     private final DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private boolean alive;

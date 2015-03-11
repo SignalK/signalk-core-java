@@ -301,8 +301,10 @@ public class Util {
 	public static void populateTree(SignalKModel signalkModel, SignalKModel temp, String p) {
 		NavigableSet<String> node = signalkModel.getTree(p);
 		if(logger.isDebugEnabled())logger.debug("Found node:" + p + " = " + node);
-		if (node != null) {
+		if (node != null && node.size()>0) {
 			addNodeToTemp(temp, node);
+		}else{
+			temp.put(p, signalkModel.get(p));
 		}
 		
 	}
