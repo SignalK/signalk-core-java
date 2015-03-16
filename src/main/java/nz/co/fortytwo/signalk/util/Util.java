@@ -29,10 +29,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Properties;
 import java.util.Set;
@@ -44,8 +49,10 @@ import net.sf.marineapi.nmea.sentence.RMCSentence;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -290,10 +297,7 @@ public class Util {
 		newPath = newPath.replace('/', '.');
 		if (newPath.startsWith(JsonConstants.DOT))
 			newPath = newPath.substring(1);
-		if (VESSELS_DOT_self.equals(newPath)){
-			newPath = VESSELS_DOT_SELF;
-		}
-		newPath = newPath.replace(VESSELS_DOT_self_DOT, VESSELS_DOT_SELF_DOT);
+		
 		return newPath;
 	}
 	
@@ -307,6 +311,21 @@ public class Util {
 			temp.put(p, signalkModel.get(p));
 		}
 		
+	}
+	
+	public static SignalKModel populateModel(SignalKModel model, String mapDump) throws IOException{
+		Properties props = new Properties();
+		props.load(new StringReader(mapDump.substring(1, mapDump.length() - 1).replace(", ", "\n")));       
+		for (Map.Entry<Object, Object> e : props.entrySet()) {
+			if(e.getValue().equals("true")|| e.getValue().equals("false")){
+				model.put((String)e.getKey(), Boolean.getBoolean((String) e.getValue()));
+			}else if(NumberUtils.isNumber((String)e.getValue())){
+				model.put((String)e.getKey(),NumberUtils.createDouble((String)e.getValue()));
+			}else{
+				model.put((String)e.getKey(), e.getValue());
+			}
+		}
+		return model;
 	}
 
 	/**
@@ -331,5 +350,9 @@ public class Util {
 		for(String key:node){
 			temp.put(key, model.get(key));
 		}
+	}
+
+	public static SignalKModel populateModel(SignalKModel signalk, File file)throws IOException {
+		 return populateModel(signalk, FileUtils.readFileToString(file));
 	}
 }

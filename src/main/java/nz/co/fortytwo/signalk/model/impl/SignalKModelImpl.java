@@ -289,7 +289,7 @@ public class SignalKModelImpl implements SignalKModel {
         try {
             lock.readLock().lock();
             //return Collections.unmodifiableNavigableSet(getKeys().subSet(key+".", true, key+".\uFFFD", true));
-            return getKeys().subSet(key+".", true, key+".\uFFFD", true);
+            return getKeys().subSet(key, true, key+".\uFFFD", true);
         } finally {
             lock.readLock().unlock();
         }
@@ -303,7 +303,7 @@ public class SignalKModelImpl implements SignalKModel {
         try {
             lock.readLock().lock();
             //return Collections.unmodifiableNavigableSet(getKeys().subSet(key+".", true, key+".\uFFFD", true));
-            return root.subMap(key+".", true, key+".\uFFFD", true);
+            return root.subMap(key, true, key+".\uFFFD", true);
             
         } finally {
             lock.readLock().unlock();

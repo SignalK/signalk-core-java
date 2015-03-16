@@ -28,6 +28,7 @@ import static nz.co.fortytwo.signalk.util.JsonConstants.DOT;
 import static nz.co.fortytwo.signalk.util.JsonConstants.LIST;
 import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -60,8 +61,8 @@ public class JsonListHandler {
 		//get a chache all the signalk keys we know about
 		for(Field f: SignalKConstants.class.getFields()){
 			try {
-				keys.add(VESSELS+DOT+"*"+DOT+f.get(null).toString());
-				if(logger.isDebugEnabled())logger.debug("Added "+VESSELS+DOT+"*"+DOT+f.get(null).toString());
+				keys.add(f.get(null).toString());
+				if(logger.isDebugEnabled())logger.debug("Added "+f.get(null).toString());
 			} catch (IllegalArgumentException e) {
 				logger.warn(e.getMessage());
 			} catch (IllegalAccessException e) {
@@ -111,13 +112,13 @@ public class JsonListHandler {
 	 */
 	private void parseList( String context, Json path, Json pathList) throws Exception {
 		//get values
-		String regexKey = context+DOT+path.at(PATH).asString();
+		String regexKey = path.at(PATH).asString();
 		if(logger.isDebugEnabled())logger.debug("Parsing list  "+regexKey );
 		
 		List<String> rslt = getMatchingPaths(regexKey);
 		//add to pathList
 		for(String p: rslt){
-			pathList.add(p);
+			pathList.add(context+dot+p);
 		}
 		
 	}
@@ -128,6 +129,7 @@ public class JsonListHandler {
 	 * The list is filtered by the key if it is not null or empty in which case a full list is returned,
 	 * supports * and ? wildcards.
 	 * @param regex
+	 * @param regexKey 
 	 * @return
 	 */
 	public List<String> getMatchingPaths(String regex) {
@@ -135,14 +137,7 @@ public class JsonListHandler {
 			return ImmutableList.copyOf(keys);
 		}
 		regex=Util.sanitizePath(regex);
-		//deal with vessels.motu, vessels.self
-		int p1 = VESSELS.length()+1;
-		int p2 = regex.indexOf(".",p1);
-		if(p2>0){
-			regex = VESSELS+DOT+"*"+regex.substring(p2);
-		}else{
-			regex = VESSELS+DOT+"*";
-		}
+		
 		if(logger.isDebugEnabled())logger.debug("Regexing " + regex);
 		Pattern pattern = Util.regexPath(regex);
 		List<String> paths = new ArrayList<String>();

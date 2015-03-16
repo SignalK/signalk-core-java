@@ -34,14 +34,17 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
  */
 public class SignalKModelFactory {
 	private static SignalKModel signalKModel;
+	static{
+			signalKModel=new SignalKModelImpl();
+	}
 	/**
 	 * Get the signalKModel singleton
 	 * @return
 	 */
 	public static synchronized SignalKModel getInstance(){
-		if(signalKModel==null){
-			signalKModel=new SignalKModelImpl();
-		}
+		//if(signalKModel==null){
+		//	signalKModel=new SignalKModelImpl();
+		//}
 		return signalKModel;
 	}
 	/**
