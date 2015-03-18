@@ -72,6 +72,8 @@ public class SignalKConstants {
 	public static final String vessels_id = "vessels.*";
 	public static final String alarms = "alarms";
 	public static final String dot = ".";
+	public static final String meta = "meta";
+	public static final String attr = "_attr";
 	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
 	public static final String alarms_anchorAlarmMethod = "alarms.anchorAlarmMethod";
 	public static final String alarms_anchorAlarmState = "alarms.anchorAlarmState";

@@ -22,13 +22,13 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.JsonConstants.*;
 import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
 import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
 import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.util.HashMap;
 
@@ -164,7 +164,6 @@ public class FullToDeltaConverter {
 					entry.set(VALUES, values);
 					entry.set(SOURCE, jsSrc.getValue());
 				}
-				
 			}
 			
 			if (js.isArray()){
@@ -173,27 +172,46 @@ public class FullToDeltaConverter {
 				Json value = Json.object();
 				value.set(PATH, path);
 				value.set(VALUE, js);
-
+				values.add(value);
+				continue;
+			}
+			if (js.isObject() && js.has(VALUE)){
+				logger.debug("Process value : "+js);
+				String path = js.getPath().substring(prefix);
+				Json value = Json.object();
+				value.set(PATH, path);
+				value.set(VALUE, js.at(VALUE));
+				if (js.has(meta)){
+					logger.debug("Process meta : "+js);
+					value.set(meta, js.at(meta));
+					values.add(value);
+				}
 				values.add(value);
 				continue;
 			}
 			
-			if ( js.isPrimitive() || js.has(VALUE)) {
-				if(js.getParentKey().equals(SOURCE))continue;
-				logger.debug("Process value: "+js);
+			if (js.isObject() && js.has(SOURCE) && !js.has(VALUE)) {
+				logger.debug("Process value object : "+js);
 				String path = js.getPath().substring(prefix);
-
 				Json value = Json.object();
 				value.set(PATH, path);
-				if(js.isPrimitive()){
-					value.set(VALUE, js.getValue());
-				}else{
-					value.set(VALUE, js.at(VALUE).getValue());
+				js.delAt(SOURCE);
+				js.delAt(TIMESTAMP);
+				js.delAt(attr);
+				//js.delAt(meta);
+				value.set(VALUE, js);
+				if (js.has(meta)){
+					logger.debug("Process meta : "+js);
+					value.set(meta, js.at(meta));
+					values.add(value);
 				}
 				values.add(value);
-				//continue;
-			} 
+				continue;
+			}
+			
 			if (js.isObject()) {
+				if(js.getParentKey().equals(SOURCE))continue;
+				if(js.getParentKey().equals(VALUE))continue;
 				logger.debug("Recurse : "+js);
 				getEntries(updates, values, jsSrcRef, js, prefix);
 			}

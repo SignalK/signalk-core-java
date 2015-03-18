@@ -24,27 +24,26 @@
 package nz.co.fortytwo.signalk.model.impl;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_altitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
 import java.util.SortedMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -75,6 +74,18 @@ public class SignalKModelImplTest {
 		NavigableMap<String, Object> branch = signalk.getSubMap(vessels_dot_self_dot+env_wind);
 		logger.debug(branch);
 		assertEquals(wind, branch.toString());
+	}
+	@Test
+	public void shouldFailAltitudeValue() throws IOException{
+		SignalKModel signalk = new SignalKModelImpl();
+		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		logger.debug(signalk);
+		try{
+		signalk.put(vessels_dot_self_dot+nav_position_altitude+dot+"value", 90);
+		}catch(IllegalArgumentException e){
+			return;
+		}
+		fail();
 	}
 	@Test
 	public void shouldReturnLeaf() throws IOException {

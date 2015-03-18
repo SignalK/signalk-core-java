@@ -32,8 +32,8 @@ import static nz.co.fortytwo.signalk.util.JsonConstants.SRC;
 import static nz.co.fortytwo.signalk.util.JsonConstants.TIMESTAMP;
 import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+import static nz.co.fortytwo.signalk.util.JsonConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
@@ -107,16 +107,16 @@ public class DeltaToMapConverter {
 			SignalKModel temp =  SignalKModelFactory.getCleanInstance();
 			
 			//go to context
-			String path = node.at(CONTEXT).asString();
+			String ctx = node.at(CONTEXT).asString();
 			//Json pathNode = temp.addNode(path);
 			Json updates = node.at(UPDATES);
 			if(updates==null)return temp;
 			if(updates.isArray()){
 				for(Json update: updates.asJsonList()){
-					parseUpdate(temp, update, path);
+					parseUpdate(temp, update, ctx);
 				}
 			}else{
-				parseUpdate(temp, updates.at(UPDATES), path);
+				parseUpdate(temp, updates.at(UPDATES), ctx);
 			}
 			
 			if(logger.isDebugEnabled())logger.debug("SignalkModelProcessor processed diff  "+temp );
@@ -126,19 +126,42 @@ public class DeltaToMapConverter {
 		
 	}
 
-	private void parseUpdate(SignalKModel temp, Json update, String path) {
-		String device = update.at(SOURCE).at(DEVICE).asString();
-		String ts = update.at(SOURCE).at(TIMESTAMP).asString();
+	private void parseUpdate(SignalKModel temp, Json update, String ctx) {
 		
-		DateTime timestamp = DateTime.parse(ts,fmt);
-		//TODO: this is n2k specific and should not be.
-		device = device + "-N2K-"+ update.at(SOURCE).at(SRC).asString();
-		device = device + "-"+update.at(SOURCE).at(PGN).asString();
+		
+		//DateTime timestamp = DateTime.parse(ts,fmt);
+		
+		
 	//grab values and add
 		Json array = update.at(VALUES);
 		for(Json e : array.asJsonList()){
 			String key = e.at(PATH).asString();
-			temp.put(path+"."+key, e.at(VALUE).getValue(),device,timestamp.withZone(DateTimeZone.UTC).toDateTimeISO().toString());
+			//temp.put(ctx+"."+key, e.at(VALUE).getValue());
+			addRecursively(temp, ctx+dot+key, e.at(VALUE));
+			
+			if(update.has(SOURCE)){
+				//TODO:generate a proper src ref.
+				addRecursively(temp, ctx+dot+key, update.at(SOURCE));
+			}
+			
+			if(update.has(TIMESTAMP)){
+				String ts = update.at(SOURCE).at(TIMESTAMP).asString();
+				//TODO: should validate the timestamp
+				temp.put(ctx+dot+key+dot+timestamp, ts);
+			}
+		}
+		
+	}
+
+	private void addRecursively(SignalKModel temp, String ctx, Json j) {
+		if(j==null||j.isNull())return;
+		logger.debug("Object is: "+j );
+		if(j.isPrimitive()){
+			temp.put(ctx+dot+j.getParentKey(), j.getValue());
+		}else{
+			for(Json child: j.asJsonMap().values()){
+			 addRecursively(temp, ctx+dot+j.getParentKey(), child);
+			}
 		}
 		
 	}

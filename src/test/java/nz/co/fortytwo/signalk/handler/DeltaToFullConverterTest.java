@@ -25,7 +25,7 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
 import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.TIMESTAMP;
+import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
@@ -66,12 +66,12 @@ public class DeltaToFullConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(172.9, (double)output.getValue(vessels_dot_self_dot+nav_courseOverGroundTrue),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".device"));
 		
 		assertEquals(3.85, (double)output.get(vessels_dot_self_dot+nav_speedOverGround+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".device"));
 	}
 	@Test
 	public void shouldProcessDiff3() {
@@ -80,17 +80,17 @@ public class DeltaToFullConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(172.9,(double) output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".device"));
 		
 		assertEquals(3.85, (double)output.get(vessels_dot_self_dot+nav_speedOverGround+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".device"));
 	}
 
 	@Test
 	public void shouldIgnoreSignalKJson() {
-		Json diff = Json.read("{\"vessels\":{\""+SELF+"\":{\"navigation\":{\"courseOverGroundTrue\": {\"value\":11.9600000381},\"courseOverGroundMagnetic\": {\"value\":93.0000000000},\"headingMagnetic\": {\"value\":0.0000000000},\"magneticVariation\": {\"value\":0.0000000000},\"headingTrue\": {\"value\":0.0000000000},\"pitch\": {\"value\":0.0000000000},\"rateOfTurn\": {\"value\":0.0000000000},\"roll\": {\"value\":0.0000000000},\"speedOverGround\": {\"value\":0.0399999980},\"speedThroughWater\": {\"value\":0.0000000000},\"state\": {\"value\":\"Not defined (example)\"},\"anchor\":{\"alarmRadius\": {\"value\":0.0000000000},\"maxRadius\": {\"value\":0.0000000000},\"position\":{\"latitude\": {\"value\":-41.2936935424},\"longitude\": {\"value\":173.2470855712},\"altitude\": {\"value\":0.0000000000}}},\"position\":{\"latitude\": {\"value\":-41.2936935424},\"longitude\": {\"value\":173.2470855712},\"altitude\": {\"value\":0.0000000000}}},\"alarm\":{\"anchorAlarmMethod\": {\"value\":\"sound\"},\"anchorAlarmState\": {\"value\":\"disabled\"},\"autopilotAlarmMethod\": {\"value\":\"sound\"},\"autopilotAlarmState\": {\"value\":\"disabled\"},\"engineAlarmMethod\": {\"value\":\"sound\"},\"engineAlarmState\": {\"value\":\"disabled\"},\"fireAlarmMethod\": {\"value\":\"sound\"},\"fireAlarmState\": {\"value\":\"disabled\"},\"gasAlarmMethod\": {\"value\":\"sound\"},\"gasAlarmState\": {\"value\":\"disabled\"},\"gpsAlarmMethod\": {\"value\":\"sound\"},\"gpsAlarmState\": {\"value\":\"disabled\"},\"maydayAlarmMethod\": {\"value\":\"sound\"},\"maydayAlarmState\": {\"value\":\"disabled\"},\"panpanAlarmMethod\": {\"value\":\"sound\"},\"panpanAlarmState\": {\"value\":\"disabled\"},\"powerAlarmMethod\": {\"value\":\"sound\"},\"powerAlarmState\": {\"value\":\"disabled\"},\"silentInterval\": {\"value\":300},\"windAlarmMethod\": {\"value\":\"sound\"},\"windAlarmState\": {\"value\":\"disabled\"},\"genericAlarmMethod\": {\"value\":\"sound\"},\"genericAlarmState\": {\"value\":\"disabled\"},\"radarAlarmMethod\": {\"value\":\"sound\"},\"radarAlarmState\": {\"value\":\"disabled\"},\"mobAlarmMethod\": {\"value\":\"sound\"},\"mobAlarmState\": {\"value\":\"disabled\"}},\"steering\":{\"rudderAngle\": {\"value\":0.0000000000},\"rudderAngleTarget\": {\"value\":0.0000000000},\"autopilot\":{\"state\": {\"value\":\"off\"},\"mode\": {\"value\":\"powersave\"},\"targetHeadingNorth\": {\"value\":0.0000000000},\"targetHeadingMagnetic\": {\"value\":0.0000000000},\"alarmHeadingXte\": {\"value\":0.0000000000},\"headingSource\": {\"value\":\"compass\"},\"deadZone\": {\"value\":0.0000000000},\"backlash\": {\"value\":0.0000000000},\"gain\": {\"value\":0},\"maxDriveAmps\": {\"value\":0.0000000000},\"maxDriveRate\": {\"value\":0.0000000000},\"portLock\": {\"value\":0.0000000000},\"starboardLock\": {\"value\":0.0000000000}}},\"environment\":{\"airPressureChangeRateAlarm\": {\"value\":0.0000000000},\"airPressure\": {\"value\":1024.0000000000},\"waterTemp\": {\"value\":0.0000000000},\"wind\":{\"speedAlarm\": {\"value\":0.0000000000},\"directionChangeAlarm\": {\"value\":0.0000000000},\"angleApparent\": {\"value\":0.0000000000},\"directionTrue\": {\"value\":256.3},\"speedApparent\": {\"value\":0.0000000000},\"speedTrue\": {\"value\":7.68}}}}}}");
+		Json diff = Json.read("{\"vessels\":{\""+SELF+"\":{\"navigation\":{\"courseOverGroundTrue\": {\"value\":11.9600000381},\"courseOverGroundMagnetic\": {\"value\":93.0000000000},\"headingMagnetic\": {\"value\":0.0000000000},\"magneticVariation\": {\"value\":0.0000000000},\"headingTrue\": {\"value\":0.0000000000},\"pitch\": {\"value\":0.0000000000},\"rateOfTurn\": {\"value\":0.0000000000},\"roll\": {\"value\":0.0000000000},\"speedOverGround\": {\"value\":0.0399999980},\"speedThroughWater\": {\"value\":0.0000000000},\"state\": {\"value\":\"Not defined (example)\"},\"anchor\":{\"alarmRadius\": {\"value\":0.0000000000},\"maxRadius\": {\"value\":0.0000000000},\"position\":{\"latitude\": {\"value\":-41.2936935424},\"longitude\": {\"value\":173.2470855712},\"altitude\": {\"value\":0.0000000000}}},\"position\":{\"latitude\": {\"value\":-41.2936935424},\"longitude\": {\"value\":173.2470855712},\"altitude\": {\"value\":0.0000000000}}},\"alarm\":{\"anchorAlarmMethod\": {\"value\":\"sound\"},\"anchorAlarmState\": {\"value\":\"disabled\"},\"autopilotAlarmMethod\": {\"value\":\"sound\"},\"autopilotAlarmState\": {\"value\":\"disabled\"},\"engineAlarmMethod\": {\"value\":\"sound\"},\"engineAlarmState\": {\"value\":\"disabled\"},\"fireAlarmMethod\": {\"value\":\"sound\"},\"fireAlarmState\": {\"value\":\"disabled\"},\"gasAlarmMethod\": {\"value\":\"sound\"},\"gasAlarmState\": {\"value\":\"disabled\"},\"gpsAlarmMethod\": {\"value\":\"sound\"},\"gpsAlarmState\": {\"value\":\"disabled\"},\"maydayAlarmMethod\": {\"value\":\"sound\"},\"maydayAlarmState\": {\"value\":\"disabled\"},\"panpanAlarmMethod\": {\"value\":\"sound\"},\"panpanAlarmState\": {\"value\":\"disabled\"},\"powerAlarmMethod\": {\"value\":\"sound\"},\"powerAlarmState\": {\"value\":\"disabled\"},\"silentInterval\": {\"value\":300},\"windAlarmMethod\": {\"value\":\"sound\"},\"windAlarmState\": {\"value\":\"disabled\"},\"genericAlarmMethod\": {\"value\":\"sound\"},\"genericAlarmState\": {\"value\":\"disabled\"},\"radarAlarmMethod\": {\"value\":\"sound\"},\"radarAlarmState\": {\"value\":\"disabled\"},\"mobAlarmMethod\": {\"value\":\"sound\"},\"mobAlarmState\": {\"value\":\"disabled\"}},\"steering\":{\"rudderAngle\": {\"value\":0.0000000000},\"rudderAngleTarget\": {\"value\":0.0000000000},\"autopilot\":{\"state\": {\"value\":\"off\"},\"mode\": {\"value\":\"powersave\"},\"targetHeadingNorth\": {\"value\":0.0000000000},\"targetHeadingMagnetic\": {\"value\":0.0000000000},\"alarmHeadingXte\": {\"value\":0.0000000000},\"headingSource\": {\"value\":\"compass\"},\"dead+00:00one\": {\"value\":0.0000000000},\"backlash\": {\"value\":0.0000000000},\"gain\": {\"value\":0},\"maxDriveAmps\": {\"value\":0.0000000000},\"maxDriveRate\": {\"value\":0.0000000000},\"portLock\": {\"value\":0.0000000000},\"starboardLock\": {\"value\":0.0000000000}}},\"environment\":{\"airPressureChangeRateAlarm\": {\"value\":0.0000000000},\"airPressure\": {\"value\":1024.0000000000},\"waterTemp\": {\"value\":0.0000000000},\"wind\":{\"speedAlarm\": {\"value\":0.0000000000},\"directionChangeAlarm\": {\"value\":0.0000000000},\"angleApparent\": {\"value\":0.0000000000},\"directionTrue\": {\"value\":256.3},\"speedApparent\": {\"value\":0.0000000000},\"speedTrue\": {\"value\":7.68}}}}}}");
 		DeltaToMapConverter processor = new DeltaToMapConverter();
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
@@ -98,7 +98,7 @@ public class DeltaToFullConverterTest {
 	}
 	@Test
 	public void shouldIgnoreRandomJson() {
-		Json diff = Json.read("{\"headingTrue\": {\"value\": 23,\"source\": \""+SELF+"\",\"timestamp\": \"2014-03-24T00: 15: 41Z\" }}");
+		Json diff = Json.read("{\"headingTrue\": {\"value\": 23,\"source\": \""+SELF+"\",\"timestamp\": \"2014-03-24T00: 15: 41+00:00\" }}");
 		DeltaToMapConverter processor = new DeltaToMapConverter();
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
@@ -111,12 +111,12 @@ public class DeltaToFullConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(172.9,(double) output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".device"));
 		
 		assertEquals(3.85,(double) output.get(vessels_dot_self_dot+nav_speedOverGround+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".device"));
 	}
 	
 	@Test
@@ -126,19 +126,19 @@ public class DeltaToFullConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(172.9,(double) output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_courseOverGroundTrue+"."+SOURCE+".device"));
 		
 		assertEquals(3.85, (double)output.get(vessels_dot_self_dot+nav_speedOverGround+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+TIMESTAMP));
-		assertEquals("/dev/actisense-N2K-115-128267", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot+nav_speedOverGround+"."+SOURCE+".device"));
 		
 		assertEquals(152.9, (double)output.get(vessels_dot_self_dot+nav_courseOverGroundMagnetic+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_courseOverGroundMagnetic+"."+TIMESTAMP));
-		assertEquals("/dev/ttyUSB0-N2K-115-128267", output.get(vessels_dot_self_dot+nav_courseOverGroundMagnetic+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_courseOverGroundMagnetic+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/ttyUSB0", output.get(vessels_dot_self_dot+nav_courseOverGroundMagnetic+"."+SOURCE+".device"));
 		
 		assertEquals(2.85, (double)output.get(vessels_dot_self_dot+nav_speedThroughWater+"."+VALUE),001);
-		assertEquals("2014-08-15T16:00:00.081Z", output.get(vessels_dot_self_dot+nav_speedThroughWater+"."+TIMESTAMP));
-		assertEquals("/dev/ttyUSB0-N2K-115-128267", output.get(vessels_dot_self_dot+nav_speedThroughWater+"."+SOURCE));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot+nav_speedThroughWater+"."+SOURCE+".timestamp"));
+		assertEquals("/dev/ttyUSB0", output.get(vessels_dot_self_dot+nav_speedThroughWater+"."+SOURCE+".device"));
 	}
 }

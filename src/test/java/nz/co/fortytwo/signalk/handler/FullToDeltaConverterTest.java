@@ -50,9 +50,10 @@ public class FullToDeltaConverterTest {
 
 	@Test
 	public void shouldCreateDelta() {
-		
 		Json data = Json
-				.read("{\"vessels\":{\"SELF\":{\"environment\":{\"temperature\":{\"air\":{\"value\":26.7,\"source\":\"n2k1-12-0\",\"n2k1-12-0\":{\"value\":26.7,\"source\":{\"label\":\"OutsideAmbientMasthead\",\"bus\":\"/dev/ttyUSB1\",\"timestamp\":\"2014-08-15-16:00:00.081\"}}},\"water\":{\"value\":18.2,\"source\":\"n2k1-12-1\",\"n2k1-12-1\":{\"value\":18.2,\"source\":{\"label\":\"WaterTemperature\",\"bus\":\"/dev/ttyUSB1\",\"timestamp\":\"2014-08-15-16:00:00.081\"}}},\"n2k2-201-0\":{\"value\":66.7,\"source\":{\"label\":\"Another freezer\",\"bus\":\"/dev/ttyUSB2\",\"timestamp\":\"2014-08-15-16:00:00.081\"}},\"aftMainFreezer\":{\"value\":18.2,\"source\":\"n2k2-201-0\",\"n2k2-201-0\":{\"value\":66.7,\"source\":{\"label\":\"Aftmainfreezer\",\"bus\":\"/dev/ttyUSB2\",\"timestamp\":\"2014-08-15-16:00:00.081\"}}}}}}}}");
+				.read("{\"vessels\":{\"motu\":{\"navigation\":{\"courseOverGroundTrue\":{\"timestamp\":\"2015-03-18T04:53:26.367Z\",\"source\":{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\"},\"value\":172.9},\"speedOverGround\":{\"timestamp\":\"2015-03-18T04:53:26.462Z\",\"source\":{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\"},\"value\":3.85}}}}}");
+		//Json data = Json
+		//		.read("{\"vessels\":{\"SELF\":{\"environment\":{\"temperature\":{\"air\":{\"value\":26.7,\"source\":\"n2k1-12-0\",\"n2k1-12-0\":{\"value\":26.7,\"source\":{\"label\":\"OutsideAmbientMasthead\",\"bus\":\"/dev/ttyUSB1\",\"timestamp\":\"2014-08-15-16:00:00.081\"}}},\"water\":{\"value\":18.2,\"source\":\"n2k1-12-1\",\"n2k1-12-1\":{\"value\":18.2,\"source\":{\"label\":\"WaterTemperature\",\"bus\":\"/dev/ttyUSB1\",\"timestamp\":\"2014-08-15-16:00:00.081\"}}},\"n2k2-201-0\":{\"value\":66.7,\"source\":{\"label\":\"Another freezer\",\"bus\":\"/dev/ttyUSB2\",\"timestamp\":\"2014-08-15-16:00:00.081\"}},\"aftMainFreezer\":{\"value\":18.2,\"source\":\"n2k2-201-0\",\"n2k2-201-0\":{\"value\":66.7,\"source\":{\"label\":\"Aftmainfreezer\",\"bus\":\"/dev/ttyUSB2\",\"timestamp\":\"2014-08-15-16:00:00.081\"}}}}}}}}");
 		
 		FullToDeltaConverter processor = new FullToDeltaConverter();
 		Json out = processor.handle(data);
@@ -112,6 +113,7 @@ public class FullToDeltaConverterTest {
 		assertTrue(context.toString().indexOf("sources.gps_0183_RMC_1")>0);
 		
 	}
+	
 	
 	
 }

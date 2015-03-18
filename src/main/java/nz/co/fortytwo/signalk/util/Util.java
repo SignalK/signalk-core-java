@@ -328,6 +328,10 @@ public class Util {
 		return model;
 	}
 
+	public static SignalKModel populateModel(SignalKModel signalk, File file)throws IOException {
+		 return populateModel(signalk, FileUtils.readFileToString(file));
+	}
+	
 	/**
 	 * Recursive findNode()
 	 * @param node
@@ -352,7 +356,5 @@ public class Util {
 		}
 	}
 
-	public static SignalKModel populateModel(SignalKModel signalk, File file)throws IOException {
-		 return populateModel(signalk, FileUtils.readFileToString(file));
-	}
+
 }

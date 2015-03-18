@@ -22,11 +22,12 @@
  *
  */
 package nz.co.fortytwo.signalk.model.impl;
-
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -200,7 +201,9 @@ public class SignalKModelImpl implements SignalKModel {
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
         }
         if (!value.equals(root.put(key, value))) {
-        	eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
+        	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
+        		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
+        	}
             //mark(key);
             return true;
         } else {
@@ -448,8 +451,11 @@ public class SignalKModelImpl implements SignalKModel {
 
 	@Override
 	public boolean putAll(SortedMap<String, Object> map) {
-		root.putAll(map);
-		return true;
+		boolean success = true;
+		for(Entry<String, Object> entry: map.entrySet()){
+			success = success && put(entry.getKey(),entry.getValue());
+		}
+		return success;
 	}
 
 	@Override

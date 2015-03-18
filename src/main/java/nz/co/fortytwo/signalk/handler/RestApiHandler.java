@@ -71,7 +71,8 @@ public class RestApiHandler {
         	return null;
         }
         path=path.substring(JsonConstants.SIGNALK_API.length());
-        if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path.split("/"));
+        if(path.startsWith("/"))path=path.substring(1);
+        if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path);
         NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace("/", "."));
         
         if(keys.size()==0){
