@@ -168,6 +168,9 @@ public class FullToDeltaConverter {
 					values = Json.array();
 					entry.set(VALUES, values);
 					entry.set(SOURCE, jsSrc.getValue());
+					if(js.has(TIMESTAMP)){
+						entry.set(TIMESTAMP, js.at(TIMESTAMP));
+					}
 				}
 			}
 			
@@ -186,6 +189,7 @@ public class FullToDeltaConverter {
 				Json value = Json.object();
 				value.set(PATH, path);
 				value.set(VALUE, js.at(VALUE));
+				
 				if (js.has(meta)){
 					logger.debug("Process meta : "+js);
 					value.set(meta, js.at(meta));

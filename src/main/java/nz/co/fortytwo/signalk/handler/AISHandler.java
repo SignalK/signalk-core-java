@@ -119,6 +119,7 @@ public class AISHandler {
 					AisMessage message = packet.getAisMessage();
 					if (logger.isDebugEnabled())
 						logger.debug("AisMessage:" + message.getClass() + ":" + message.toString());
+					
 					// 1,2,3
 					if (message instanceof AisPositionMessage) {
 						vInfo = new AisVesselInfo((AisPositionMessage) message);
@@ -131,21 +132,22 @@ public class AISHandler {
 						vInfo = new AisVesselInfo((AisMessage18) message);
 					}
 					if (vInfo != null) {
-
+						String ts = Util.getIsoTimeString(packet.getBestTimestamp());
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
 
 						model.put(aisVessel+name, vInfo.getName());
-						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()));
-						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), "AIS");
+						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()), "AIS", ts);
+						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), "AIS", ts);
 						if (vInfo.getPosition() != null) {
+							model.put(aisVessel+ nav_position+dot+timestamp, ts);
 							model.put(aisVessel+ nav_position_source, "AIS");
 							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
 							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
 						}
-						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS");
-						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS");
+						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS", ts);
+						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS", ts);
 						model.put(aisVessel+ nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, "AIS");
-						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), "AIS");
+						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), "AIS", ts);
 					}
 				}
 			}

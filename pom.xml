@@ -79,96 +79,6 @@
 			<version>0.0.21</version>
 		</dependency>
 
-		<!-- Camel Apache2 licence
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-core</artifactId>
-			<version>${camel.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-websocket</artifactId>
-			<version>${camel.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-cometd</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-xstream</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-stream</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-exec</artifactId>
-			<version>${camel.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-restlet</artifactId>
-		    <version>${camel.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-jetty</artifactId>
-		    <version>${camel.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-test</artifactId>
-			<version>${camel.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-netty4</artifactId>
-		    <version>${camel.version}</version>
-		    
-		</dependency>-->
-		<!--  <dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-quartz2</artifactId>
-		    <version>${camel.version}</version>
-		</dependency> -->
-		
-		<!-- jetty Apache/Eclipse licence
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-io</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
-			<artifactId>jsp-2.1-glassfish</artifactId>
-			<version>2.1.v20100127</version>
-		</dependency>-->
 	  	<!-- ais -->
 	  	
 	  	<!-- ais  Apache licence-->
@@ -273,6 +183,14 @@
 			<groupId>com.ning</groupId>
 			<artifactId>async-http-client</artifactId>
 			<version>1.8.14</version>
+			<scope>test</scope>
+		</dependency>
+		<!--  apache  -->
+		<dependency>
+	 		<groupId>com.cedarsoftware</groupId>
+		  	<artifactId>json-io</artifactId>
+		  	<version>3.0.1</version>
+		  	<scope>test</scope>
 		</dependency>
   </dependencies>
   <build>

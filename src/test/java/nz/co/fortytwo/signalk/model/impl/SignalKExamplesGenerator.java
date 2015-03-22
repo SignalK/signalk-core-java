@@ -1,8 +1,5 @@
 package nz.co.fortytwo.signalk.model.impl;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
@@ -17,6 +14,8 @@ import nz.co.fortytwo.signalk.util.JsonSerializer;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonWriter;
 
 public class SignalKExamplesGenerator {
 	private static Logger logger = Logger.getLogger(SignalKExamplesGenerator.class);
@@ -101,10 +100,11 @@ public class SignalKExamplesGenerator {
 	
 	private void print(SignalKModel model) throws IOException {
 		
-		 logger.debug("Signal K key/value tree: "+model);
+		 logger.debug("Signal K key/value tree: \n"+model.toString().replaceAll(",", "\n"));
 		 Json full = ser.writeJson(model);  
-		 logger.debug("Signal K full json format: "+ full);
-		 logger.debug("Signal K delta json format: "+ conv.handle(full));
+		 
+		 logger.debug("Signal K full json format: \n"+ JsonWriter.formatJson(full.toString()));
+		 logger.debug("Signal K delta json format: \n"+ JsonWriter.formatJson(conv.handle(full).toString()));
 		 logger.debug("\n");
 		
 	}

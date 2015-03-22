@@ -357,6 +357,14 @@ public class Util {
 		//return ISO8601DateFormat.getDateInstance().format(new Date());
 	}
 
+	public static String getIsoTimeString(DateTime now) {
+		return now.toDateTimeISO().toString();
+	}
+
+	public static String getIsoTimeString(long timestamp) {
+		return new DateTime(timestamp,DateTimeZone.UTC).toDateTimeISO().toString();
+	}
+
 
 
 }

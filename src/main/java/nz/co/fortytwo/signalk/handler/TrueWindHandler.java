@@ -66,11 +66,11 @@ public class TrueWindHandler {
 					
 					if (!Double.isNaN(windCalc[1])) {
 						//map.put(Constants.WIND_DIR_TRUE, round(trueDirection, 2));
-						signalkModel.put(vessels_dot_self_dot+ env_wind_directionTrue, Util.round(windCalc[1], 2), SELF);
+						signalkModel.put(vessels_dot_self_dot+ env_wind_directionTrue, Util.round(windCalc[1], 2), SELF, Util.getIsoTimeString());
 					}
 					if (!Double.isNaN(windCalc[0])) {
 						//map.put(Constants.WIND_SPEED_TRUE, round(trueWindSpeed, 2));
-						signalkModel.put(vessels_dot_self_dot+env_wind_speedTrue, Util.round(windCalc[0], 2), SELF);
+						signalkModel.put(vessels_dot_self_dot+env_wind_speedTrue, Util.round(windCalc[0], 2), SELF, Util.getIsoTimeString());
 					}
 				}
 
