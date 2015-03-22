@@ -30,14 +30,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Properties;
 import java.util.Set;
@@ -54,18 +51,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 /**
- * Place for all the left over bits that are used across freeboard
+ * Place for all the left over bits that are used across Signalk
  * @author robert
  *
  */
 public class Util {
 	
-	public static final String VESSELS_DOT_self = JsonConstants.VESSELS + ".self";
-	public static final String VESSELS_DOT_SELF = JsonConstants.VESSELS+JsonConstants.DOT+JsonConstants.SELF;
-	public static final String VESSELS_DOT_self_DOT = JsonConstants.VESSELS + ".self"+JsonConstants.DOT;
-	public static final String VESSELS_DOT_SELF_DOT = JsonConstants.VESSELS+JsonConstants.DOT+JsonConstants.SELF+JsonConstants.DOT;
 	private static Logger logger = Logger.getLogger(Util.class);
 	private static Properties props;
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
@@ -355,6 +350,13 @@ public class Util {
 			temp.put(key, model.get(key));
 		}
 	}
+
+	public static String getIsoTimeString() {
+		// TODO Auto-generated method stub
+		return DateTime.now(DateTimeZone.UTC).toDateTimeISO().toString();
+		//return ISO8601DateFormat.getDateInstance().format(new Date());
+	}
+
 
 
 }

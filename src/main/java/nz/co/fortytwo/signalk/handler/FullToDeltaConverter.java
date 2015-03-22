@@ -102,7 +102,7 @@ public class FullToDeltaConverter {
 
 			// add values
 			Json updates = Json.array();
-			getEntries(updates, null, null, ctx, context.length() + 1);
+			getEntries(updates, Json.array(), null, ctx, context.length() + 1);
 
 			if (updates.asList().size() == 0)
 				return null;
@@ -124,12 +124,17 @@ public class FullToDeltaConverter {
 	 * @return
 	 */
 	protected Json getContext(Json node) {
+		
 		// look down the tree until we get more than one branch, thats the context
-		if (node.asJsonMap().size() > 1){
+		if ( node.asJsonMap().size() > 1){
 			logger.debug("Context is :"+node.asJsonMap().size()+", "+ node);
 			return node;
 		}
 		for (Json j : node.asJsonMap().values()) {
+			
+			if(j.isPrimitive()){
+				return node;
+			}
 			logger.debug("Context recurse :"+ j);
 			return getContext(j);
 		}
@@ -140,7 +145,7 @@ public class FullToDeltaConverter {
 		if (!j.isObject())
 			return;
 		
-		Json entry = null;
+		Json entry = Json.object();
 		
 		for (Json js : j.asJsonMap().values()) {
 			logger.debug("Process : "+js+", is primitive:"+js.isPrimitive());
@@ -154,7 +159,7 @@ public class FullToDeltaConverter {
 				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())){
 						
 					//existing entry
-					if(entry!=null){
+					if(entry.asJsonMap().size()>0){
 						updates.add(entry);
 					}
 					jsSrcRef=jsSrc.toString();
@@ -208,7 +213,15 @@ public class FullToDeltaConverter {
 				values.add(value);
 				continue;
 			}
-			
+			if (js.isPrimitive()) {
+				logger.debug("Process primitive : "+js);
+				String path = js.getPath().substring(prefix);
+				Json value = Json.object();
+				value.set(PATH, path);
+				value.set(VALUE, js);
+				values.add(value);
+				continue;
+			}
 			if (js.isObject()) {
 				if(js.getParentKey().equals(SOURCE))continue;
 				if(js.getParentKey().equals(VALUE))continue;
@@ -216,7 +229,8 @@ public class FullToDeltaConverter {
 				getEntries(updates, values, jsSrcRef, js, prefix);
 			}
 		}
-		if(entry!=null){
+		if(values.asJsonList().size()>0){
+			entry.set(VALUES, values);
 			updates.add(entry);
 		}
 

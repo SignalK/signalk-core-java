@@ -63,7 +63,7 @@ public class NMEAHandlerTest {
 			JsonSerializer ser = new JsonSerializer();
 			 Json temp = Json.read(jsonFile.toURI().toURL());
 			 NavigableMap<String, Object> map = ser.read(temp);
-			signalkModel.putAll(map);
+			//signalkModel.putAll(map);
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 		}

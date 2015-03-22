@@ -82,7 +82,6 @@ public class SignalKModelImpl implements SignalKModel {
     private final NavigableMap<String,Object> root;
     private final int numrevisions;
     private final NavigableSet<String>[] mark;
-    private final DateFormat iso8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private boolean alive;
     private volatile int revision;
@@ -174,20 +173,6 @@ public class SignalKModelImpl implements SignalKModel {
     @Override
 	public void readUnlock() {
         lock.readLock().unlock();
-    }
-
-    /**
-     * Return an ISO-8601 timestamp for the current time. This method
-     * caches its return value so can be called whenever a timestamp
-     * is required.
-     */
-    public String timestamp() {
-        long s = System.currentTimeMillis() / 1000;
-        if (touch != s) {
-            formattouch = iso8601.format(new Date());
-            touch = s;
-        }
-        return formattouch;
     }
 
     private boolean doPut(String key, Object value) {

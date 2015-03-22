@@ -22,8 +22,8 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+import static nz.co.fortytwo.signalk.util.JsonConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +32,11 @@ import java.text.ParseException;
 import java.util.Collection;
 
 import mjson.Json;
+import net.minidev.json.JSONArray;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
+import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -42,6 +45,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 /**
  * Updates the convert n2k json to signalk tree
@@ -53,13 +57,14 @@ public class N2KHandler {
 
 	private static final String FILTER = "filter";
 	private static final String NODE = "node";
-	private static final String SOURCE = "source";
-	private static final String self = VESSELS + "." + SELF + ".";
+	//private static final String SOURCE = "source";
+	//private static final String self = VESSELS + "." + SELF + ".";
 	private static Logger logger = Logger.getLogger(N2KHandler.class);
 	// private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	private NumberFormat numberFormat = NumberFormat.getInstance();
 	private Json mappings = null;
 	private JsonPath pgnPath = JsonPath.compile("$.pgn");
+	private JsonPath srcPath = JsonPath.compile("$.src");
 	private Multimap<String, N2KHolder> nodeMap = HashMultimap.create();
 
 	public N2KHandler() {
@@ -71,11 +76,11 @@ public class N2KHandler {
 				logger.debug("Array="+mappingArray);
 				for (Json j : mappingArray.asJsonList()) {
 					logger.debug("Json="+j);
-					String filter = "$";
+					String filter = "$.fields";
 					if(j.at(FILTER)!=null && !j.at(FILTER).isNull()){
-						filter=j.at(FILTER).toString();
+						filter=j.at(FILTER).asString();
 					}
-					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(SOURCE));
+					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(SOURCE).getValue());
 					String node = j.at(NODE).asString();
 					nodeMap.put(pgn, new N2KHolder(node, compiledPath));
 				}
@@ -123,11 +128,30 @@ public class N2KHandler {
 
 			// make a dummy signalk object
 			SignalKModel temp = SignalKModelFactory.getCleanInstance();
+			String sourceRef = "n2k-"+pgn+"-"+n2k.read(srcPath);
+			String ts = Util.getIsoTimeString();
+			//temp.put(vessels_dot_self_dot+sourceRef, Json.read(n2kmsg));
 			// mapping contains an array
 			for (N2KHolder entry : entries) {
-				Object var = n2k.read(entry.path);
-				// put in signalk tree
-				temp.put(self + entry.node, resolve(var));
+				try{
+					Object var = n2k.read(entry.path);
+					Object val = resolve(var);
+					logger.debug(" evaluating " + entry + " = "+val.getClass()+ " : "+val);
+					// put in signalk tree
+					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.source, sourceRef);
+					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.timestamp, ts);
+					if(val instanceof JSONArray){
+						if(!((JSONArray)val).isEmpty()){
+							temp.put(vessels_dot_self_dot + entry.node, ((JSONArray)val).get(0));
+						}
+						continue;
+					}
+					temp.put(vessels_dot_self_dot + entry.node, val);
+					
+				}catch(PathNotFoundException p){
+					logger.error(p);
+				}
+					
 			}
 			if (logger.isDebugEnabled())
 				logger.debug("N2KHandler output  " + temp);
@@ -149,12 +173,15 @@ public class N2KHandler {
 	}
 
 	class N2KHolder {
+		String parent = "";
 		String node = null;
 		JsonPath path = null;
 
 		public N2KHolder(String node, JsonPath path) {
 			this.node = node;
 			this.path = path;
+			int p = node.lastIndexOf(dot);
+			if(p>0)parent=node.substring(0,p);
 		}
 	}
 
