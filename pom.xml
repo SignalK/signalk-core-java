@@ -6,7 +6,7 @@
   <name>signalk-core</name>
   <properties>
 		<!-- <bundle.name>nsb-${project.version}</bundle.name> -->
-		<jetty.version>8.1.15.v20140411</jetty.version>
+		<jetty.version>9.2.9.v20150224</jetty.version>
 <!-- 		<camel.version>2.14.1</camel.version> -->
 <!-- 		<camel.core.version>2.14.1</camel.core.version> -->
 		<jna.version>3.6.0-SNAPSHOT</jna.version>
@@ -66,18 +66,18 @@
   <dependencies>
   			<!-- serial comms -->
 
-		<!-- jna LGPL, Apache-->
+		<!-- jna LGPL, Apache
 		<dependency>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
 			<version>${jna.version}</version>
-		</dependency>
-		<!-- BSD -->
+		</dependency>-->
+		<!-- BSD 
 		<dependency>
 			<groupId>com.sparetimelabs</groupId>
 			<artifactId>purejavacomm</artifactId>
 			<version>0.0.21</version>
-		</dependency>
+		</dependency>-->
 
 	  	<!-- ais -->
 	  	
@@ -96,7 +96,7 @@
 	  		<artifactId>mjson</artifactId>
 	  		<version>1.3</version>
 	  	</dependency>-->
-	  	<dependency>
+	    <dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
@@ -151,16 +151,16 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.4</version>
-		</dependency>
-		<dependency>
+		</dependency>-->
+		<!-- <dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-exec</artifactId>
 			<version>1.1</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -179,12 +179,12 @@
 		    <artifactId>json-path</artifactId>
 		    <version>1.2.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.ning</groupId>
-			<artifactId>async-http-client</artifactId>
-			<version>1.8.14</version>
-			<scope>test</scope>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.ning</groupId> -->
+<!-- 			<artifactId>async-http-client</artifactId> -->
+<!-- 			<version>1.8.14</version> -->
+<!-- 			<scope>test</scope> -->
+<!-- 		</dependency> -->
 		<!--  apache  -->
 		<dependency>
 	 		<groupId>com.cedarsoftware</groupId>
