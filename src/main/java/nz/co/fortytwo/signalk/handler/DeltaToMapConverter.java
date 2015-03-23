@@ -145,7 +145,7 @@ public class DeltaToMapConverter {
 			}
 			
 			if(update.has(TIMESTAMP)){
-				String ts = update.at(SOURCE).at(TIMESTAMP).asString();
+				String ts = update.at(TIMESTAMP).asString();
 				//TODO: should validate the timestamp
 				temp.put(ctx+dot+key+dot+timestamp, ts);
 			}
