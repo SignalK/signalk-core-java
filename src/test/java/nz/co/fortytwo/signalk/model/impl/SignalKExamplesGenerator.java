@@ -27,14 +27,11 @@ public class SignalKExamplesGenerator {
 	public void shouldHandleGPRMC() throws IOException{
 		 String nmea1 = "$GPRMC,144629.20,A,5156.91111,N,00434.80385,E,0.295,,011113,,,A*78";
 		 logger.debug("Converting "+nmea1);
-		// String nmea2 = "$GPRMC,144629.30,A,5156.91115,N,00434.80383,E,1.689,,011113,,,A*73";
-		// String nmea3 = "$GPRMC,144629.50,A,5156.91127,N,00434.80383,E,1.226,,011113,,,A*75";
 		 NMEAHandler processor = new NMEAHandler();
 		
 		 SignalKModel model = processor.handle(nmea1);
 		 print(model);
-		 //assertEquals(51.9485185d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.00001);
-		 //logger.debug("Lat :"+model.get(vessels_dot_self_dot +nav_position_latitude));
+
 	}
 	
 	@Test
@@ -54,8 +51,7 @@ public class SignalKExamplesGenerator {
 		 SignalKModel model = processor.handle(nmea);
 		 print(model);
 		}
-		 //assertEquals(51.9485185d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.00001);
-		 //logger.debug("Lat :"+model.get(vessels_dot_self_dot +nav_position_latitude));
+
 	}
 	
 	

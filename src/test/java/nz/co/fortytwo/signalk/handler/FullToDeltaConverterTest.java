@@ -58,6 +58,7 @@ public class FullToDeltaConverterTest {
 		FullToDeltaConverter processor = new FullToDeltaConverter();
 		Json out = processor.handle(data);
 		logger.debug(out);
+		
 	}
 	
 	@Test
@@ -71,6 +72,7 @@ public class FullToDeltaConverterTest {
 		logger.debug(context);
 		logger.debug(context.getPath());
 		assertEquals("vessels.366982330.navigation", context.getPath());
+
 	}
 	
 	@Test

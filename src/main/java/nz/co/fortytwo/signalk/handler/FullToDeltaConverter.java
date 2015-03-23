@@ -172,6 +172,7 @@ public class FullToDeltaConverter {
 						entry.set(TIMESTAMP, js.at(TIMESTAMP));
 					}
 				}
+				
 			}
 			
 			if (js.isArray()){
@@ -212,7 +213,7 @@ public class FullToDeltaConverter {
 				if (js.has(meta)){
 					logger.debug("Process meta : "+js);
 					value.set(meta, js.at(meta));
-					values.add(value);
+					//values.add(value);
 				}
 				values.add(value);
 				continue;
@@ -227,14 +228,16 @@ public class FullToDeltaConverter {
 				continue;
 			}
 			if (js.isObject()) {
+				if(js.getParentKey().equals(TIMESTAMP))continue;
 				if(js.getParentKey().equals(SOURCE))continue;
 				if(js.getParentKey().equals(VALUE))continue;
 				logger.debug("Recurse : "+js);
 				getEntries(updates, values, jsSrcRef, js, prefix);
 			}
 		}
-		if(values.asJsonList().size()>0){
-			entry.set(VALUES, values);
+		if(entry.asJsonMap().size()>0){
+			logger.debug("Clean up last values array : "+values);
+		//	entry.set(VALUES, values);
 			updates.add(entry);
 		}
 

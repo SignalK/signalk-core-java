@@ -101,6 +101,21 @@ public class AISHandler {
 	 * @throws Exception 
 	 */
 	public SignalKModel handle(String bodyStr) throws Exception {
+		return handle(bodyStr,null);
+	}
+	/**
+	 * Converts an AIS NMEA string to a signalK JSON object
+	 * See https://github.com/dma-ais/AisLib
+	 * 
+	 * HD-SF. Free raw AIS data feed for non-commercial use.
+	 * hd-sf.com:9009
+	 * 
+	 * @param bodyStr
+	 * @param device - the serial or other device the data was recieved over.
+	 * @return
+	 * @throws Exception 
+	 */
+	public SignalKModel handle(String bodyStr, String device) throws Exception {
 
 		if (logger.isDebugEnabled())
 			logger.debug("Processing AIS:" + bodyStr);
@@ -132,22 +147,28 @@ public class AISHandler {
 						vInfo = new AisVesselInfo((AisMessage18) message);
 					}
 					if (vInfo != null) {
+						if(StringUtils.isBlank(device))device="unknown";
 						String ts = Util.getIsoTimeString(packet.getBestTimestamp());
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
-
+						String sourceRef = aisVessel+"sources.ais";
+						//create ais source entry
+						model.put(sourceRef+dot+value, packet.getStringMessage());
+						model.put(sourceRef+dot+timestamp, ts);
+						model.put(sourceRef+dot+source, device);
+						
 						model.put(aisVessel+name, vInfo.getName());
-						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()), "AIS", ts);
-						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), "AIS", ts);
+						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()), sourceRef, ts);
+						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), sourceRef, ts);
 						if (vInfo.getPosition() != null) {
 							model.put(aisVessel+ nav_position+dot+timestamp, ts);
-							model.put(aisVessel+ nav_position_source, "AIS");
+							model.put(aisVessel+ nav_position_source, sourceRef);
 							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
 							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
 						}
-						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, "AIS", ts);
-						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), "AIS", ts);
-						model.put(aisVessel+ nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, "AIS");
-						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), "AIS", ts);
+						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, sourceRef, ts);
+						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), sourceRef, ts);
+						model.put(aisVessel+ nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, sourceRef);
+						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), sourceRef, ts);
 					}
 				}
 			}

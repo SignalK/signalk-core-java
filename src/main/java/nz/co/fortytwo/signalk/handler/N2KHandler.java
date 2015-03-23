@@ -39,6 +39,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
@@ -57,10 +58,9 @@ public class N2KHandler {
 
 	private static final String FILTER = "filter";
 	private static final String NODE = "node";
-	//private static final String SOURCE = "source";
-	//private static final String self = VESSELS + "." + SELF + ".";
+
 	private static Logger logger = Logger.getLogger(N2KHandler.class);
-	// private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+
 	private NumberFormat numberFormat = NumberFormat.getInstance();
 	private Json mappings = null;
 	private JsonPath pgnPath = JsonPath.compile("$.pgn");
@@ -117,6 +117,16 @@ public class N2KHandler {
 	 * @return
 	 */
 	public SignalKModel handle(String n2kmsg) {
+		return handle(n2kmsg, null);
+	}
+	
+	/**
+	 * 
+	 * Converts a Json n2k message (from CANboat analyser) to a signalK json message
+	 * @param n2kmsg
+	 * @return
+	 */
+	public SignalKModel handle(String n2kmsg, String device) {
 		// get the pgn value
 		DocumentContext n2k = JsonPath.parse(n2kmsg);
 		String pgn = n2k.read(pgnPath);
@@ -128,24 +138,34 @@ public class N2KHandler {
 
 			// make a dummy signalk object
 			SignalKModel temp = SignalKModelFactory.getCleanInstance();
-			String sourceRef = "n2k-"+pgn+"-"+n2k.read(srcPath);
+			String sourceRef = vessels_dot_self_dot+"sources.n2k."+pgn+dot+n2k.read(srcPath);
+			
 			String ts = Util.getIsoTimeString();
-			//temp.put(vessels_dot_self_dot+sourceRef, Json.read(n2kmsg));
+			if(StringUtils.isBlank(device))device = "unknown";
+			//add the actual source
+			temp.put(sourceRef+dot+value, n2kmsg);
+			temp.put(sourceRef+dot+timestamp, ts);
+			temp.put(sourceRef+dot+SignalKConstants.source, device);
+			
 			// mapping contains an array
 			for (N2KHolder entry : entries) {
 				try{
 					Object var = n2k.read(entry.path);
 					Object val = resolve(var);
 					logger.debug(" evaluating " + entry + " = "+val.getClass()+ " : "+val);
-					// put in signalk tree
-					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.source, sourceRef);
-					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.timestamp, ts);
+					
 					if(val instanceof JSONArray){
 						if(!((JSONArray)val).isEmpty()){
 							temp.put(vessels_dot_self_dot + entry.node, ((JSONArray)val).get(0));
+							// put in signalk tree
+							temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.source, sourceRef);
+							temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.timestamp, ts);
 						}
 						continue;
 					}
+					// put in signalk tree
+					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.source, sourceRef);
+					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.timestamp, ts);
 					temp.put(vessels_dot_self_dot + entry.node, val);
 					
 				}catch(PathNotFoundException p){
