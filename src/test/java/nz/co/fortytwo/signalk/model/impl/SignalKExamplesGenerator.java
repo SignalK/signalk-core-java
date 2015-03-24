@@ -85,7 +85,7 @@ public class SignalKExamplesGenerator {
 	
 	//N2K
 	@Test
-	public void shouldConvertN2K() throws IOException{
+	public void shouldConvertN2K_129026() throws IOException{
 		String json = "{\"timestamp\":\"2014-08-15-18:00:10.005\",\"prio\":\"2\",\"src\":\"160\",\"dst\":\"255\",\"pgn\":\"129026\",\"description\":\"COG & SOG, Rapid Update\",\"fields\":{\"COG_Reference\":\"True\",\"COG\":\"206.1\",\"SOG\":\"3.65\"}}";
 		logger.debug("Converting "+Json.read(json));
 		N2KHandler handler = new N2KHandler();
@@ -93,7 +93,15 @@ public class SignalKExamplesGenerator {
 		print(model);
 	}
 	
-	
+	@Test
+	public void shouldConvertN2K_127250() throws IOException{
+		String json = "{\"timestamp\":\"2013-10-08-15:47:28.263\",\"prio\":\"2\",\"src\":\"204\",\"dst\":\"255\",\"pgn\":\"127250\",\"description\":\"Vessel Heading\",\"fields\":{\"Heading\":\"129.7\",\"Reference\":\"Magnetic\"}}";
+		//tree.should.have.with.deep.property('navigation.headingMagnetic.value', 129.7);
+		logger.debug("Converting "+Json.read(json));
+		N2KHandler handler = new N2KHandler();
+		SignalKModel model = handler.handle(json);
+		print(model);
+	}
 	private void print(SignalKModel model) throws IOException {
 		
 		 logger.debug("Signal K key/value tree: \n"+model.toString().replaceAll(",", "\n"));

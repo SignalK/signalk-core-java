@@ -27,6 +27,23 @@ package nz.co.fortytwo.signalk.util;
 
 public class SignalKConstants {
 
+	//fixed
+	public static final String self =  Util.getConfigProperty(Constants.SELF);
+	public static final String version = "version";
+	public static final String timestamp = "timestamp";
+	public static final String source = "source";
+	public static final String value = "value";
+	public static final String vessels = "vessels";
+	public static final String vessels_id = "vessels.*";
+	public static final String dot = ".";
+	public static final String meta = "meta";
+	public static final String attr = "_attr";
+	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
+	
+	//temp
+	public static final String env_time = "environment.time";
+	public static final String env_date = "environment.date";
+	//generated
 	public static final String resources = "resources";
 	public static final String resources_charts = "resources.charts";
 	public static final String resources_charts_id = "resources.charts.*";
@@ -63,18 +80,7 @@ public class SignalKConstants {
 	public static final String resources_waypoints_id_position_latitude = "resources.waypoints.*.position.latitude";
 	public static final String resources_waypoints_id_position_longitude = "resources.waypoints.*.position.longitude";
 	public static final String resources_waypoints_id_type = "resources.waypoints.*.type";
-	public static final String self =  Util.getConfigProperty(Constants.SELF);
-	public static final String version = "version";
-	public static final String timestamp = "timestamp";
-	public static final String source = "source";
-	public static final String value = "value";
-	public static final String vessels = "vessels";
-	public static final String vessels_id = "vessels.*";
 	public static final String alarms = "alarms";
-	public static final String dot = ".";
-	public static final String meta = "meta";
-	public static final String attr = "_attr";
-	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
 	public static final String alarms_anchorAlarmMethod = "alarms.anchorAlarmMethod";
 	public static final String alarms_anchorAlarmState = "alarms.anchorAlarmState";
 	public static final String alarms_autopilotAlarmMethod = "alarms.autopilotAlarmMethod";

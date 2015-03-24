@@ -27,9 +27,11 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import mjson.Json;
 import net.minidev.json.JSONArray;
@@ -58,14 +60,23 @@ public class N2KHandler {
 
 	private static final String FILTER = "filter";
 	private static final String NODE = "node";
+	private static final String AIS_PGN_129038 = "129038";
+	private static final String AIS_PGN_129039 = "129039";
+	private static final String AIS_PGN_129794 = "129794";
+	private static final String AIS_PGN_129809 = "129809";
+	
+	private static final String TYPE = "type";
+	private static final CharSequence STRING = "string";
 
 	private static Logger logger = Logger.getLogger(N2KHandler.class);
 
-	private NumberFormat numberFormat = NumberFormat.getInstance();
+	private NumberFormat numberFormat = DecimalFormat.getInstance();
 	private Json mappings = null;
 	private JsonPath pgnPath = JsonPath.compile("$.pgn");
 	private JsonPath srcPath = JsonPath.compile("$.src");
+	private JsonPath userId = JsonPath.compile("$.fields.User_ID");
 	private Multimap<String, N2KHolder> nodeMap = HashMultimap.create();
+	private Pattern pattern = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
 
 	public N2KHandler() {
 		File mappingFile = new File("./conf/n2kMappings.json");
@@ -80,9 +91,13 @@ public class N2KHandler {
 					if(j.at(FILTER)!=null && !j.at(FILTER).isNull()){
 						filter=j.at(FILTER).asString();
 					}
-					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(SOURCE).getValue());
+					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(SOURCE).getValue().toString().replaceAll(" ", "_"));
 					String node = j.at(NODE).asString();
-					nodeMap.put(pgn, new N2KHolder(node, compiledPath));
+					String type = null;
+					if(j.has(TYPE)){
+						type = j.at(TYPE).asString();
+					}
+					nodeMap.put(pgn, new N2KHolder(node, compiledPath, type));
 				}
 			}
 
@@ -128,17 +143,23 @@ public class N2KHandler {
 	 */
 	public SignalKModel handle(String n2kmsg, String device) {
 		// get the pgn value
-		DocumentContext n2k = JsonPath.parse(n2kmsg);
+		DocumentContext n2k = JsonPath.parse(n2kmsg.replaceAll(" ", "_"));
 		String pgn = n2k.read(pgnPath);
 		if (logger.isDebugEnabled())
 			logger.debug("processing n2k pgn " + pgn);
 		if (nodeMap.containsKey(pgn)) {
 			// process it, mappings is n2kMapping.json as a json object
 			Collection<N2KHolder> entries = nodeMap.get(pgn);
-
+			//check AIS pgns
+			String target = null;
+			if(AIS_PGN_129038.equals(pgn)||AIS_PGN_129039.equals(pgn)||AIS_PGN_129794.equals(pgn)||AIS_PGN_129809.equals(pgn)){
+				target = vessels+dot+n2k.read(userId)+dot;
+			}else{
+				target = vessels_dot_self_dot;
+			}
 			// make a dummy signalk object
 			SignalKModel temp = SignalKModelFactory.getCleanInstance();
-			String sourceRef = vessels_dot_self_dot+"sources.n2k."+pgn+dot+n2k.read(srcPath);
+			String sourceRef = target+"sources.n2k."+pgn+dot+n2k.read(srcPath);
 			
 			String ts = Util.getIsoTimeString();
 			if(StringUtils.isBlank(device))device = "unknown";
@@ -151,22 +172,26 @@ public class N2KHandler {
 			for (N2KHolder entry : entries) {
 				try{
 					Object var = n2k.read(entry.path);
-					Object val = resolve(var);
+					Object val = resolve(var,entry.type);
 					logger.debug(" evaluating " + entry + " = "+val.getClass()+ " : "+val);
 					
 					if(val instanceof JSONArray){
 						if(!((JSONArray)val).isEmpty()){
-							temp.put(vessels_dot_self_dot + entry.node, ((JSONArray)val).get(0));
+							temp.put(target + entry.node, resolve(((JSONArray)val).get(0),entry.type));
 							// put in signalk tree
-							temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.source, sourceRef);
-							temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.timestamp, ts);
+							if(entry.parent!=null){
+								temp.put(target + entry.parent+dot+SignalKConstants.source, sourceRef);
+								temp.put(target + entry.parent+dot+SignalKConstants.timestamp, ts);
+							}
 						}
 						continue;
 					}
 					// put in signalk tree
-					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.source, sourceRef);
-					temp.put(vessels_dot_self_dot + entry.parent+dot+SignalKConstants.timestamp, ts);
-					temp.put(vessels_dot_self_dot + entry.node, val);
+					if(entry.parent!=null){
+						temp.put(target + entry.parent+dot+SignalKConstants.source, sourceRef);
+						temp.put(target + entry.parent+dot+SignalKConstants.timestamp, ts);
+					}
+					temp.put(target + entry.node, val);
 					
 				}catch(PathNotFoundException p){
 					logger.error(p);
@@ -181,11 +206,16 @@ public class N2KHandler {
 
 	}
 
-	private Object resolve(Object var) {
+	private Object resolve(Object var, String type) {
 		if (var == null || !(var instanceof String))
 			return var;
 		try {
-			return numberFormat.parse((String)var);
+			if(StringUtils.equals(STRING, type))return ((String)var).replace('_', ' ');
+			//check if numeric (-+0..9(.)0...9)
+			if(!pattern.matcher((String)var).find()){
+				return ((String)var).replace('_', ' ');
+			}
+			return numberFormat.parse((String)var).doubleValue();
 		} catch (ParseException e) {
 			return var;
 		}
@@ -196,10 +226,12 @@ public class N2KHandler {
 		String parent = "";
 		String node = null;
 		JsonPath path = null;
+		String type = null;
 
-		public N2KHolder(String node, JsonPath path) {
+		public N2KHolder(String node, JsonPath path, String type) {
 			this.node = node;
 			this.path = path;
+			this.type = type;
 			int p = node.lastIndexOf(dot);
 			if(p>0)parent=node.substring(0,p);
 		}
