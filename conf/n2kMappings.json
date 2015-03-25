@@ -87,32 +87,32 @@
     "130306": [
         {
             "source": "Wind Speed",
-            "node": "environment.wind.speedApparent",
+            "node": "environment.wind.speedApparent.value",
             "filter": "$.fields[?(@.Reference=='Apparent')]"
         },
         {
             "source": "Wind Speed",
-            "node": "environment.wind.speedTrue",
+            "node": "environment.wind.speedTrue.value",
             "filter":"$.fields[?(@.Reference=='True_(boat_referenced)')]"
         },
         {
             "source": "Wind Speed",
-            "node": "environment.wind.speedOverGround",
+            "node": "environment.wind.speedOverGround.value",
             "filter": "$.fields[?(@.Reference=='True_(ground_referenced_to_North)')]"
         },
         {
             "source": "Wind Angle",
-            "node": "environment.wind.angleApparent",
+            "node": "environment.wind.angleApparent.value",
             "filter": "$.fields[?(@.Reference=='Apparent')]"
         },
         {
             "source": "Wind Angle",
-            "node": "environment.wind.angleTrue",
+            "node": "environment.wind.angleTrue.value",
             "filter": "$.fields[?(@.Reference=='True_(boat_referenced)')]"
         },
         {
             "source": "Wind Angle",
-            "node": "environment.wind.directionTrue",
+            "node": "environment.wind.directionTrue.value",
             "filter": "$.fields[?(@.Reference=='True_(ground_referenced_to_North)')]"
         }
     ],

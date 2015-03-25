@@ -25,26 +25,29 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.propulsion_id_engineTemperature;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.propulsion_id_oilPressure;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.propulsion_id_rpm;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.NavigableMap;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -53,25 +56,7 @@ public class NMEAHandlerTest {
 	private static Logger logger = Logger.getLogger(NMEAHandlerTest.class);
 	private SignalKModel signalkModel=SignalKModelFactory.getInstance();
 	
-	@Before
-	public void setUp() throws Exception {
-		
-	
-		File jsonFile = new File("./conf/self.json");
-		System.out.println(jsonFile.getAbsolutePath());
-		try{
-			JsonSerializer ser = new JsonSerializer();
-			 Json temp = Json.read(jsonFile.toURI().toURL());
-			 NavigableMap<String, Object> map = ser.read(temp);
-			//signalkModel.putAll(map);
-		}catch(Exception ex){
-			System.out.println(ex.getMessage());
-		}
-	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
 	@Test
 	public void shouldPassJson(){
 		 String jStr = "{\"vessels\":{\""+SELF+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
@@ -82,17 +67,49 @@ public class NMEAHandlerTest {
 		 assertNull( model);
 		 
 	}
+	//"$IIVPW,4.71,N,,*03",
+	//"$IIVTG,224.44,T,224.44,M,5.81,N,,,D*68",
+	//"$IIVWT,039,L,08.10,N,04.17,M,,*2B",
+	//"$IIMWD,,,,,08.16,N,04.20,M*54"};
 	@Test
 	public void shouldHandleGPRMC(){
 		 String nmea1 = "$GPRMC,144629.20,A,5156.91111,N,00434.80385,E,0.295,,011113,,,A*78";
-		// String nmea2 = "$GPRMC,144629.30,A,5156.91115,N,00434.80383,E,1.689,,011113,,,A*73";
-		// String nmea3 = "$GPRMC,144629.50,A,5156.91127,N,00434.80383,E,1.226,,011113,,,A*75";
 		 NMEAHandler processor = new NMEAHandler();
-		
 		 SignalKModel model = processor.handle(nmea1);
 		 logger.debug("Returned signalk tree:"+model);
-		 assertEquals(51.9485185d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.00001);
-		 logger.debug("Lat :"+model.get(vessels_dot_self_dot +nav_position_latitude));
+		 assertEquals(51.9485185d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.0001);
+		 assertEquals(4.580064d,(double)model.get(vessels_dot_self_dot +nav_position_longitude),0.0001);
+		 assertEquals(0.1517598d,(double)model.getValue(vessels_dot_self_dot +nav_speedOverGround),0.0001);
+		 //logger.debug("Lat :"+model.get(vessels_dot_self_dot +nav_position_latitude));
+	}
+	
+	@Test
+	public void shouldHandleMWV() throws IOException{
+		String nmea1 = "$IIMWV,338,R,13.41,N,A*2C";
+		 NMEAHandler processor = new NMEAHandler();
+		 SignalKModel model = processor.handle(nmea1);
+		 logger.debug("Returned signalk tree:"+model);
+		 assertEquals(338.0,model.getValue(vessels_dot_self_dot +env_wind_angleApparent));
+		 assertEquals(6.898640400000001,model.getValue(vessels_dot_self_dot +env_wind_speedApparent));
+	}
+	@Test
+	public void shouldHandleDBT() throws IOException{
+		String nmea1 = "$IIDBT,034.25,f,010.44,M,005.64,F*27";
+		 NMEAHandler processor = new NMEAHandler();
+		 SignalKModel model = processor.handle(nmea1);
+		 logger.debug("Returned signalk tree:"+model);
+		 assertEquals(10.44,model.getValue(vessels_dot_self_dot +env_depth_belowTransducer));
+	}
+	
+	@Test
+	public void shouldHandleGLL() throws IOException{
+		String nmea1 = "$GPGLL,6005.071,N,02332.346,E,095559,A,D*43";
+		 NMEAHandler processor = new NMEAHandler();
+		 SignalKModel model = processor.handle(nmea1);
+		 logger.debug("Returned signalk tree:"+model);
+		 assertEquals(60.0845166d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.0001);
+		 assertEquals(23.5391d,(double)model.get(vessels_dot_self_dot +nav_position_longitude),0.0001);
+
 	}
 	@Test
 	@Ignore

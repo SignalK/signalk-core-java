@@ -43,7 +43,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DeltaToFullConverterTest {
+public class DeltaToMapConverterTest {
 
 	String jsonDiff = "{\"context\": \"vessels."+SELF+".navigation\",\"updates\":[{\"source\": {\"device\" : \"/dev/actisense\",\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"pgn\":\"128267\"},\"values\": [{ \"path\": \"courseOverGroundTrue\",\"value\": 172.9 },{ \"path\": \"speedOverGround\",\"value\": 3.85 }]}]}";
 	String jsonDiff1 = "{\"context\": \"vessels."+SELF+"\",\"updates\":[{\"source\": {\"device\" : \"/dev/actisense\", \"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"pgn\":\"128267\"},\"values\": [{ \"path\": \"navigation.courseOverGroundTrue\",\"value\": 172.9 },{ \"path\": \"navigation.speedOverGround\",\"value\": 3.85 }]}]}";

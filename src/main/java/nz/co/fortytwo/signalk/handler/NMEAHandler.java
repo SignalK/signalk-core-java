@@ -25,6 +25,7 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
@@ -329,6 +330,8 @@ public class NMEAHandler{
 						double angle = sen.getAngle();
 						sk.put(vessels_dot_self_dot + env_wind_angleApparent , angle, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
 						sk.put(vessels_dot_self_dot + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						//sk.put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
+						//sk.put(vessels_dot_self_dot + env_wind + dot+timestamp , now);
 					}
 					
 					// Cruzpro BVE sentence
