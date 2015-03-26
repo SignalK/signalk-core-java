@@ -227,22 +227,22 @@ public class N2KHandlerTest {
 		logger.debug("Converting "+Json.read(json));
 		N2KHandler handler = new N2KHandler();
 		SignalKModel model = handler.handle(json);
-		assertEquals(50.0, model.get(vessels_dot_self_dot+env_wind_angleApparent));
-		assertEquals(6.22, model.get(vessels_dot_self_dot+env_wind_speedApparent));
+		assertEquals(50.0, model.getValue(vessels_dot_self_dot+env_wind_angleApparent));
+		assertEquals(6.22, model.getValue(vessels_dot_self_dot+env_wind_speedApparent));
 		
 		json = "{\"timestamp\":\"2013-10-08-15:47:28.264\",\"prio\":\"2\",\"src\":\"1\",\"dst\":\"255\",\"pgn\":\"130306\",\"description\":\"Wind Data\",\"fields\":{\"SID\":\"68\",\"Wind Speed\":\"4.89\",\"Wind Angle\":\"86.0\",\"Reference\":\"True (boat referenced)\"}}";
 		logger.debug("Converting "+Json.read(json));
 		handler = new N2KHandler();
 		model = handler.handle(json);
-		assertEquals(86.0, model.get(vessels_dot_self_dot+env_wind_angleTrue));
-		assertEquals(4.89, model.get(vessels_dot_self_dot+env_wind_speedTrue));
+		assertEquals(86.0, model.getValue(vessels_dot_self_dot+env_wind_angleTrue));
+		assertEquals(4.89, model.getValue(vessels_dot_self_dot+env_wind_speedTrue));
 		
 		json = "{\"timestamp\":\"2013-10-08-15:47:28.264\",\"prio\":\"2\",\"src\":\"3\",\"dst\":\"255\",\"pgn\":\"130306\",\"description\":\"Wind Data\",\"fields\":{\"SID\":\"94\",\"Wind Speed\":\"4.82\",\"Wind Angle\":\"218.6\",\"Reference\":\"True (ground referenced to North)\"}}";
 		logger.debug("Converting "+Json.read(json));
 		handler = new N2KHandler();
 		model = handler.handle(json);
-		assertEquals(4.82, model.get(vessels_dot_self_dot+env_wind_speedOverGround));
-		assertEquals(218.6, model.get(vessels_dot_self_dot+env_wind_directionTrue));
+		assertEquals(4.82, model.getValue(vessels_dot_self_dot+env_wind_speedOverGround));
+		assertEquals(218.6, model.getValue(vessels_dot_self_dot+env_wind_directionTrue));
 	}
 	
 	@Test

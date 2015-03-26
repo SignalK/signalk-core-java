@@ -526,8 +526,8 @@ public class TSAGeoMag
             //InputStream is;
             Reader is;
                         
-            InputStream input = getClass().getResourceAsStream("WMMX.COF");
-            if(input == null) throw new FileNotFoundException("WMMX.COF not found");
+            InputStream input = getClass().getResourceAsStream("WMM.COF");
+            if(input == null) throw new FileNotFoundException("WMM.COF not found");
             is = new InputStreamReader(input);
             StreamTokenizer str = new StreamTokenizer(is);
             
@@ -541,13 +541,15 @@ public class TSAGeoMag
             logger.debug("TSAGeoMag Epoch is: " + epoch);
             logger.debug("TSAGeoMag default date is: " + defaultDate);
             str.nextToken();
+            logger.debug("TSAGeoMag value is: " + str.nval);
             //strModel = str.sval;
             str.nextToken();
-            
+            logger.debug("TSAGeoMag value is: " + str.nval);
             //loop to get data from file
             while(true){
                 str.nextToken();
-                if(str.nval == 9999)	// end of file
+                logger.debug("TSAGeoMag value is: " + str.nval);
+                if(str.nval == 1.0E48)	// end of file
                     break;
                 
                 int n = (int)str.nval;
@@ -564,6 +566,7 @@ public class TSAGeoMag
                 
                 if (m <= n)
                 {
+                	logger.debug("TSAGeoMag array pos is: " + m+":"+n);
                     c[m][n] = gnm;
                     cd[m][n] = dgnm;
                     
