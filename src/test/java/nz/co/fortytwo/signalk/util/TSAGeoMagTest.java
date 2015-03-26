@@ -1,26 +1,3 @@
-/*
- *
- * Copyright (C) 2012-2014 R T Huitema. All Rights Reserved.
- * Web: www.42.co.nz
- * Email: robert@42.co.nz
- * Author: R T Huitema
- *
- * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
- * WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
 package nz.co.fortytwo.signalk.util;
 
 /*                     <p><center>PUBLIC DOMAIN NOTICE</center></p><p>
@@ -37,17 +14,19 @@ or responsibility for the use of this software.
  */
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
+import nz.co.fortytwo.signalk.util.TSAGeoMag;;
 
 /**<p>
  *  Test values from
  *  <a href ="http://www.ngdc.noaa.gov/geomag/WMM/soft.shtml"> the National GeoPhysical Data Center.</a>.
- *  Click on the WMM2010testvalues.pdf link.
+ *  Click on the WMM2015testvalues.pdf link.
  *  </p><p>
  *  You have to run this test twice. Once with the WMM.COF
  *  file present, and then with it missing. Otherwise the
@@ -61,6 +40,9 @@ import org.junit.Test;
  * <p>Updated with the test values for the 2010 WMM.COF coefficients. From page 18 of
  * <i>The US/UK World Magnetic Model for 2010-2015, Preliminary online version containing
  * final WMM2010 model coefficients</i></p>
+ * @version 1.3 Jan 15, 2015
+ * <p>Updated with the test values for the 2015 WMM.COF coefficients. From the test values WMM2015testvalues.pdf
+ * from the WMM web site.</p>
  */
 public class TSAGeoMagTest 
 {
@@ -70,23 +52,23 @@ public class TSAGeoMagTest
      */
     @Test public final void getDeclination() 
     {
-        assertEquals(-6.13, magModel.getDeclination(80, 0, 2010, 0) , 1.0E-02);
-        assertEquals(0.97, magModel.getDeclination(0, 120, 2010, 0) , 1.0E-02);
-        assertEquals(70.21, magModel.getDeclination(-80, 240, 2010, 0) , 1.0E-02);
-        assertEquals(-6.57, magModel.getDeclination(80, 0, 2010, 100) , 1.0E-02);
-        assertEquals(0.94, magModel.getDeclination(0, 120, 2010, 100) , 1.0E-02);
-        assertEquals(69.62, magModel.getDeclination(-80, 2400, 2010, 100) , 1.0E-02);
+        assertEquals(-3.85, magModel.getDeclination(80, 0, 2015, 0) , 5.0E-03);
+        assertEquals(0.57, magModel.getDeclination(0, 120, 2015, 0) , 5.0E-03);
+        assertEquals(69.81, magModel.getDeclination(-80, 240, 2015, 0) , 5.0E-03);
+        assertEquals(-4.27, magModel.getDeclination(80, 0, 2015, 100) , 5.0E-03);
+        assertEquals(0.56, magModel.getDeclination(0, 120, 2015, 100) , 5.0E-03);
+        assertEquals(69.22, magModel.getDeclination(-80, 240, 2015, 100) , 5.0E-03);
         
-        assertEquals(-5.21, magModel.getDeclination(80, 0, 2012.5, 0) , 1.0E-02);
-        assertEquals(0.88, magModel.getDeclination(0, 120, 2012.5, 0) , 1.0E-02);
-        assertEquals(70.04, magModel.getDeclination(-80, 240, 2012.5, 0) , 1.0E-02);
-        assertEquals(-5.63, magModel.getDeclination(80, 0, 2012.5, 100) , 1.0E-02);
-        assertEquals(0.86, magModel.getDeclination(0, 120, 2012.5, 100) , 1.0E-02);
-        assertEquals(69.45, magModel.getDeclination(-80, 2400, 2012.5, 100) , 1.0E-02);
+        assertEquals(-2.75, magModel.getDeclination(80, 0, 2017.5, 0) , 5.0E-03);
+        assertEquals(0.32, magModel.getDeclination(0, 120, 2017.5, 0) , 5.0E-03);
+        assertEquals(69.58, magModel.getDeclination(-80, 240, 2017.5, 0) , 5.0E-03);
+        assertEquals(-3.17, magModel.getDeclination(80, 0, 2017.5, 100) , 5.0E-03);
+        assertEquals(0.32, magModel.getDeclination(0, 120, 2017.5, 100) , 5.0E-03);
+        assertEquals(69.00, magModel.getDeclination(-80, 240, 2017.5, 100) , 5.0E-03);
         
-        assertEquals(-5.21, magModel.getDeclination(80, 0) , 1.0E-02);
-        assertEquals(0.88, magModel.getDeclination(0, 120) , 1.0E-02);
-        assertEquals(70.04, magModel.getDeclination(-80, 240) , 1.0E-02);
+        assertEquals(-2.75, magModel.getDeclination(80, 0) , 5.0E-03);
+        assertEquals(0.32, magModel.getDeclination(0, 120) , 5.0E-03);
+        assertEquals(69.58, magModel.getDeclination(-80, 240) , 5.0E-03);
     }
     
     /**
@@ -94,23 +76,23 @@ public class TSAGeoMagTest
      */
     @Test public final void getDipAngle() 
     {
-        assertEquals(82.98, magModel.getDipAngle(80, 0, 2010, 0) , 1.0E-02);
-        assertEquals(-16.50, magModel.getDipAngle(0, 120, 2010, 0) , 1.0E-02);
-        assertEquals(-72.62, magModel.getDipAngle(-80, 240, 2010, 0) , 1.0E-02);
-        assertEquals(83.04, magModel.getDipAngle(80, 0, 2010, 100) , 1.0E-02);
-        assertEquals(-16.62, magModel.getDipAngle(0, 120, 2010, 100) , 1.0E-02);
-        assertEquals(-72.79, magModel.getDipAngle(-80, 2400, 2010, 100) , 1.0E-02);
+        assertEquals(83.04, magModel.getDipAngle(80, 0, 2015, 0) , 5E-03);
+        assertEquals(-15.89, magModel.getDipAngle(0, 120, 2015, 0) , 5.0E-03);
+        assertEquals(-72.39, magModel.getDipAngle(-80, 240, 2015, 0) , 5.0E-03);
+        assertEquals(83.09, magModel.getDipAngle(80, 0, 2015, 100) , 5.0E-03);
+        assertEquals(-16.01, magModel.getDipAngle(0, 120, 2015, 100) , 5.0E-03);
+        assertEquals(-72.57, magModel.getDipAngle(-80, 240, 2015, 100) , 5.0E-03);
         
-        assertEquals(83.00, magModel.getDipAngle(80, 0, 2012.5, 0) , 1.0E-02);
-        assertEquals(-16.31, magModel.getDipAngle(0, 120, 2012.5, 0) , 1.0E-02);
-        assertEquals(-72.53, magModel.getDipAngle(-80, 240, 2012.5, 0) , 1.0E-02);
-        assertEquals(83.05, magModel.getDipAngle(80, 0, 2012.5, 100) , 1.0E-02);
-        assertEquals(-16.43, magModel.getDipAngle(0, 120, 2012.5, 100) , 1.0E-02);
-        assertEquals(-72.70, magModel.getDipAngle(-80, 2400, 2012.5, 100) , 1.0E-02);
+        assertEquals(83.08, magModel.getDipAngle(80, 0, 2017.5, 0) , 5.0E-03);
+        assertEquals(-15.57, magModel.getDipAngle(0, 120, 2017.5, 0) , 5.0E-03);
+        assertEquals(-72.28, magModel.getDipAngle(-80, 240, 2017.5, 0) , 5.0E-03);
+        assertEquals(83.13, magModel.getDipAngle(80, 0, 2017.5, 100) , 5.0E-03);
+        assertEquals(-15.70, magModel.getDipAngle(0, 120, 2017.5, 100) , 5.0E-03);
+        assertEquals(-72.45, magModel.getDipAngle(-80, 240, 2017.5, 100) , 5.0E-03);
         
-        assertEquals(83.00, magModel.getDipAngle(80, 0) , 1.0E-02);
-        assertEquals(-16.31, magModel.getDipAngle(0, 120) , 1.0E-02);
-        assertEquals(-72.53, magModel.getDipAngle(-80, 240) , 1.0E-02);
+        assertEquals(83.08, magModel.getDipAngle(80, 0) , 5.0E-03);
+        assertEquals(-15.57, magModel.getDipAngle(0, 120) , 5.0E-03);
+        assertEquals(-72.28, magModel.getDipAngle(-80, 240) , 5.0E-03);
     }
     /**
      * Test method for {@link d3.env.TSAGeoMag#getHorizontalIntensity(double, double, double, double)} in nT
@@ -118,115 +100,118 @@ public class TSAGeoMagTest
      */
     @Test public final void getHorizontalIntensity() 
     {
-        assertEquals(6687.8, magModel.getHorizontalIntensity(80, 0, 2010, 0) , 1.0E-01);
-        assertEquals(39434.5, magModel.getHorizontalIntensity(0, 120, 2010, 0) , 1.0E-01);
-        assertEquals(16714.0, magModel.getHorizontalIntensity(-80, 240, 2010, 0) , 1.0E-01);
-        assertEquals(6374.0, magModel.getHorizontalIntensity(80, 0, 2010, 100) , 1.0E-01);
-        assertEquals(37457.0, magModel.getHorizontalIntensity(0, 120, 2010, 100) , 1.0E-01);
-        assertEquals(15748.6, magModel.getHorizontalIntensity(-80, 2400, 2010, 100) , 1.0E-01);
+        assertEquals(6642.1, magModel.getHorizontalIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(39520.2, magModel.getHorizontalIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(16793.5, magModel.getHorizontalIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals(6331.9, magModel.getHorizontalIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(37537.3, magModel.getHorizontalIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(15820.7, magModel.getHorizontalIntensity(-80, 240, 2015, 100) , 5.0E-02);
         
-        assertEquals(6685.5, magModel.getHorizontalIntensity(80, 0, 2012.5, 0) , 1.0E-01);
-        assertEquals(39428.6, magModel.getHorizontalIntensity(0, 120, 2012.5, 0) , 1.0E-01);
-        assertEquals(16737.2, magModel.getHorizontalIntensity(-80, 240, 2012.5, 0) , 1.0E-01);
-        assertEquals(6371.6, magModel.getHorizontalIntensity(80, 0, 2012.5, 100) , 1.0E-01);
-        assertEquals(37452.2, magModel.getHorizontalIntensity(0, 120, 2012.5, 100) , 1.0E-01);
-        assertEquals(15768.9, magModel.getHorizontalIntensity(-80, 2400, 2012.5, 100) , 1.0E-01);
+        assertEquals(6607.0, magModel.getHorizontalIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(39572.0, magModel.getHorizontalIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(16839.1, magModel.getHorizontalIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals(6300.1, magModel.getHorizontalIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(37586.1, magModel.getHorizontalIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(15862.0, magModel.getHorizontalIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
         
-        assertEquals(6685.5, magModel.getHorizontalIntensity(80, 0) , 1.0E-01);
-        assertEquals(39428.6, magModel.getHorizontalIntensity(0, 120) , 1.0E-01);
-        assertEquals(16737.2, magModel.getHorizontalIntensity(-80, 240) , 1.0E-01);
+        assertEquals(6607.0, magModel.getHorizontalIntensity(80, 0) , 5.0E-02);
+        assertEquals(39572.0, magModel.getHorizontalIntensity(0, 120) , 5.0E-02);
+        assertEquals(16839.1, magModel.getHorizontalIntensity(-80, 240) , 5.0E-02);
     }
     /**
      * Test method for d3.env.TSAGeoMag.getEastIntensity() in nT
      */
     @Test public final void getEastIntensity() 
     {
-        assertEquals(6649.5, magModel.getEastIntensity(80, 0, 2010, 0) , 1.0E-01);
-        assertEquals(39428.8, magModel.getEastIntensity(0, 120, 2010, 0) , 1.0E-01);
-        assertEquals(5657.7, magModel.getEastIntensity(-80, 240, 2010, 0) , 1.0E-01);
-        assertEquals(6332.2, magModel.getEastIntensity(80, 0, 2010, 100) , 1.0E-01);
-        assertEquals(37452.0, magModel.getEastIntensity(0, 120, 2010, 100) , 1.0E-01);
-        assertEquals(5484.3, magModel.getEastIntensity(-80, 2400, 2010, 100) , 1.0E-01);
+        assertEquals(6627.1, magModel.getEastIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(39518.2, magModel.getEastIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(5797.3, magModel.getEastIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals(6314.3, magModel.getEastIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(37535.6, magModel.getEastIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(5613.1, magModel.getEastIntensity(-80, 240, 2015, 100) , 5.0E-02);
         
-        assertEquals(6658.0, magModel.getEastIntensity(80, 0, 2012.5, 0) , 1.0E-01);
-        assertEquals(39423.9, magModel.getEastIntensity(0, 120, 2012.5, 0) , 1.0E-01);
-        assertEquals(5713.6, magModel.getEastIntensity(-80, 240, 2012.5, 0) , 1.0E-01);
-        assertEquals(6340.9, magModel.getEastIntensity(80, 0, 2012.5, 100) , 1.0E-01);
-        assertEquals(37448.1, magModel.getEastIntensity(0, 120, 2012.5, 100) , 1.0E-01);
-        assertEquals(5535.5, magModel.getEastIntensity(-80, 2400, 2012.5, 100) , 1.0E-01);
+        assertEquals(6599.4, magModel.getEastIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(39571.4, magModel.getEastIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(5873.8, magModel.getEastIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals(6290.5, magModel.getEastIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(37585.5, magModel.getEastIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(5683.5, magModel.getEastIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
         
-        assertEquals(6658.0, magModel.getEastIntensity(80, 0) , 1.0E-01);
-        assertEquals(39423.9, magModel.getEastIntensity(0, 120) , 1.0E-01);
-        assertEquals(5713.6, magModel.getEastIntensity(-80, 240) , 1.0E-01);
+        assertEquals(6599.4, magModel.getEastIntensity(80, 0) , 5.0E-02);
+        assertEquals(39571.4, magModel.getEastIntensity(0, 120) , 5.0E-02);
+        assertEquals(5873.8, magModel.getEastIntensity(-80, 240) , 5.0E-02);
     }
     /**
      * Test method for d3.env.TSAGeoMag.getNorthIntensity() in nT
      */
     @Test public final void getNorthIntensity() 
     {
-        assertEquals(-714.6, magModel.getNorthIntensity(80, 0, 2010, 0) , 1.0E-01);
-        assertEquals(664.9, magModel.getNorthIntensity(0, 120, 2010, 0) , 1.0E-01);
-        assertEquals(15727.3, magModel.getNorthIntensity(-80, 240, 2010, 0) , 1.0E-01);
-        assertEquals(-729.1, magModel.getNorthIntensity(80, 0, 2010, 100) , 1.0E-01);
-        assertEquals(611.9, magModel.getNorthIntensity(0, 120, 2010, 100) , 1.0E-01);
-        assertEquals(14762.8, magModel.getNorthIntensity(-80, 2400, 2010, 100) , 1.0E-01);
+        assertEquals( -445.9, magModel.getNorthIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(  392.9, magModel.getNorthIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(15761.1, magModel.getNorthIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals( -471.6, magModel.getNorthIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(  364.4, magModel.getNorthIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(14791.5, magModel.getNorthIntensity(-80, 240, 2015, 100) , 5.0E-02);
         
-        assertEquals(-606.7, magModel.getNorthIntensity(80, 0, 2012.5, 0) , 1.0E-01);
-        assertEquals(608.1, magModel.getNorthIntensity(0, 120, 2012.5, 0) , 1.0E-01);
-        assertEquals(15731.8, magModel.getNorthIntensity(-80, 240, 2012.5, 0) , 1.0E-01);
-        assertEquals(-625.1, magModel.getNorthIntensity(80, 0, 2012.5, 100) , 1.0E-01);
-        assertEquals(559.7, magModel.getNorthIntensity(0, 120, 2012.5, 100) , 1.0E-01);
-        assertEquals(14765.4, magModel.getNorthIntensity(-80, 2400, 2012.5, 100) , 1.0E-01);
+        assertEquals( -317.1, magModel.getNorthIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(  222.5, magModel.getNorthIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(15781.4, magModel.getNorthIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals( -348.5, magModel.getNorthIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(  209.5, magModel.getNorthIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(14808.8, magModel.getNorthIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
         
-        assertEquals(-606.7, magModel.getNorthIntensity(80, 0) , 1.0E-01);
-        assertEquals(608.1, magModel.getNorthIntensity(0, 120) , 1.0E-01);
-        assertEquals(15731.8, magModel.getNorthIntensity(-80, 240) , 1.0E-01);
+        assertEquals( -317.1, magModel.getNorthIntensity(80, 0) , 5.0E-02);
+        assertEquals(  222.5, magModel.getNorthIntensity(0, 120) , 5.0E-02);
+        assertEquals(15781.4, magModel.getNorthIntensity(-80, 240) , 5.0E-02);
     }
     /**
      * Test method for d3.env.TSAGeoMag.getVerticalIntensity()
      */
     @Test public final void getVerticalIntensity() 
     {
-        assertEquals(54346.2, magModel.getVerticalIntensity(80, 0, 2010, 0) , 1.0E-01);
-        assertEquals(-11683.8, magModel.getVerticalIntensity(0, 120, 2010, 0) , 1.0E-01);
-        assertEquals(-53407.5, magModel.getVerticalIntensity(-80, 240, 2010, 0) , 1.0E-01);
-        assertEquals(52194.9, magModel.getVerticalIntensity(80, 0, 2010, 100) , 1.0E-01);
-        assertEquals(-11180.8, magModel.getVerticalIntensity(0, 120, 2010, 100) , 1.0E-01);
-        assertEquals(-50834.8, magModel.getVerticalIntensity(-80, 2400, 2010, 100) , 1.0E-01);
+        assertEquals( 54432.3, magModel.getVerticalIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(-11252.4, magModel.getVerticalIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(-52919.1, magModel.getVerticalIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals( 52269.8, magModel.getVerticalIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(-10773.4, magModel.getVerticalIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(-50378.6, magModel.getVerticalIntensity(-80, 240, 2015, 100) , 5.0E-02);
         
-        assertEquals(54420.4, magModel.getVerticalIntensity(80, 0, 2012.5, 0) , 1.0E-01);
-        assertEquals(-11540.5, magModel.getVerticalIntensity(0, 120, 2012.5, 0) , 1.0E-01);
-        assertEquals(-53184.3, magModel.getVerticalIntensity(-80, 240, 2012.5, 0) , 1.0E-01);
-        assertEquals(52261.9, magModel.getVerticalIntensity(80, 0, 2012.5, 100) , 1.0E-01);
-        assertEquals(-11044.2, magModel.getVerticalIntensity(0, 120, 2012.5, 100) , 1.0E-01);
-        assertEquals(-50625.9, magModel.getVerticalIntensity(-80, 2400, 2012.5, 100) , 1.0E-01);
+        assertEquals( 54459.2, magModel.getVerticalIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(-11030.1, magModel.getVerticalIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(-52687.9, magModel.getVerticalIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals( 52292.7, magModel.getVerticalIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(-10564.2, magModel.getVerticalIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(-50163.0, magModel.getVerticalIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
         
-        assertEquals(54420.4, magModel.getVerticalIntensity(80, 0) , 1.0E-01);
-        assertEquals(-11540.5, magModel.getVerticalIntensity(0, 120) , 1.0E-01);
-        assertEquals(-53184.3, magModel.getVerticalIntensity(-80, 240) , 1.0E-01);
+        assertEquals( 54459.2, magModel.getVerticalIntensity(80, 0) , 5.0E-02);
+        assertEquals(-11030.1, magModel.getVerticalIntensity(0, 120) , 5.0E-02);
+        assertEquals(-52687.9, magModel.getVerticalIntensity(-80, 240) , 5.0E-02);
     }
     /**
      * Test method for d3.env.TSAGeoMag.getIntensity()
      */
-    @Test public final void getIntensity() 
+    @Test public final void getIntensity()
     {
-        assertEquals(54756.2, magModel.getIntensity(80, 0, 2010, 0) , 1.0E-01);
-        assertEquals(41128.9, magModel.getIntensity(0, 120, 2010, 0) , 1.0E-01);
-        assertEquals(55961.8, magModel.getIntensity(-80, 240, 2010, 0) , 1.0E-01);
-        assertEquals(52582.6, magModel.getIntensity(80, 0, 2010, 100) , 1.0E-01);
-        assertEquals(39090.1, magModel.getIntensity(0, 120, 2010, 100) , 1.0E-01);
-        assertEquals(53218.3, magModel.getIntensity(-80, 2400, 2010, 100) , 1.0E-01);
-        
-        assertEquals(54829.5, magModel.getIntensity(80, 0, 2012.5, 0) , 1.0E-01);
-        assertEquals(41082.8, magModel.getIntensity(0, 120, 2012.5, 0) , 1.0E-01);
-        assertEquals(55755.7, magModel.getIntensity(-80, 240, 2012.5, 0) , 1.0E-01);
-        assertEquals(52648.9, magModel.getIntensity(80, 0, 2012.5, 100) , 1.0E-01);
-        assertEquals(39046.7, magModel.getIntensity(0, 120, 2012.5, 100) , 1.0E-01);
-        assertEquals(53024.9, magModel.getIntensity(-80, 2400, 2012.5, 100) , 1.0E-01);
-        
-        assertEquals(54829.5, magModel.getIntensity(80, 0) , 1.0E-01);
-        assertEquals(41082.8, magModel.getIntensity(0, 120) , 1.0E-01);
-        assertEquals(55755.7, magModel.getIntensity(-80, 240) , 1.0E-01);
+        assertEquals(54836.0, magModel.getIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(41090.9, magModel.getIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(55519.8, magModel.getIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals(52652.0, magModel.getIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(39052.7, magModel.getIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(52804.4, magModel.getIntensity(-80, 240, 2015, 100) , 5.0E-02);
+                       
+        assertEquals(54858.5, magModel.getIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(41080.5, magModel.getIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(55313.4, magModel.getIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals(52670.9, magModel.getIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(39042.5, magModel.getIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(52611.1, magModel.getIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
+                             
+        assertEquals(54858.5, magModel.getIntensity(80, 0) , 5.0E-02);
+        assertEquals(41080.5, magModel.getIntensity(0, 120) , 5.0E-02);
+        assertEquals(55313.4, magModel.getIntensity(-80, 240) , 5.0E-02);
+        //assertEquals(52672.8, magModel.getIntensity(40, -105, 2014, 0), 0.05);
+        //assertEquals(52672.8, magModel.getIntensity(40, -105, magModel.decimalYear(new GregorianCalendar(2014, 0, 0)), 0), 0.05);
+        //assertEquals(52672.5, magModel.getIntensity(40, -105, magModel.decimalYear(new GregorianCalendar(2014, 0, 1)), 0), 0.05);
     }
     
     /**
@@ -243,5 +228,9 @@ public class TSAGeoMagTest
 	GregorianCalendar cal2 = new GregorianCalendar(2012, 6, 1);  // the full day of July 1, 0 hours into 2 July
 	assertTrue(cal2.isLeapYear(2012));
 	assertEquals(2012.5, mag.decimalYear(cal2), 0.0);
+	
+	cal2 = new GregorianCalendar(2013, 3, 13);
+	assertFalse(cal2.isLeapYear(2013));
+	assertEquals(2013.282, mag.decimalYear(cal2), 0.0005);
     }
 }
