@@ -66,7 +66,7 @@ public class RestApiHandler {
 		if(logger.isDebugEnabled())logger.debug("We are processing the path = "+path);
         
         //check valid request.
-        if(path.length()<JsonConstants.SIGNALK_API.length()){
+        if(path.length()<JsonConstants.SIGNALK_API.length() || !path.startsWith(JsonConstants.SIGNALK_API)){
         	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	return null;
         }

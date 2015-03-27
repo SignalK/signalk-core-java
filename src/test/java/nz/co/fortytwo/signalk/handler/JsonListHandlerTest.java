@@ -77,5 +77,16 @@ public class JsonListHandlerTest {
 		logger.debug(reply);
 		assertTrue(reply.asList().size()>4);
 	}
+	@Test
+	public void shouldProduceSpecificPathList() throws Exception {
+		//test ? works
+		String request = "{\"context\":\"vessels.*\",\"list\":[{\"path\":\"navigation.position.l?t*\"}]}";
+		Json json = Json.read(request);
+		JsonListHandler processor = new JsonListHandler();
+		Json reply = processor.handle(json);
+		assertNotNull(reply);
+		logger.debug(reply);
+		assertTrue(reply.asList().size()==1);
+	}
 
 }
