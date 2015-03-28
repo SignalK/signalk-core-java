@@ -104,6 +104,10 @@ public class JsonGetHandler {
 						return path.at(FORMAT).asString();
 					}
 				}
+			}else{
+				if (paths.has(FORMAT)) {
+					return paths.at(FORMAT).asString();
+				}
 			}
 
 		}

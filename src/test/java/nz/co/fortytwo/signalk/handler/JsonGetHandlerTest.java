@@ -57,6 +57,20 @@ public class JsonGetHandlerTest {
 	}
 
 	@Test
+	public void shouldFindFullFormat(){
+		String json = "{\"context\":\"vessels.motu\",\"get\":[{\"path\":\"environment.wind.*\",\"format\":\"full\"}]}";
+		JsonGetHandler processor = new JsonGetHandler();
+		String format = processor.getFormat(Json.read(json));
+		assertEquals("full",format);
+	}
+	@Test
+	public void shouldFindDeltaFormat(){
+		String json = "{\"context\":\"vessels.motu\",\"get\":[{\"path\":\"environment.wind.*\",\"format\":\"delta\"}]}";
+		JsonGetHandler processor = new JsonGetHandler();
+		String format = processor.getFormat(Json.read(json));
+		assertEquals("delta",format);
+	}
+	@Test
 	public void shouldGetPaths() throws Exception {
 		SignalKModel model = SignalKModelFactory.getInstance();
 		model.getData().clear();
