@@ -25,13 +25,20 @@ package nz.co.fortytwo.signalk.util;
 
 public class Constants {
 
+	//camel output destination types
+	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";
+	public static final String OUTPUT_MQTT = "OUTPUT_MQTT";
+	public static final String OUTPUT_STOMP = "OUTPUT_STOMP";
+	//misc camel header constants
+	public static final String DESTINATION = "destination";
+	public static final String REPLY_TO = "reply-to";
+	public static final String CamelMQTTPublishTopic = "CamelMQTTPublishTopic";
 	// attached device types
 	public static final String UID = "UID";
 	public static final String IMU = "IMU";
 	public static final String MEGA = "MEGA";
 
 	public static final String MERGE_MODEL = "MRG"; 
-
 		
 	// config constants
 	public static final String DEMO = "signalk.demo";
@@ -46,7 +53,6 @@ public class Constants {
 	public static final String SERIAL_PORTS = "signalk.serial.ports";
 	public static final String SERIAL_PORT_BAUD = "signalk.serial.port.baud";
 
-	
 	//debug flags
 	public static final String SEND_MESSAGE = "signalk.debug.sendMessage";
 	public static final String STATIC_DIR = "signalk.static.files.dir";
@@ -56,6 +62,7 @@ public class Constants {
 	public static final String UDP_PORT = "signalk.udp.port";
 	public static final String TCP_NMEA_PORT = "signalk.tcp.nmea.port";
 	public static final String UDP_NMEA_PORT = "signalk.udp.nmea.port";
+	
 	
 	public Constants() {
 		// TODO Auto-generated constructor stub
