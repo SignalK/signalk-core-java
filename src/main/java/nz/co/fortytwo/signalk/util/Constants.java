@@ -29,6 +29,9 @@ public class Constants {
 	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";
 	public static final String OUTPUT_MQTT = "OUTPUT_MQTT";
 	public static final String OUTPUT_STOMP = "OUTPUT_STOMP";
+	public static final String OUTPUT_TCP = "OUTPUT_TCP";
+	public static final String OUTPUT_WS = "OUTPUT_WS";
+	public static final String OUTPUT_NMEA = "OUTPUT_NMEA";
 	//misc camel header constants
 	public static final String DESTINATION = "destination";
 	public static final String REPLY_TO = "reply-to";
