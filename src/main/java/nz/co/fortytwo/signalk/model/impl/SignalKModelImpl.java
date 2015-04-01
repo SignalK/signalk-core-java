@@ -22,22 +22,21 @@
  *
  */
 package nz.co.fortytwo.signalk.model.impl;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
-import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
+
+import org.apache.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
@@ -63,6 +62,7 @@ import com.google.common.eventbus.EventBus;
  */
 public class SignalKModelImpl implements SignalKModel {
     
+	private static Logger logger = Logger.getLogger(SignalKModelImpl.class);
     private final char separator;
     private final NavigableMap<String,Object> root;
 
@@ -87,17 +87,7 @@ public class SignalKModelImpl implements SignalKModel {
         this.root = new ConcurrentSkipListMap<String,Object>(root);
     }
     
-    /**
-     * Create a new Model
-     * @param numrevisions the number of revisions to record a list of changed keys. The only
-     * storage overhead here is one Set per revision, so more is not expensive.
-     */
-    public SignalKModelImpl(char separator) {
-        this.separator = separator;
-        root = new ConcurrentSkipListMap<String,Object>();
-
-    }
-
+    
     /**
      * Return the hierarchy separator
      */
@@ -117,6 +107,7 @@ public class SignalKModelImpl implements SignalKModel {
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
         }
         if (!value.equals(root.put(key, value))) {
+        	logger.debug("doPut "+key+"="+value);
         	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
         		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
         	}
@@ -152,6 +143,7 @@ public class SignalKModelImpl implements SignalKModel {
     		return doDelete(key);
 		}
     	if(value instanceof Boolean || value instanceof Number || value instanceof String){
+    		logger.debug("Put "+key+"="+value);
     		return doPut(key, value);
     	}
     	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value);
@@ -237,8 +229,11 @@ public class SignalKModelImpl implements SignalKModel {
 	public boolean putAll(SortedMap<String, Object> map) {
 		boolean success = true;
 		for(Entry<String, Object> entry: map.entrySet()){
-			success = success && put(entry.getKey(),entry.getValue());
+			logger.debug("Adding "+entry.getKey()+"="+entry.getValue());
+			boolean s = put(entry.getKey(),entry.getValue());
+			success = success && s;
 		}
+		logger.debug("putAll done: "+this);
 		return success;
 	}
 

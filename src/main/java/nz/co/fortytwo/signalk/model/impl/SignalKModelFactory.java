@@ -35,6 +35,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 public class SignalKModelFactory {
 	private static SignalKModel signalKModel;
 	static{
+		if(signalKModel==null)
 			signalKModel=new SignalKModelImpl();
 	}
 	/**
