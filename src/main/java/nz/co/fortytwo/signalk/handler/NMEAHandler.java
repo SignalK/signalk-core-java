@@ -290,7 +290,6 @@ public class NMEAHandler{
 								try {
 									sk.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+source+dot+"src",sen.toSentence());
 									sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , sen.getHeading(),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
-									
 								} catch (Exception e) {
 									logger.error(e.getMessage());
 								}
@@ -304,7 +303,7 @@ public class NMEAHandler{
 						RMCSentence sen = (RMCSentence) evt.getSentence();
 						Util.checkTime(sen);
 						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeed()));
-						sk.put(vessels_dot_self_dot + nav_speedOverGround , Util.kntToMs(sen.getSpeed()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						sk.put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
 					}
 					if (evt.getSentence() instanceof VHWSentence) {
 						VHWSentence sen = (VHWSentence) evt.getSentence();
@@ -380,6 +379,7 @@ public class NMEAHandler{
 				}
 				
 			}
+
 
 			public void readingStopped() {
 			}

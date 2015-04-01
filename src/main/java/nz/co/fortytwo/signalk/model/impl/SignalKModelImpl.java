@@ -46,63 +46,36 @@ import com.google.common.eventbus.EventBus;
  * A thread-safe datamodel. Objects are stored with hierarchical keys, eg "a.b"
  * or "a.b.c", and a node in the tree can be a leaf or an intermediate, not both.
  * Nodes are always stored alphabetically.  Objects can be inserted or deleted
- * on any thread so long as a lock is acquired, and any thread can retrieve the
- * list of keys modified for that revision, or for the whole model or a subtree
+ * on any thread  or for the whole model or a subtree
  * of it without locking and without needing to synchronized on the returned tree.
- * </p><p>
- * To update, the model lock should be acquired, then fields set, and finally the
- * model unlocked, e.g.
  * </p><pre>
- * model.lock();
+
  * model.put("vessels.self.navigation.position.latitude", 57.9);
  * model.put("vessels.self.navigation.position.longitude", 17.2);
  * model.put("vessels.self.navigation.position.source", "gps");
  * model.put("vessels.self.navigation.position.teimstamp", model.timestamp());
- * model.unlock();
+
  * </pre>
  * <p>
- * On unlock, provided the model has been updated the revision will be
- * incremented. Any objects that want to be notified of this change should
- * wait on the model from another thread; either directly, or by calling {@link #watch}.
- * When notified they can retrieve the current state of the model by calling
- * {@link #getRevision}, and {@link #getRevisionKeys}, or they can get the same
- * data from {@link ModelEvent} if they called watch. For example:
- * </p><pre>
- * ModelEvent event = model.watch(1000, watchtest);
- * if (event == null) {
- *    // 1000ms without a matching event reached
- * } else {
- *    // event is now an event that was "watched" by watchtest
- * }
- * </pre>
+ * Changes to the model are notified on the Guava EventBus. To listen for changes 
+ * obtain the event bus (getEventBus()) and register for PathEvent
+ * </p>
  */
 public class SignalKModelImpl implements SignalKModel {
     
     private final char separator;
     private final NavigableMap<String,Object> root;
-    private final int numrevisions;
-    private final NavigableSet<String>[] mark;
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private boolean alive;
-    private volatile int revision;
+
     private int nextrevision;
-    private long touch;
-    private String formattouch, revisionkey;
-  //private Json this;
+
   	private EventBus eventBus = new EventBus();
     
   	 /**
      * Create a new Model
-     * @param numrevisions = 100, the number of revisions to record a list of changed keys. The only
-     * storage overhead here is one Set per revision, so more is not expensive.
-     * @param separator = '.', the hierarchy separator, eg '.' or '/'
      */
     public SignalKModelImpl() {
-    	this.numrevisions = 1000;
         this.separator = '.';
         root = new ConcurrentSkipListMap<String,Object>();
-        mark = new NavigableSet[numrevisions];
-        alive = true;
     }
     
     /**
@@ -110,25 +83,19 @@ public class SignalKModelImpl implements SignalKModel {
      * @param root
      */
     public SignalKModelImpl(NavigableMap<String,Object> root) {
-    	this.numrevisions = 1000;
         this.separator = '.';
         this.root = new ConcurrentSkipListMap<String,Object>(root);
-        mark = new NavigableSet[numrevisions];
-        alive = true;
     }
     
     /**
      * Create a new Model
      * @param numrevisions the number of revisions to record a list of changed keys. The only
      * storage overhead here is one Set per revision, so more is not expensive.
-     * @param separator the hierarchy separator, eg '.' or '/'
      */
-    public SignalKModelImpl(int numrevisions, char separator) {
-        this.numrevisions = numrevisions;
+    public SignalKModelImpl(char separator) {
         this.separator = separator;
         root = new ConcurrentSkipListMap<String,Object>();
-        mark = new NavigableSet[numrevisions];
-        alive = true;
+
     }
 
     /**
@@ -138,42 +105,6 @@ public class SignalKModelImpl implements SignalKModel {
         return separator;
     }
 
-    /**
-     * Set the key against which to store the current revision number in the
-     * model, or null to not store it
-     */
-    public void setRevisionKey(String key) {
-        this.revisionkey = key;
-    }
-
-    /* (non-Javadoc)
-	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#lock()
-	 */
-    @Override
-	public void lock() {
-        lock.writeLock().lock();
-        nextrevision++;
-        // Create a new one here because it's possible for a slow thread
-        // still to have a handle on an old one. This will eliminate
-        // any concurrency problems.
-        setmark(nextrevision % numrevisions, new TreeSet<String>());
-    }
-
-    /* (non-Javadoc)
-	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#readLock()
-	 */
-    @Override
-	public void readLock() {
-        lock.readLock().lock();
-    }
-
-    /* (non-Javadoc)
-	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#readUnlock()
-	 */
-    @Override
-	public void readUnlock() {
-        lock.readLock().unlock();
-    }
 
     private boolean doPut(String key, Object value) {
         // If value = "aa.bb.cc", fail if map contains "aa.bb" or "aa.bb.cc.dd"
@@ -189,7 +120,6 @@ public class SignalKModelImpl implements SignalKModel {
         	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
         		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
         	}
-            //mark(key);
             return true;
         } else {
             return false;
@@ -203,7 +133,6 @@ public class SignalKModelImpl implements SignalKModel {
             String mapkey = i.next();
             if (mapkey.startsWith(key) && (mapkey.length() == key.length() || mapkey.charAt(key.length()) == separator)) {
             	eventBus.post(new PathEvent(mapkey, nextrevision ,PathEvent.EventType.DEL));
-                //mark(mapkey);
                 i.remove();
                 found = true;
             } else {
@@ -248,12 +177,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public Object get(String key) {
-        try {
-            lock.readLock().lock();
-            return root.get(key);
-        } finally {
-            lock.readLock().unlock();
-        }
+    	return root.get(key);
     }
     
     /* (non-Javadoc)
@@ -261,12 +185,7 @@ public class SignalKModelImpl implements SignalKModel {
    	 */
        @Override
    	public Object getValue(String key) {
-           try {
-               lock.readLock().lock();
                return root.get(key+".value");
-           } finally {
-               lock.readLock().unlock();
-           }
        }
 
     /* (non-Javadoc)
@@ -274,13 +193,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public NavigableSet<String> getTree(String key) {
-        try {
-            lock.readLock().lock();
-            //return Collections.unmodifiableNavigableSet(getKeys().subSet(key+".", true, key+".\uFFFD", true));
-            return getKeys().subSet(key, true, key+".\uFFFD", true);
-        } finally {
-            lock.readLock().unlock();
-        }
+         return getKeys().subSet(key, true, key+".\uFFFD", true);
     }
     
     /* (non-Javadoc)
@@ -288,118 +201,9 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public NavigableMap<String, Object> getSubMap(String key) {
-        try {
-            lock.readLock().lock();
-            //return Collections.unmodifiableNavigableSet(getKeys().subSet(key+".", true, key+".\uFFFD", true));
             return root.subMap(key, true, key+".\uFFFD", true);
-            
-        } finally {
-            lock.readLock().unlock();
-        }
     }
 
-  
-
-    @SuppressWarnings("unchecked")
-    private NavigableSet<String> getmark(int i) {
-        return mark[i];
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setmark(int i, NavigableSet<String> v) {
-        mark[i] = v;
-    }
-
-    /* (non-Javadoc)
-	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#unlock()
-	 */
-    @Override
-	public boolean unlock() {
-        NavigableSet<String> m = getmark(nextrevision % numrevisions);
-        if (m.isEmpty()) {
-            lock.writeLock().unlock();
-            return false;
-        } else {
-            revision = nextrevision; 
-            if (revisionkey != null) {
-                put(revisionkey, revision);
-            }
-            lock.writeLock().unlock();
-            //setmark(revision % numrevisions, m = Collections.unmodifiableNavigableSet(m));
-            setmark(revision % numrevisions, m );
-            modelChanged();
-            return true;
-        }
-    }
-
-    /**
-     * Called when the Model has changed, the default implementation
-     * will notify any object that called Object.wait on this object.
-     */
-    protected void modelChanged() {
-        //event = new ModelEvent(this, revision, getRevisionKeys(revision));
-        synchronized(this) {
-            notifyAll();
-        }
-    }
-
-  
-    /**
-     * Close the model - all this will do is interrupt any Objects waiting on this
-     */
-    public synchronized void close() {
-        alive = false;
-        notifyAll();
-    }
-    
-    /**
-     * Return true if the model is alive (i.e. not closed).
-     */
-    public synchronized boolean isAlive() {
-        return alive;
-    }
-
-
-    /**
-     * Return the current revision - this increased by one every time
-     * {@link #unlock} is called after changes have been made.
-     */
-    public int getRevision() {
-        return revision;
-    }
-
-    /**
-     * Return the oldest revision number that can be passed into {@link #getRevisionKeys}
-     */
-    public int getOldestRevision() {
-        return Math.max(0, nextrevision - numrevisions + 1);
-    }
-
-    /** 
-     * Return a list of all keys modified between the specified revision
-     * and the current revision, inclusive. If the specified revision has
-     * expired, this method returns null - it can't be determined what has
-     * changed between the specified revision and now.
-     * Returned set is read-only and is guaranteed to remain unchanged
-     * during its lifetime - there is no need to synchronize.
-     */
-    public NavigableSet<String> getRevisionKeys(int revision) {
-        if (revision < getOldestRevision()) {
-            return null;
-        } else if (revision == this.revision) {
-            return getmark(revision % numrevisions);
-        } else {
-            NavigableSet<String> s = new TreeSet<String>();
-            for (int i=revision;i<=this.revision;i++) {
-                Set<String> ss = getmark(i % numrevisions);
-                if (ss != null) {
-                    s.addAll(ss);
-                }
-            }
-            //return Collections.unmodifiableNavigableSet(s);     // Java 8 method
-            return s;
-        }
-    }
 
     /* (non-Javadoc)
 	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getEventBus()
@@ -426,12 +230,7 @@ public class SignalKModelImpl implements SignalKModel {
     }
 
     public String toString() {
-        try {
-            lock.readLock().lock();
             return root.toString();
-        } finally {
-            lock.readLock().unlock();
-        }
     }
 
 	@Override
@@ -447,41 +246,6 @@ public class SignalKModelImpl implements SignalKModel {
 	public boolean putValue(String key, Object value) {
 		return put(key+".value", value);
 	}
-
-	
-
-    /*
-    public static void main(String[] args) throws Exception {
-        Appendable out = System.out;
-
-        Model model = new Model(5, '.');
-        model.lock();
-        model.put("navigation.heading.magnetic", 29.1);
-        model.unlock();
-        model.lock();
-        model.put("navigation.heading.magnetic2", "b");
-        model.unlock();
-        Set x = model.getTree("navigation.heading");
-        System.out.println(x);
-        model.lock();
-        model.put("navigation.depth", "c");
-        model.unlock();
-        model.lock();
-        model.put("navigation.wind.angle", "c");
-        model.put("navigation.wind.direction", "c");
-        model.unlock();
-        model.lock();
-        model.put("navigation.heading.true", null);
-        model.unlock();
-        model.lock();
-        model.put("navigation.heading.magnetic", null);
-        model.unlock();
-        System.out.println(x);
-        model.lock();
-        model.put("navigation", null);
-        model.unlock();
-    }
-    */
 
 
 }

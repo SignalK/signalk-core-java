@@ -23,36 +23,14 @@
  */
 package nz.co.fortytwo.signalk.model;
 
-import java.util.Date;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
-import java.util.Set;
 import java.util.SortedMap;
-import java.util.concurrent.ConcurrentHashMap;
-
-import mjson.Json;
-
-import org.joda.time.DateTime;
 
 import com.google.common.eventbus.EventBus;
 
 public interface SignalKModel{
 		
-	/**
-	 * Lock the model for writing.
-	 */
-	public abstract void lock();
-
-	/**
-	 * Lock the model for reading
-	 */
-	public abstract void readLock();
-
-	/**
-	 * Unlock the model for reading
-	 */
-	public abstract void readUnlock();
-
 	/**
 	 * Get a value from the Model
 	 */
@@ -70,7 +48,7 @@ public interface SignalKModel{
 	 * Release the write lock, update the revision (assuming the model
 	 * has changed) and call {@link #modelChanged}
 	 */
-	public abstract boolean unlock();
+	//public abstract boolean unlock();
 
 	public abstract EventBus getEventBus();
 
