@@ -79,7 +79,7 @@ public class NMEAHandlerTest {
 		 logger.debug("Returned signalk tree:"+model);
 		 assertEquals(51.9485185d,(double)model.get(vessels_dot_self_dot +nav_position_latitude),0.0001);
 		 assertEquals(4.580064d,(double)model.get(vessels_dot_self_dot +nav_position_longitude),0.0001);
-		 assertEquals(0.1517598d,(double)model.getValue(vessels_dot_self_dot +nav_speedOverGround),0.0001);
+		 assertEquals(0.025293299999999994d,(double)model.getValue(vessels_dot_self_dot +nav_speedOverGround),0.0001);
 		 //logger.debug("Lat :"+model.get(vessels_dot_self_dot +nav_position_latitude));
 	}
 	
