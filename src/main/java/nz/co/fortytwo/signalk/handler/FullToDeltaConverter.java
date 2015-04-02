@@ -237,8 +237,12 @@ public class FullToDeltaConverter {
 		}
 		if(entry.asJsonMap().size()>0){
 			logger.debug("Clean up last values array : "+values);
-		//	entry.set(VALUES, values);
 			updates.add(entry);
+		}else{
+			if(values.asList().size()>0){
+				entry.set(VALUES, values);
+				updates.add(entry);
+			}
 		}
 
 	}

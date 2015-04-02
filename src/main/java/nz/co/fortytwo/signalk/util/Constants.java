@@ -32,6 +32,7 @@ public class Constants {
 	public static final String OUTPUT_TCP = "OUTPUT_TCP";
 	public static final String OUTPUT_WS = "OUTPUT_WS";
 	public static final String OUTPUT_NMEA = "OUTPUT_NMEA";
+	public static final String OUTPUT_REST = "OUTPUT_REST";
 	//misc camel header constants
 	public static final String DESTINATION = "destination";
 	public static final String REPLY_TO = "reply-to";
@@ -65,6 +66,7 @@ public class Constants {
 	public static final String UDP_PORT = "signalk.udp.port";
 	public static final String TCP_NMEA_PORT = "signalk.tcp.nmea.port";
 	public static final String UDP_NMEA_PORT = "signalk.udp.nmea.port";
+	
 	
 	
 	public Constants() {
