@@ -159,6 +159,7 @@ public class Util {
 		props.setProperty(Constants.UDP_PORT,"5554");
 		props.setProperty(Constants.TCP_NMEA_PORT,"5557");
 		props.setProperty(Constants.UDP_NMEA_PORT,"5556");
+		props.setProperty(Constants.CLOCK_SOURCE,"system");
 	}
 	
 

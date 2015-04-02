@@ -66,6 +66,7 @@ public class Constants {
 	public static final String UDP_PORT = "signalk.udp.port";
 	public static final String TCP_NMEA_PORT = "signalk.tcp.nmea.port";
 	public static final String UDP_NMEA_PORT = "signalk.udp.nmea.port";
+	public static final String CLOCK_SOURCE = "signalk.clock.source";
 	
 	
 	

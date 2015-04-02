@@ -40,6 +40,8 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,6 +63,7 @@ import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.VHWSentence;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.Constants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,12 +85,20 @@ public class NMEAHandler{
 
 	// map of sentence listeners
 	private ConcurrentMap<String, List<SentenceListener>> listeners = new ConcurrentHashMap<String, List<SentenceListener>>();
+	private boolean rmcClock=false;
 
 	public NMEAHandler() {
 		super();
 		// register BVE
 		//SentenceFactory.getInstance().registerParser("BVE", net.sf.marineapi.nmea.parser.BVEParser.class);
 		//SentenceFactory.getInstance().registerParser("XDR", net.sf.marineapi.nmea.parser.CruzproXDRParser.class);
+		try {
+			if("rmc".equals(Util.getConfig(null).getProperty(Constants.CLOCK_SOURCE))){
+				rmcClock=true;
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		} 
 		setNmeaListeners();
 	}
 
@@ -301,7 +312,7 @@ public class NMEAHandler{
 					
 					if (evt.getSentence() instanceof RMCSentence) {
 						RMCSentence sen = (RMCSentence) evt.getSentence();
-						Util.checkTime(sen);
+						if(rmcClock)Util.checkTime(sen);
 						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeed()));
 						sk.put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
 					}
