@@ -22,8 +22,12 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,6 +94,9 @@ public class N2KHandler {
 					String filter = "$.fields";
 					if(j.at(FILTER)!=null && !j.at(FILTER).isNull()){
 						filter=j.at(FILTER).asString();
+						//replace spaces in words only
+						filter=filter.replaceAll("([A-Za-z)]) ([(A-Za-z])", "$1_$2");
+						logger.debug("Converted filter:"+filter);
 					}
 					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(SOURCE).getValue().toString().replaceAll(" ", "_"));
 					String node = j.at(NODE).asString();
