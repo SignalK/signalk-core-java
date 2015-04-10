@@ -1,5 +1,6 @@
 package nz.co.fortytwo.signalk.util;
 import java.lang.reflect.Array;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -196,14 +197,15 @@ public class JsonSerializer {
     private void jsonWrite(String key, double value, Appendable out) throws IOException {
         int dp = getNumDecimalPlaces(key);
         if (df[dp] == null) {
-            StringBuilder sb = new StringBuilder(dp + 2);
-            sb.append("#0.");
-            for (int i=0;i<dp;i++) {
-                sb.append('0');
-            }
-            df[dp] = new DecimalFormat(sb.toString());
-            //need to avoid locale decimal symbol
-            df[dp].setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+            //StringBuilder sb = new StringBuilder(dp + 2);
+            //sb.append("#0.");
+           // for (int i=0;i<dp;i++) {
+           //     sb.append('0');
+           // }
+           // df[dp] = new DecimalFormat(sb.toString());
+        	 //need to avoid locale decimal symbol
+        	df[dp] = new DecimalFormat("0",DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+            df[dp].setMaximumFractionDigits(dp);
         }
         String v = df[dp].format(value);
 
