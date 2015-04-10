@@ -23,14 +23,11 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.*;
-import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
-import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import mjson.Json;
 
@@ -87,34 +84,39 @@ public class FullToDeltaConverter {
 	 * @param node
 	 * @return
 	 */
-	public Json handle(Json node) {
+	public List<Json> handle(Json node) {
 		// avoid full signalk syntax
-		if (node.has(CONTEXT))
-			return node;
+		List<Json> list = new ArrayList<Json>();
+		if (node.has(CONTEXT)){
+			list.add(node);
+			return list;
+		}
 		// deal with diff format
 		if (node.has(VESSELS)) {
 			if(logger.isDebugEnabled())logger.debug("processing full format  " + node);
 			// find the first branch that splits
-			Json ctx = getContext(node.at(VESSELS));
-		
-			String context = ctx.getPath();
-			// process it
+			//Json ctx = getContext();
+			for(Json vessel : node.at(VESSELS).asJsonMap().values()){
+				String context = vessel.getPath();
+				// process it
 
-			// add values
-			Json updates = Json.array();
-			getEntries(updates, Json.array(), null, ctx, context.length() + 1);
+				// add values
+				Json updates = Json.array();
+				getEntries(updates, Json.array(), null, vessel, context.length() + 1);
 
-			if (updates.asList().size() == 0)
-				return null;
-
-			Json delta = Json.object();
-			delta.set(CONTEXT, context);
-			delta.set(UPDATES, updates);
-
-			return delta;
+				if (updates.asList().size() > 0){
+	
+					Json delta = Json.object();
+					delta.set(CONTEXT, context);
+					delta.set(UPDATES, updates);
+					list.add(delta);
+				}
+			}
+			
 		}
+		if(list.size()==0)return null;
 		// misc types
-		return node;
+		return list;
 	}
 
 	/**
