@@ -202,6 +202,8 @@ public class JsonSerializer {
                 sb.append('0');
             }
             df[dp] = new DecimalFormat(sb.toString());
+            //need to avoid locale decimal symbol
+            df[dp].setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
         }
         String v = df[dp].format(value);
 
