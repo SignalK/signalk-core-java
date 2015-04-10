@@ -204,7 +204,7 @@ public class JsonSerializer {
            // }
            // df[dp] = new DecimalFormat(sb.toString());
         	 //need to avoid locale decimal symbol
-        	df[dp] = new DecimalFormat("0",DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        	df[dp] = new DecimalFormat("0.0",DecimalFormatSymbols.getInstance(Locale.ENGLISH));
             df[dp].setMaximumFractionDigits(dp);
         }
         String v = df[dp].format(value);
