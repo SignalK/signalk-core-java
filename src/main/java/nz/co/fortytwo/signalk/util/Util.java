@@ -160,6 +160,11 @@ public class Util {
 		props.setProperty(Constants.TCP_NMEA_PORT,"5557");
 		props.setProperty(Constants.UDP_NMEA_PORT,"5556");
 		props.setProperty(Constants.CLOCK_SOURCE,"system");
+		props.setProperty(Constants.HAWTIO_PORT, "8000");
+		props.setProperty(Constants.HAWTIO_AUTHENTICATE,"false");
+		props.setProperty(Constants.HAWTIO_CONTEXT,"/hawtio");
+		props.setProperty(Constants.HAWTIO_WAR ,"./hawtio/hawtio-default-offline-1.4.48.war");
+		props.setProperty(Constants.HAWTIO_START,"true");
 	}
 	
 

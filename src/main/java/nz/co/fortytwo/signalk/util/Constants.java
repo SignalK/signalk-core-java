@@ -67,6 +67,11 @@ public class Constants {
 	public static final String TCP_NMEA_PORT = "signalk.tcp.nmea.port";
 	public static final String UDP_NMEA_PORT = "signalk.udp.nmea.port";
 	public static final String CLOCK_SOURCE = "signalk.clock.source";
+	public static final String HAWTIO_PORT = "hawtio.port";
+	public static final String HAWTIO_AUTHENTICATE = "hawtio.authenticationEnabled";
+	public static final String HAWTIO_CONTEXT = "hawtio.context";
+	public static final String HAWTIO_WAR = "hawtio.war";
+	public static final String HAWTIO_START = "hawtio.start";
 	
 	
 	
