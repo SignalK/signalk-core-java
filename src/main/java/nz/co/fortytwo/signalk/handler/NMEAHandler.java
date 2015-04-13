@@ -66,6 +66,8 @@ import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.Constants;
 import nz.co.fortytwo.signalk.util.Util;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -121,14 +123,15 @@ public class NMEAHandler{
 		SignalKModel model = null;
 		if (StringUtils.isNotBlank(bodyStr)&& bodyStr.startsWith("$")) {
 			try {
-				if(logger.isDebugEnabled())logger.debug("Processing NMEA:" + bodyStr);
+				if(logger.isDebugEnabled())logger.debug("Processing NMEA:[" + bodyStr+"]");
 				Sentence sentence = SentenceFactory.getInstance().createParser(bodyStr);
 				model = SignalKModelFactory.getCleanInstance();
 				fireSentenceEvent(model, sentence, source);
 				return model;
 			} catch (Exception e) {
 				logger.debug(e.getMessage(), e);
-				logger.error(e.getMessage() + " : " + bodyStr);
+				logger.error(e.getMessage() + ":" + bodyStr.getBytes());
+				logger.error("   in hexidecimal : " + Hex.encodeHexString(bodyStr.getBytes()));
 			}
 		}
 		return null;
