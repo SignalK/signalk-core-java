@@ -73,10 +73,10 @@ public class JsonConstants extends SignalKConstants {
 	public static final String timezone = "timezone";
 	
 
-	public static final String SIGNALK_AUTH = "/signalk/auth";
-	public static final String SIGNALK_API = "/signalk/api";
-	public static final String SIGNALK_SUBSCRIBE = "/signalk/stream";
-	public static final String SIGNALK_WS = "/signalk/stream";
+	public static final String SIGNALK_AUTH = "/signalk/auth/v1";
+	public static final String SIGNALK_API = "/signalk/api/v1";
+	public static final String SIGNALK_WS_URL = "/signalk/stream/v1/url";
+	public static final String SIGNALK_WS = "/signalk/stream/v1/ws";
 	
 	public JsonConstants() {
 		// TODO Auto-generated constructor stub
