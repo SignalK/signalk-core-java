@@ -23,20 +23,21 @@
  */
 package nz.co.fortytwo.signalk.util;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
-import static nz.co.fortytwo.signalk.util.JsonConstants.nav_anchor_position_latitude;
-import static org.junit.Assert.assertEquals;
-import mjson.Json;
-import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import java.net.UnknownHostException;
 
+import mjson.Json;
+
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 public class UtilTest {
 
+	private static Logger logger = Logger.getLogger(UtilTest.class);
+	
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -45,6 +46,28 @@ public class UtilTest {
 	public void tearDown() throws Exception {
 	}
 
+	@Test
+	public void shouldGetWelcomeMsg(){
+		Json msg = Util.getWelcomeMsg();
+		logger.debug(msg);
+		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","self":"motu"}
+		assertTrue(msg.has(SignalKConstants.timestamp));
+		assertTrue(msg.has(SignalKConstants.version));
+		assertTrue(msg.has(SignalKConstants.self_str));
+	}
 	
+	@Test
+	public void shouldGetAddressesMsg() throws UnknownHostException{
+		Json msg = Util.getAddressesMsg();
+		logger.debug(msg);
+		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","self":"motu"}
+		assertTrue(msg.has(SignalKConstants.stompPort));
+		assertTrue(msg.has(SignalKConstants.mqttPort));
+		assertTrue(msg.has(SignalKConstants.websocketUrl));
+		assertTrue(msg.has(SignalKConstants.signalkTcpPort));
+		assertTrue(msg.has(SignalKConstants.signalkUdpPort));
+		assertTrue(msg.has(SignalKConstants.nmeaUdpPort));
+		assertTrue(msg.has(SignalKConstants.nmeaTcpPort));
+	}
 
 }

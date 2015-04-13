@@ -30,6 +30,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -143,8 +145,8 @@ public class Util {
 	public static void setDefaults(Properties props) {
 		//populate sensible defaults here
 		props.setProperty(Constants.SELF,"self");
-		props.setProperty(Constants.WEBSOCKET_PORT,"9292");
-		props.setProperty(Constants.REST_PORT,"9290");
+		props.setProperty(Constants.WEBSOCKET_PORT,"3000");
+		props.setProperty(Constants.REST_PORT,"8080");
 		props.setProperty(Constants.CFG_DIR,"./conf/");
 		props.setProperty(Constants.CFG_FILE,"signalk.cfg");
 		props.setProperty(Constants.DEMO,"false");
@@ -159,14 +161,42 @@ public class Util {
 		props.setProperty(Constants.UDP_PORT,"5554");
 		props.setProperty(Constants.TCP_NMEA_PORT,"5557");
 		props.setProperty(Constants.UDP_NMEA_PORT,"5556");
+		props.setProperty(Constants.STOMP_PORT,"61613");
+		props.setProperty(Constants.MQTT_PORT,"1883");
 		props.setProperty(Constants.CLOCK_SOURCE,"system");
 		props.setProperty(Constants.HAWTIO_PORT, "8000");
 		props.setProperty(Constants.HAWTIO_AUTHENTICATE,"false");
 		props.setProperty(Constants.HAWTIO_CONTEXT,"/hawtio");
 		props.setProperty(Constants.HAWTIO_WAR ,"./hawtio/hawtio-default-offline-1.4.48.war");
 		props.setProperty(Constants.HAWTIO_START,"true");
+		props.setProperty(Constants.VERSION, "0.1");
 	}
 	
+
+	public static Json getAddressesMsg() throws UnknownHostException{
+		Json msg = Json.object();
+		msg.set(SignalKConstants.websocketUrl, "ws://"+InetAddress.getLocalHost().getCanonicalHostName()+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS_URL);
+		msg.set(SignalKConstants.signalkTcpPort,getConfigProperty(Constants.TCP_PORT));
+		msg.set(SignalKConstants.signalkUdpPort,getConfigProperty(Constants.UDP_PORT));
+		msg.set(SignalKConstants.nmeaTcpPort,getConfigProperty(Constants.TCP_NMEA_PORT));
+		msg.set(SignalKConstants.nmeaUdpPort,getConfigProperty(Constants.UDP_NMEA_PORT));
+		msg.set(SignalKConstants.stompPort,getConfigProperty(Constants.STOMP_PORT));
+		msg.set(SignalKConstants.mqttPort,getConfigProperty(Constants.MQTT_PORT));
+		
+		return msg;
+	}
+	
+	public static Json getWelcomeMsg(){
+		Json msg = Json.object();
+		msg.set(SignalKConstants.version, getVersion());
+		msg.set(SignalKConstants.timestamp, getIsoTimeString());
+		msg.set(SignalKConstants.self_str, JsonConstants.SELF);
+		return msg;
+	}
+	
+	public static String getVersion() {
+		return getConfigProperty(Constants.VERSION);
+	}
 
 	/**
 	 * Round to specified decimals

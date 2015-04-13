@@ -25,6 +25,8 @@ package nz.co.fortytwo.signalk.util;
 
 public class Constants {
 
+	public static final String VERSION = "signalk.version";
+	
 	//camel output destination types
 	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";
 	public static final String OUTPUT_MQTT = "OUTPUT_MQTT";
@@ -72,6 +74,9 @@ public class Constants {
 	public static final String HAWTIO_CONTEXT = "hawtio.context";
 	public static final String HAWTIO_WAR = "hawtio.war";
 	public static final String HAWTIO_START = "hawtio.start";
+
+	public static final String STOMP_PORT = "signalk.stomp.port";
+	public static final String MQTT_PORT = "signalk.mqtt.port";
 	
 	
 	

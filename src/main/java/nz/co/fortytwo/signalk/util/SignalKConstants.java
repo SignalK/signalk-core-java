@@ -28,6 +28,7 @@ package nz.co.fortytwo.signalk.util;
 public class SignalKConstants {
 
 	//fixed
+	public static final String self_str =  "self";
 	public static final String self =  Util.getConfigProperty(Constants.SELF);
 	public static final String version = "version";
 	public static final String timestamp = "timestamp";
@@ -39,6 +40,16 @@ public class SignalKConstants {
 	public static final String meta = "meta";
 	public static final String attr = "_attr";
 	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
+	
+	public static final String websocketUrl="websocketUrl";
+	
+	public static final String signalkTcpPort = "signalkTcpPort";
+	public static final String signalkUdpPort = "signalkUdpPort";
+	public static final String nmeaTcpPort = "nmeaTcpPort";
+	public static final String nmeaUdpPort = "nmeaUdpPort";
+	
+	public static final String stompPort = "stompPort";
+	public static final String mqttPort = "mqttPort";
 	
 	//temp
 	public static final String env_time = "environment.time";
@@ -259,6 +270,8 @@ public class SignalKConstants {
 	public static final String tanks_id_capacity = "tanks.*.capacity";
 	public static final String tanks_id_level = "tanks.*.level";
 	public static final String tanks_id_tankType = "tanks.*.tankType";
+	
+	
 
 	public SignalKConstants() {
 		super();
