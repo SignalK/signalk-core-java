@@ -22,9 +22,7 @@
  *
  */
 package nz.co.fortytwo.signalk.model.impl;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -32,9 +30,11 @@ import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.regex.Pattern;
 
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
+import nz.co.fortytwo.signalk.util.JsonConstants;
 
 import org.apache.log4j.Logger;
 
@@ -65,6 +65,8 @@ public class SignalKModelImpl implements SignalKModel {
 	private static Logger logger = Logger.getLogger(SignalKModelImpl.class);
     private final char separator;
     private final NavigableMap<String,Object> root;
+    private Pattern selfMatch = Pattern.compile("\\.self\\.");
+    private static String dot_self_dot = dot+JsonConstants.SELF+dot;
 
     private int nextrevision;
 
@@ -139,6 +141,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public boolean put(String key, Object value) throws IllegalArgumentException{
+    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
     	if(value == null){
     		return doDelete(key);
 		}
@@ -151,12 +154,14 @@ public class SignalKModelImpl implements SignalKModel {
 
     @Override
 	public boolean put(String key, Object value, String source) throws IllegalArgumentException {
+    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
     	if(source==null)return (doPut(key, value));
 		return (doPut(key+".value", value)&& doPut(key+".source", source));
 	}
 
 	@Override
 	public boolean put(String key, Object value, String source, String timestamp) throws IllegalArgumentException {
+		key = selfMatch.matcher(key).replaceAll(dot_self_dot);
 		if(source!=null&& timestamp!=null)return (doPut(key+".value", value)&& doPut(key+".source", source)&& doPut(key+".timestamp", timestamp));
 		if(source!=null&& timestamp==null)return (doPut(key+".value", value)&& doPut(key+".source", source));
 		if(source==null&& timestamp!=null)return (doPut(key+".value", value)&& doPut(key+".timestamp", timestamp));
@@ -169,6 +174,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public Object get(String key) {
+    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
     	return root.get(key);
     }
     
@@ -177,6 +183,7 @@ public class SignalKModelImpl implements SignalKModel {
    	 */
        @Override
    	public Object getValue(String key) {
+    	   key = selfMatch.matcher(key).replaceAll(dot_self_dot);
                return root.get(key+".value");
        }
 
@@ -185,6 +192,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public NavigableSet<String> getTree(String key) {
+    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
          return getKeys().subSet(key, true, key+".\uFFFD", true);
     }
     
@@ -193,6 +201,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public NavigableMap<String, Object> getSubMap(String key) {
+    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
             return root.subMap(key, true, key+".\uFFFD", true);
     }
 
@@ -239,6 +248,7 @@ public class SignalKModelImpl implements SignalKModel {
 
 	@Override
 	public boolean putValue(String key, Object value) {
+		key = selfMatch.matcher(key).replaceAll(dot_self_dot);
 		return put(key+".value", value);
 	}
 

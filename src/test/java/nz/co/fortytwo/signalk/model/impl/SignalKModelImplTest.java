@@ -26,11 +26,13 @@ package nz.co.fortytwo.signalk.model.impl;
 import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_altitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -43,6 +45,7 @@ import java.util.NavigableMap;
 import java.util.SortedMap;
 
 import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
@@ -64,6 +67,17 @@ public class SignalKModelImplTest {
 	public void tearDown() throws Exception {
 	}
 	
+	@Test
+	public void shouldSubstituteSelf() throws IOException {
+		
+		SignalKModel signalk = new SignalKModelImpl();
+		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		logger.debug(signalk);
+		
+		signalk.putValue("vessels.self.environment.wind.angleApparent", 256.0d);
+		
+		assertEquals(256.0, signalk.getValue(vessels+dot+JsonConstants.SELF+dot+env_wind_angleApparent));
+	}
 
 	@Test
 	public void shouldReturnBranch() throws IOException {
