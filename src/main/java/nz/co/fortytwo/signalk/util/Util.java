@@ -313,7 +313,15 @@ public class Util {
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}
-		return "self";
+		return null;
+	}
+	public static Integer getConfigPropertyInt(String prop) {
+		try {
+			return Integer.valueOf(getConfig(null).getProperty(prop));
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+		}
+		return null;
 	}
 	
 
