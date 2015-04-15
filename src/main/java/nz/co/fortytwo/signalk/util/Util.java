@@ -175,13 +175,14 @@ public class Util {
 
 	public static Json getAddressesMsg() throws UnknownHostException{
 		Json msg = Json.object();
-		msg.set(SignalKConstants.websocketUrl, "ws://"+InetAddress.getLocalHost().getCanonicalHostName()+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS);
-		msg.set(SignalKConstants.signalkTcpPort,getConfigProperty(Constants.TCP_PORT));
-		msg.set(SignalKConstants.signalkUdpPort,getConfigProperty(Constants.UDP_PORT));
-		msg.set(SignalKConstants.nmeaTcpPort,getConfigProperty(Constants.TCP_NMEA_PORT));
-		msg.set(SignalKConstants.nmeaUdpPort,getConfigProperty(Constants.UDP_NMEA_PORT));
-		msg.set(SignalKConstants.stompPort,getConfigProperty(Constants.STOMP_PORT));
-		msg.set(SignalKConstants.mqttPort,getConfigProperty(Constants.MQTT_PORT));
+		String hostname=InetAddress.getLocalHost().getCanonicalHostName();
+		msg.set(SignalKConstants.websocketUrl, "ws://"+hostname+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS);
+		msg.set(SignalKConstants.signalkTcpPort,getConfigProperty(hostname+":"+Constants.TCP_PORT));
+		msg.set(SignalKConstants.signalkUdpPort,getConfigProperty(hostname+":"+Constants.UDP_PORT));
+		msg.set(SignalKConstants.nmeaTcpPort,getConfigProperty(hostname+":"+Constants.TCP_NMEA_PORT));
+		msg.set(SignalKConstants.nmeaUdpPort,getConfigProperty(hostname+":"+Constants.UDP_NMEA_PORT));
+		msg.set(SignalKConstants.stompPort,getConfigProperty(hostname+":"+Constants.STOMP_PORT));
+		msg.set(SignalKConstants.mqttPort,getConfigProperty(hostname+":"+Constants.MQTT_PORT));
 		
 		return msg;
 	}
