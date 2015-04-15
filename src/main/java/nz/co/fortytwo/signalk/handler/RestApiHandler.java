@@ -23,7 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -115,7 +115,7 @@ public class RestApiHandler {
 	        response.setStatus(HttpServletResponse.SC_OK);
         	return pathList;
         }
-        if(path.startsWith("/vessels")){
+        if(path.startsWith(vessels)){
 	        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, SignalKConstants.dot));
 	        
 	        if(keys.size()==0){
