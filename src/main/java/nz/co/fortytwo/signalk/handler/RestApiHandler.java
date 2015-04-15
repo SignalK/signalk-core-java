@@ -23,14 +23,21 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+
+import java.io.IOException;
+import java.util.List;
 import java.util.NavigableMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonConstants;
+import nz.co.fortytwo.signalk.util.JsonSerializer;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 
 import org.apache.log4j.Logger;
 
@@ -44,8 +51,11 @@ import org.apache.log4j.Logger;
  */
 public class RestApiHandler {
 
+	private static final String SLASH = "/";
+	private static final String LIST = "list";
 	private static Logger logger = Logger.getLogger(RestApiHandler.class);
-	
+	private JsonSerializer ser = new JsonSerializer();
+	private JsonListHandler listHandler = new JsonListHandler();
 	/**
 	 * Process a signalk GET message. The method will recover the appropriate json object at the urls path from 
 	 * the provided SignalKModel. 
@@ -58,8 +68,9 @@ public class RestApiHandler {
 	 * @param response
 	 * @param signalkModel
 	 * @return
+	 * @throws IOException 
 	 */
-	public SignalKModel processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) {
+	public Json processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) throws IOException {
 		// use Restlet API to create the response
 		String path = request.getPathInfo();
 		//String path =  exchange.getIn().getHeader(Exchange.HTTP_URI, String.class);
@@ -71,23 +82,57 @@ public class RestApiHandler {
         	return null;
         }
         path=path.substring(JsonConstants.SIGNALK_API.length());
-        if(path.startsWith("/"))path=path.substring(1);
+        if(path.startsWith(SLASH))path=path.substring(1);
         if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path);
-        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace("/", "."));
-        
-        if(keys.size()==0){
-        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        	return null;
+        if(path.startsWith(LIST)){
+        	
+        	path=path.substring(LIST.length()).replace(SLASH, SignalKConstants.dot);
+        	if(path.startsWith(SignalKConstants.dot))path=path.substring(1);
+        	//find the 'vessels.* or as much as exists
+        	int pos1=-1;
+        	int pos2=-1;
+        	String context="vessels.*";
+        	if(path.length()>0){
+        		pos1=path.indexOf(SignalKConstants.dot)+1;
+        		pos2=path.indexOf(SignalKConstants.dot, pos1);
+        	}
+        	if(pos2>-1){
+        		//we have a potential vessel name
+        		context=path.substring(0,pos2);
+        		path=path.substring(pos2+1);
+        	}
+        	path=path+"*";
+        	
+        	
+        	List<String> rslt = listHandler.getMatchingPaths(path);
+        	Json pathList = Json.array();
+    		for(String p: rslt){
+    			pathList.add(context+dot+p);
+    		}
+    		response.setContentType("application/json");
+	        
+	        // SEND RESPONSE
+	        response.setStatus(HttpServletResponse.SC_OK);
+        	return pathList;
         }
-    
-        if(logger.isDebugEnabled())logger.debug("Returning:"+keys);
-        
-        response.setContentType("application/json");
-        
-        // SEND RESPONSE
-        response.setStatus(HttpServletResponse.SC_OK);
-        return SignalKModelFactory.getWrappedInstance(keys);
-		
+        if(path.startsWith("/vessels")){
+	        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, SignalKConstants.dot));
+	        
+	        if(keys.size()==0){
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	return null;
+	        }
+	    
+	        if(logger.isDebugEnabled())logger.debug("Returning:"+keys);
+	        
+	        response.setContentType("application/json");
+	        
+	        // SEND RESPONSE
+	        response.setStatus(HttpServletResponse.SC_OK);
+	        return ser.writeJson(SignalKModelFactory.getWrappedInstance(keys));
+        }
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    	return null;
 	}
 
 }

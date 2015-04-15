@@ -58,7 +58,7 @@ public class JsonListHandler {
 	private List<String> keys = new ArrayList<String>();
 	
 	public JsonListHandler(){
-		//get a chache all the signalk keys we know about
+		//get a cache all the signalk keys we know about
 		for(Field f: SignalKConstants.class.getFields()){
 			try {
 				keys.add(f.get(null).toString());
