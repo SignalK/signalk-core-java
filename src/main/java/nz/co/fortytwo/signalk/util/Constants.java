@@ -62,8 +62,12 @@ public class Constants {
 	//debug flags
 	public static final String SEND_MESSAGE = "signalk.debug.sendMessage";
 	public static final String STATIC_DIR = "signalk.static.files.dir";
+	public static final String MAP_DIR = "signalk.maps.dir";
+	public static final String MAP_DIR_FILTER = "signalk.maps.dir.filter";
+	
 	public static final String SELF = "signalk.vessel.self";
 //	public static final String SESSIONID = "signalk.session";
+	
 	public static final String TCP_PORT = "signalk.tcp.port";
 	public static final String UDP_PORT = "signalk.udp.port";
 	public static final String TCP_NMEA_PORT = "signalk.tcp.nmea.port";
@@ -77,6 +81,8 @@ public class Constants {
 
 	public static final String STOMP_PORT = "signalk.stomp.port";
 	public static final String MQTT_PORT = "signalk.mqtt.port";
+
+	
 	
 	
 	
