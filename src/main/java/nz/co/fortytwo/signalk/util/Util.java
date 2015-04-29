@@ -149,6 +149,7 @@ public class Util {
 		props.setProperty(Constants.REST_PORT,"8080");
 		props.setProperty(Constants.CFG_DIR,"./conf/");
 		props.setProperty(Constants.CFG_FILE,"signalk.cfg");
+		props.setProperty(Constants.STORAGE_ROOT,"./storage/");
 		props.setProperty(Constants.DEMO,"false");
 		props.setProperty(Constants.STREAM_URL,"./src/test/resources/motu.log&scanStream=true&scanStreamDelay=500");
 		props.setProperty(Constants.USBDRIVE,"/media/usb0");

@@ -24,25 +24,20 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
-import static nz.co.fortytwo.signalk.util.JsonConstants.DEVICE;
 import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
-import static nz.co.fortytwo.signalk.util.JsonConstants.PGN;
 import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.SRC;
 import static nz.co.fortytwo.signalk.util.JsonConstants.TIMESTAMP;
 import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
+import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * Converts SignalK delta format to map format
@@ -53,51 +48,15 @@ import org.joda.time.format.ISODateTimeFormat;
 public class DeltaToMapConverter {
 
 	private static Logger logger = Logger.getLogger(DeltaToMapConverter.class);
-	private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-	
-	
-
-	/*
-	 *  {
-    "context": "vessels.motu.navigation",
-    "updates":[
-	    	{
-		    "source": {
-		        "device" : "/dev/actisense",
-		        "timestamp":"2014-08-15-16:00:00.081",
-		        "src":"115",
-		         "pgn":"128267"
-		    },
-		    "values": [
-		         { "path": "courseOverGroundTrue","value": 172.9 },
-		         { "path": "speedOverGround","value": 3.85 }
-		      ]
-		    },
-		     {
-		      "source": {
-		        "device" : "/dev/actisense",
-		        "timestamp":"2014-08-15-16:00:00.081",
-		        "src":"115",
-		         "pgn":"128267"
-		    },
-		    "values": [
-		         { "path": "courseOverGroundTrue","value": 172.9 },
-		         { "path": "speedOverGround","value": 3.85 }
-		      ]
-		    }
-	    ]
-	      
-	}
-*/
-	 
 	
 	/**
 	 * Convert Delta JSON to full tree map.
 	 * Returns null if the json is not an update, otherwise return a SignalKModel
 	 * @param node
 	 * @return
+	 * @throws Exception 
 	 */
-	public SignalKModel  handle(Json node) {
+	public SignalKModel  handle(Json node) throws Exception {
 		//avoid full signalk syntax
 		if(node.has(VESSELS))return null;
 		//deal with diff format
@@ -119,14 +78,14 @@ public class DeltaToMapConverter {
 				parseUpdate(temp, updates.at(UPDATES), ctx);
 			}
 			
-			if(logger.isDebugEnabled())logger.debug("SignalkModelProcessor processed diff  "+temp );
+			if(logger.isDebugEnabled())logger.debug("DeltaToMapConverter processed diff  "+temp );
 			return  temp;
 		}
 		return null;
 		
 	}
 
-	private void parseUpdate(SignalKModel temp, Json update, String ctx) {
+	protected void parseUpdate(SignalKModel temp, Json update, String ctx) throws Exception {
 		
 		
 		//DateTime timestamp = DateTime.parse(ts,fmt);
@@ -153,9 +112,10 @@ public class DeltaToMapConverter {
 		
 	}
 
-	private void addRecursively(SignalKModel temp, String ctx, Json j) {
+	protected void addRecursively(SignalKModel temp, String ctx, Json j) throws Exception {
 		if(j==null||j.isNull())return;
-		logger.debug("Object is: "+j );
+		if(logger.isDebugEnabled())logger.debug("Object is: "+j );
+		preProcess(temp,ctx,j);
 		if(j.isPrimitive()){
 			temp.put(ctx+dot+j.getParentKey(), j.getValue());
 		}else{
@@ -164,6 +124,16 @@ public class DeltaToMapConverter {
 			}
 		}
 		
+	}
+
+	/**
+	 * Allows us to do pre-processing in sub-classes
+	 * @param temp
+	 * @param ctx
+	 * @param j
+	 */
+	protected void preProcess(SignalKModel temp, String ctx, Json j) throws Exception{
+		//do nothing
 	}
 
 	

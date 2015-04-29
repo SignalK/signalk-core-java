@@ -82,6 +82,11 @@ public class Constants {
 	public static final String STOMP_PORT = "signalk.stomp.port";
 	public static final String MQTT_PORT = "signalk.mqtt.port";
 
+	public static final String STORAGE_ROOT = "signalk.storage.root";
+	public static final String PAYLOAD = "payload";
+	public static final String MIME_TYPE = "mimetype";
+	public static final String STORAGE_URI="uri";
+
 	
 	
 	

@@ -44,6 +44,7 @@ public class JsonConstants extends SignalKConstants {
 	public static final String UNSUBSCRIBE = "unsubscribe";
 	public static final String LIST = "list";
 	public static final String GET = "get";
+	public static final String PUT = "put";
 	public static final String PATHLIST = "pathlist";
 	public static final String SOURCE = "source";
 	public static final String DEVICE = "device";
