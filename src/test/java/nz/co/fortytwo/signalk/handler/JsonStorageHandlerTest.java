@@ -39,11 +39,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class JsonPutTest {
+public class JsonStorageHandlerTest {
 
 	String jsonDiff = "{\"context\":\"resources\",\"put\":[{\"timestamp\":\"2015-03-23T01:57:01.856Z\",\"values\":[{\"path\":\"routes.self.currentTrack\",\"value\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\",\"mimetype\":\"application/vnd.geo+json\",\"payload\":{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[23.366832680000005,59.85969252999999],[23.367125929999997,59.85961481000001],[23.367415009999995,59.85953943999999]]},\"properties\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\"}}}}],\"source\":\"vessels.motu\"}]}";
 	
-	private static Logger logger = Logger.getLogger(JsonPutTest.class);
+	private static Logger logger = Logger.getLogger(JsonStorageHandlerTest.class);
 	@Before
 	public void setUp() throws Exception {
 		
@@ -54,21 +54,26 @@ public class JsonPutTest {
 	}
 
 	@Test
-	public void shouldProcessDiff() throws Exception{
+	public void shouldProcessPut() throws Exception{
 		Json diff = Json.read(jsonDiff);
 		File dataRoot = new File(Util.getConfigProperty(Constants.STORAGE_ROOT));
 		//empty it
 		FileUtils.deleteDirectory(dataRoot);
 		
-		JsonPutHandler processor = new JsonPutHandler();
-		SignalKModel output = processor.handle(diff);
+		JsonStorageHandler processor = new JsonStorageHandler();
+		Json output = processor.handle(diff);
 		logger.debug(output);
-		String filePath = (String) output.get("resources.routes.motu.currentTrack.value.uri");
+		assertTrue(!output.at("put").at(0).at("values").at(0).at("value").has("payload"));
+		String filePath = output.at("put").at(0).at("values").at(0).at("value").at("uri").asString();
 		logger.debug(filePath);
 		assertNotNull(filePath);
 		File data = new File(Util.getConfigProperty(Constants.STORAGE_ROOT)+filePath);
 		assertTrue(data.exists());
 		//logger.debug(filePath);
+		//now retrieve it again
+		output = processor.handle(output);
+		assertTrue(output.at("put").at(0).at("values").at(0).at("value").has("payload"));
+		assertTrue(!output.at("put").at(0).at("values").at(0).at("value").has("uri"));
 		data.delete();
 	}
 	
