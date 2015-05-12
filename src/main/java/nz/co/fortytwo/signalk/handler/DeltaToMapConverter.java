@@ -23,7 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.JsonConstants.*;
 import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
 import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
 import static nz.co.fortytwo.signalk.util.JsonConstants.TIMESTAMP;
@@ -69,14 +69,12 @@ public class DeltaToMapConverter {
 			String ctx = node.at(CONTEXT).asString();
 			//Json pathNode = temp.addNode(path);
 			Json updates = node.at(UPDATES);
+			if(updates==null)updates = node.at(PUT);
 			if(updates==null)return temp;
-			if(updates.isArray()){
+			
 				for(Json update: updates.asJsonList()){
 					parseUpdate(temp, update, ctx);
 				}
-			}else{
-				parseUpdate(temp, updates.at(UPDATES), ctx);
-			}
 			
 			if(logger.isDebugEnabled())logger.debug("DeltaToMapConverter processed diff  "+temp );
 			return  temp;
@@ -114,13 +112,19 @@ public class DeltaToMapConverter {
 
 	protected void addRecursively(SignalKModel temp, String ctx, Json j) throws Exception {
 		if(j==null||j.isNull())return;
-		if(logger.isDebugEnabled())logger.debug("Object is: "+j );
+		if(logger.isDebugEnabled())logger.debug("Key:"+ctx+dot+j.getParentKey()+", Object: "+j );
 		preProcess(temp,ctx,j);
 		if(j.isPrimitive()){
 			temp.put(ctx+dot+j.getParentKey(), j.getValue());
-		}else{
+		}else if(j.isArray()){
+			temp.put(ctx+dot+j.getParentKey(), j);
+		}else {
 			for(Json child: j.asJsonMap().values()){
-			 addRecursively(temp, ctx+dot+j.getParentKey(), child);
+				if(VALUE.equals(j.getParentKey())){
+					addRecursively(temp, ctx, child);
+				}else{
+					addRecursively(temp, ctx+dot+j.getParentKey(), child);
+				}
 			}
 		}
 		

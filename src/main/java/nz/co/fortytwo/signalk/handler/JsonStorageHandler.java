@@ -139,7 +139,7 @@ public class JsonStorageHandler {
 				}
 				if (j.at(PAYLOAD).isObject()) {
 					// save it separately and add a storage url
-					payload = j.toString().trim();
+					payload = j.at(PAYLOAD).toString().trim();
 				}
 				File save = new File(storageDir, filePath);
 				logger.debug("Save to from "+save.getAbsolutePath());

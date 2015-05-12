@@ -32,6 +32,7 @@ import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Pattern;
 
+import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
 import nz.co.fortytwo.signalk.util.JsonConstants;
@@ -108,6 +109,7 @@ public class SignalKModelImpl implements SignalKModel {
         if (othkey != null && othkey.startsWith(key) && othkey.charAt(key.length()) == separator) {
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
         }
+        //meta.zones array
         if (!value.equals(root.put(key, value))) {
         	logger.debug("doPut "+key+"="+value);
         	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
@@ -149,7 +151,11 @@ public class SignalKModelImpl implements SignalKModel {
     		logger.debug("Put "+key+"="+value);
     		return doPut(key, value);
     	}
-    	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value);
+    	if(value instanceof Json && ((Json)value).isArray() ){
+    		logger.debug("Put "+key+"="+value);
+    		return doPut(key, value);
+    	}
+    	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value.getClass()+":"+value);
     }
 
     @Override

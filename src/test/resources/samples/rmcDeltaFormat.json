@@ -1,0 +1,32 @@
+{
+  "context":"vessels.motu",
+  "updates":[
+    {
+      "timestamp":"2015-03-23T01:57:02.256Z",
+      "values":[
+        {
+          "path":"navigation.position",
+          "value":{
+            "longitude":4.58006417,
+            "latitude":51.9485185
+          }
+        },
+        {
+          "path":"navigation.speedOverGround",
+          "value":0.1517598
+        }
+      ],
+      "source":"vessels.motu.sources.nmea.0183.RMC"
+    },
+    {
+      "timestamp":"2015-03-23T01:57:02.256Z",
+      "values":[
+        {
+          "path":"sources.nmea.0183.RMC",
+          "value":"$GPRMC,144629.20,A,5156.91111,N,00434.80385,E,0.295,,011113,,,A*78"
+        }
+      ],
+      "source":"unknown"
+    }
+  ]
+}
