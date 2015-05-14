@@ -100,6 +100,7 @@ public class RestApiHandler {
         }
         path=path.substring(JsonConstants.SIGNALK_API.length());
         if(path.startsWith(SLASH))path=path.substring(1);
+        if(path.endsWith(SLASH))path=path.substring(path.length()-1);
         if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path);
         if(path.startsWith(LIST)){
         	
