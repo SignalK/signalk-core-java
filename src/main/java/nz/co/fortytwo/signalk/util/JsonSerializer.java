@@ -1,14 +1,18 @@
 package nz.co.fortytwo.signalk.util;
-import java.lang.reflect.Array;
-import java.math.RoundingMode;
-import java.util.*;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.text.*;
-import java.io.*;
 
-import nz.co.fortytwo.signalk.model.SignalKModel;
 import mjson.Json;
+import nz.co.fortytwo.signalk.model.SignalKModel;
 
 
 public class JsonSerializer {
@@ -68,7 +72,7 @@ public class JsonSerializer {
 
         List<String> trail = new ArrayList<String>();       // The "breadcrumbs" of where we are in the tree
         boolean needcomma = false;
-        String lastkey = null, lastmissingkey = null;
+        String lastkey = null;
 
         while (iterator.hasNext()) {
             Map.Entry<String,Object> e = iterator.next();
@@ -116,6 +120,8 @@ public class JsonSerializer {
                 jsonWrite(s[j], ((Number)value).doubleValue(), out);
             } else if (value instanceof Boolean) {
                 jsonWrite(((Boolean)value).booleanValue(), out);
+            } else if (value instanceof Json && ((Json)value).isArray()) {
+                out.append(((Json)value).toString());
             } else if (value== null) {
                 jsonNull(out);
             } else {

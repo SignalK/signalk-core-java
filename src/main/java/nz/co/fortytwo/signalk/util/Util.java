@@ -68,6 +68,7 @@ public class Util {
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
 	public static File cfg = null;
 	private static boolean timeSet=false;
+	public static final double R = 6372800; // In meters
 	
 	/**
 	 * Smooth the data a bit
@@ -409,6 +410,17 @@ public class Util {
 
 	public static String getIsoTimeString(long timestamp) {
 		return new DateTime(timestamp,DateTimeZone.UTC).toDateTimeISO().toString();
+	}
+
+	public static double haversineMeters(double lat, double lon, double anchorLat, double anchorLon) {
+		double dLat = Math.toRadians(anchorLat - lat);
+        double dLon = Math.toRadians(anchorLon - lon);
+        lat = Math.toRadians(lat);
+        anchorLat = Math.toRadians(anchorLat);
+ 
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat) * Math.cos(anchorLat);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return R * c;
 	}
 
 

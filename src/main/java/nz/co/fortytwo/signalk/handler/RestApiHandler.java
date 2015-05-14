@@ -23,10 +23,14 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.Constants.STORAGE_ROOT;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +42,9 @@ import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
+import nz.co.fortytwo.signalk.util.Util;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 /*
@@ -56,6 +62,17 @@ public class RestApiHandler {
 	private static Logger logger = Logger.getLogger(RestApiHandler.class);
 	private JsonSerializer ser = new JsonSerializer();
 	private JsonListHandler listHandler = new JsonListHandler();
+	private File storageDir = new File(Util.getConfigProperty(STORAGE_ROOT));
+	private Map<String, String> mimeMap = new HashMap<String, String>();
+	
+	public RestApiHandler() throws IOException {
+		@SuppressWarnings("unchecked")
+		List<String> lines = FileUtils.readLines(new File("./src/main/resources/mime.types"));
+		for (String line : lines) {
+			String[] parts = line.split("=");
+			mimeMap.put(parts[1], parts[0]);
+		}
+	}
 	/**
 	 * Process a signalk GET message. The method will recover the appropriate json object at the urls path from 
 	 * the provided SignalKModel. 
@@ -70,7 +87,7 @@ public class RestApiHandler {
 	 * @return
 	 * @throws IOException 
 	 */
-	public Json processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) throws IOException {
+	public Object processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) throws IOException {
 		// use Restlet API to create the response
 		String path = request.getPathInfo();
 		//String path =  exchange.getIn().getHeader(Exchange.HTTP_URI, String.class);
@@ -130,6 +147,17 @@ public class RestApiHandler {
 	        // SEND RESPONSE
 	        response.setStatus(HttpServletResponse.SC_OK);
 	        return ser.writeJson(SignalKModelFactory.getWrappedInstance(keys));
+        }
+        //storage dir
+        if(path.startsWith(resources)){
+        	path = path.substring(resources.length()+1);
+	        if(logger.isDebugEnabled())logger.debug("Returning resource:"+path);
+	        String ext = path.substring(path.lastIndexOf(".")+1);
+	        response.setContentType(mimeMap.get(ext));
+	        
+	        // SEND RESPONSE
+	        response.setStatus(HttpServletResponse.SC_OK);
+	        return FileUtils.readFileToString(new File(storageDir,path));
         }
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     	return null;

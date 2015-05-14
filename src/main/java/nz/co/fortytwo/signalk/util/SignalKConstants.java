@@ -38,7 +38,16 @@ public class SignalKConstants {
 	public static final String vessels_id = "vessels.*";
 	public static final String dot = ".";
 	public static final String meta = "meta";
+	public static final String zones = "zones";
 	public static final String attr = "_attr";
+	public static final String alarms = "alarms";
+	public static final String alarm = "alarm";
+	public static final String alarmState = "alarmState";
+	public static final String alarmMessage = "alarmMessage";
+	public static final String warnMessage = "warnMessage";
+	public static final String message = "message";
+	public static final String warn = "warn";
+	public static final String normal = "normal";
 	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
 	
 	public static final String websocketUrl="websocketUrl";
@@ -91,28 +100,7 @@ public class SignalKConstants {
 	public static final String resources_waypoints_id_position_latitude = "resources.waypoints.*.position.latitude";
 	public static final String resources_waypoints_id_position_longitude = "resources.waypoints.*.position.longitude";
 	public static final String resources_waypoints_id_type = "resources.waypoints.*.type";
-	public static final String alarms = "alarms";
-	public static final String alarms_anchorAlarmMethod = "alarms.anchorAlarmMethod";
-	public static final String alarms_anchorAlarmState = "alarms.anchorAlarmState";
-	public static final String alarms_autopilotAlarmMethod = "alarms.autopilotAlarmMethod";
-	public static final String alarms_autopilotAlarmState = "alarms.autopilotAlarmState";
-	public static final String alarms_engineAlarmMethod = "alarms.engineAlarmMethod";
-	public static final String alarms_engineAlarmState = "alarms.engineAlarmState";
-	public static final String alarms_fireAlarmMethod = "alarms.fireAlarmMethod";
-	public static final String alarms_fireAlarmState = "alarms.fireAlarmState";
-	public static final String alarms_gasAlarmMethod = "alarms.gasAlarmMethod";
-	public static final String alarms_gasAlarmState = "alarms.gasAlarmState";
-	public static final String alarms_gpsAlarmMethod = "alarms.gpsAlarmMethod";
-	public static final String alarms_gpsAlarmState = "alarms.gpsAlarmState";
-	public static final String alarms_maydayAlarmMethod = "alarms.maydayAlarmMethod";
-	public static final String alarms_maydayAlarmState = "alarms.maydayAlarmState";
-	public static final String alarms_panpanAlarmMethod = "alarms.panpanAlarmMethod";
-	public static final String alarms_panpanAlarmState = "alarms.panpanAlarmState";
-	public static final String alarms_powerAlarmMethod = "alarms.powerAlarmMethod";
-	public static final String alarms_powerAlarmState = "alarms.powerAlarmState";
-	public static final String alarms_silentInterval = "alarms.silentInterval";
-	public static final String alarms_windAlarmMethod = "alarms.windAlarmMethod";
-	public static final String alarms_windAlarmState = "alarms.windAlarmState";
+	
 	public static final String communication = "communication";
 	public static final String communication_callsignDsc = "communication.callsignDsc";
 	public static final String communication_callsignHf = "communication.callsignHf";

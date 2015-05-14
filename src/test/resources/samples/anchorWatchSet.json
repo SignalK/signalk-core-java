@@ -1,46 +1,55 @@
 {
-    "context": "vessels.self",
-    "put": [
-        {
-            "timestamp": "2015-05-08T06:29:26.455Z",
-            "source": "vessels.self",
-            "values": [
-                {
-                    "path": "navigation.anchor.position",
-                    "value": {
-                        "latitude": 60.08087031,
-                        "longitude": 23.53406503,
-                        "altitude": 0
-                    }
-                },
-                {
-                    "path": "navigation.anchor",
-                    "value": {
-                        "maxRadius": 50
-                    }
-                },
-                {
-                    "path": "navigation.anchor.currentRadius.meta",
-                    "value": {
-                        "displayName": "Anchor Watch",
-                        "shortName": "Anchor Watch",
-                        "warnMethod": "visual",
-                        "alarmMethod": "sound",
-                        "zones": [
-                            [
-                                0,
-                                50,
-                                "normal"
-                            ],
-                            [
-                                50,
-                                999999,
-                                "alarm"
-                            ]
-                        ]
-                    }
-                }
-            ]
-        }
-    ]
+	"context": "vessels.self",
+	"put": 
+	[
+		{
+			"timestamp": "2015-05-08T06:29:26.455Z",
+			"source": "vessels.self",
+			"values": 
+			[
+				{
+					"path": "navigation.anchor.position",
+					"value": 
+					{
+						"latitude": 60.08087031,
+						"longitude": 23.53406503,
+						"altitude": 0
+					}
+				},
+
+				{
+					"path": "navigation.anchor.maxRadius",
+					"value": 
+					{
+						"value": 50
+					}
+				},
+
+				{
+					"path": "navigation.anchor.currentRadius.meta",
+					"value": 
+					{
+						"displayName": "Anchor Watch",
+						"shortName": "Anchor Watch",
+						"warnMethod": "visual",
+						"alarmMethod": "sound",
+						"zones": 
+						[
+							[
+								0,
+								50,
+								"normal"
+							],
+
+							[
+								50,
+								999999,
+								"alarm"
+							]
+						]
+					}
+				}
+			]
+		}
+	]
 }

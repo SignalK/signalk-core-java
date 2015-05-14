@@ -131,7 +131,7 @@ public class JsonStorageHandler {
 
 				String ext = getExtension(j);
 				String filePath = ctx.replace('.', '/') + DOT + ext;
-				// MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(mimeType);
+
 				String payload = null;
 				if (j.at(PAYLOAD).isString()) {
 					// save it separately and add a storage url

@@ -52,7 +52,7 @@ public class RestApiHandlerTest {
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+vessels+"/"+self+"/"+nav+"/position");
 
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
-		Json reply = api.processGet(mockedRequest, mockedResponse, model);
+		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
 		assertEquals(-41.2936935424d,reply.at(vessels).at(self).at(nav).at("position").at("latitude").asDouble(),0.0001);
 		assertEquals(173.2470855712d,reply.at(vessels).at(self).at(nav).at("position").at("longitude").asDouble(),0.0001);
@@ -75,7 +75,7 @@ public class RestApiHandlerTest {
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+vessels+"/other/"+nav+"/position");
 
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
-		Json reply = api.processGet(mockedRequest, mockedResponse, model);
+		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
 		assertEquals(-41.2936935424,reply.at(vessels).at("other").at(nav).at("position").at("latitude").asDouble(),0.0001);
 		assertEquals(173.2470855712,reply.at(vessels).at("other").at(nav).at("position").at("longitude").asDouble(),0.0001);
@@ -96,7 +96,7 @@ public class RestApiHandlerTest {
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+vessels+"/"+self+"/"+nav+"/not_here");
 
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
-		Json reply = api.processGet(mockedRequest, mockedResponse, model);
+		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
 		//assertEquals(-41.2936935424,reply.get(vessels).at(self_dot+nav_position_latitude));
 		//assertEquals(173.2470855712,reply.get(vessels).at(self_dot+nav_position_longitude));
@@ -116,7 +116,7 @@ public class RestApiHandlerTest {
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+"vess/"+self+"/"+nav+"/");
 
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
-		Json reply = api.processGet(mockedRequest, mockedResponse, model);
+		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
 		//assertEquals(-41.2936935424,reply.get(vessels).at(self_dot+nav_position_latitude));
 		//assertEquals(173.2470855712,reply.get(vessels).at(self_dot+nav_position_longitude));
@@ -137,7 +137,7 @@ public class RestApiHandlerTest {
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API.substring(0,11));
 
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
-		Json reply = api.processGet(mockedRequest, mockedResponse, model);
+		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
 		//assertEquals(-41.2936935424,reply.get(vessels).at(self_dot+nav_position_latitude));
 		//assertEquals(173.2470855712,reply.get(vessels).at(self_dot+nav_position_longitude));
