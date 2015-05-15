@@ -77,6 +77,8 @@ public class JsonConstants extends SignalKConstants {
 	public static final String SIGNALK_AUTH = "/signalk/auth/v1";
 	public static final String SIGNALK_API = "/signalk/api/v1";
 	public static final String SIGNALK_WS = "/signalk/stream/v1";
+	public static final String SIGNALK_INSTALL = "/signalk/install/v1";
+	public static final String SIGNALK_UPGRADE = "/signalk/upgrade/v1";
 	
 	public JsonConstants() {
 		// TODO Auto-generated constructor stub
