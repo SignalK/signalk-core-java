@@ -179,12 +179,12 @@ public class Util {
 		Json msg = Json.object();
 		String hostname=InetAddress.getLocalHost().getCanonicalHostName();
 		msg.set(SignalKConstants.websocketUrl, "ws://"+hostname+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS);
-		msg.set(SignalKConstants.signalkTcpPort,getConfigProperty(hostname+":"+Constants.TCP_PORT));
-		msg.set(SignalKConstants.signalkUdpPort,getConfigProperty(hostname+":"+Constants.UDP_PORT));
-		msg.set(SignalKConstants.nmeaTcpPort,getConfigProperty(hostname+":"+Constants.TCP_NMEA_PORT));
-		msg.set(SignalKConstants.nmeaUdpPort,getConfigProperty(hostname+":"+Constants.UDP_NMEA_PORT));
-		msg.set(SignalKConstants.stompPort,getConfigProperty(hostname+":"+Constants.STOMP_PORT));
-		msg.set(SignalKConstants.mqttPort,getConfigProperty(hostname+":"+Constants.MQTT_PORT));
+		msg.set(SignalKConstants.signalkTcpPort,hostname+":"+getConfigProperty(Constants.TCP_PORT));
+		msg.set(SignalKConstants.signalkUdpPort,hostname+":"+getConfigProperty(Constants.UDP_PORT));
+		msg.set(SignalKConstants.nmeaTcpPort,hostname+":"+getConfigProperty(Constants.TCP_NMEA_PORT));
+		msg.set(SignalKConstants.nmeaUdpPort,hostname+":"+getConfigProperty(Constants.UDP_NMEA_PORT));
+		msg.set(SignalKConstants.stompPort,hostname+":"+getConfigProperty(Constants.STOMP_PORT));
+		msg.set(SignalKConstants.mqttPort,hostname+":"+getConfigProperty(Constants.MQTT_PORT));
 		
 		return msg;
 	}

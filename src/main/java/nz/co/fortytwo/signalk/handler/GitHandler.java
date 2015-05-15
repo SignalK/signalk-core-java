@@ -122,7 +122,7 @@ public class GitHandler {
 			logger.debug("We are processing the extension:" + path);
 		// now we should have a valid github project name
 		try {
-			String fileName = install(path);
+			String fileName = upgrade(path);
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.sendRedirect("/logs.html");
 			return fileName;
@@ -143,24 +143,28 @@ public class GitHandler {
 			//make log name
 			String logFile = "output.log";
 			File output = new File(installLogDir,logFile);
-			
-			String gitPath = github+path+".git";
-			logger.debug("Cloning from " + gitPath + " to " + staticDir);
-			FileUtils.writeStringToFile(output, "Updating from " + gitPath + " to " + staticDir+"\n",false);
 			File destDir = new File(staticDir,SLASH+path);
 			destDir.mkdirs();
-			result = Git.cloneRepository().setURI(gitPath).setDirectory(destDir).call();
-			result.fetch().setRemote(gitPath);
-			logger.debug("Cloned "+gitPath+" repository: " + result.getRepository().getDirectory());
-			FileUtils.writeStringToFile(output, "Cloned "+gitPath+" repository: " + result.getRepository().getDirectory(), true);
-			//now run npm install
-			runNpmInstall(output, destDir);
-			
+			String gitPath = github+path+".git";
+			logger.debug("Cloning from " + gitPath + " to " + destDir.getAbsolutePath());
+			FileUtils.writeStringToFile(output, "Updating from " + gitPath + " to " + destDir.getAbsolutePath()+"\n",false);
+			try{
+				result = Git.cloneRepository().setURI(gitPath).setDirectory(destDir).call();
+				result.fetch().setRemote(gitPath);
+				logger.debug("Cloned "+gitPath+" repository: " + result.getRepository().getDirectory());
+				FileUtils.writeStringToFile(output, "Cloned "+gitPath+" repository: " + result.getRepository().getDirectory(), true);
+				//now run npm install
+				runNpmInstall(output, destDir);
+			}catch(Exception e){
+				FileUtils.writeStringToFile(output, e.getMessage(),true);
+				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
+				logger.debug("Error updating "+gitPath+" repository: " + e.getMessage(),e);
+			}
 			return logFile;
 			
 		
 		} finally {
-			result.close();
+			if(result!=null)result.close();
 		}
 		
 	}
@@ -209,32 +213,35 @@ public class GitHandler {
 			String logFile = "output.log";
 			File installLogDir = new File(staticDir,"logs");
 			installLogDir.mkdirs();
-			//make log name
-			
-			File output = new File(installLogDir,logFile);
-			String gitPath = github+path+".git";
-			logger.debug("Cloning from " + gitPath + " to " + staticDir);
-			FileUtils.writeStringToFile(output, "Updating from " + gitPath + " to " + staticDir+"\n",false);
+			//
 			File destDir = new File(staticDir,SLASH+path);
 			destDir.mkdirs();
-			FileRepositoryBuilder builder = new FileRepositoryBuilder();
-			repository = builder.setGitDir(destDir)
-				.readEnvironment() // scan environment GIT_* variables
-				.findGitDir() // scan up the file system tree
-				.build();
-			
-			FetchResult result = new Git(repository).fetch().setRemote(gitPath).setCheckFetchedObjects(true).call();
-			FileUtils.writeStringToFile(output, result.getMessages(),true);
-			logger.debug("Updated "+gitPath+" repository: " + result.getMessages());
-			
-			//now run npm install
-			runNpmInstall(output, destDir);
-			
+			File output = new File(installLogDir,logFile);
+			String gitPath = github+path+".git";
+			logger.debug("Cloning from " + gitPath + " to " + destDir.getAbsolutePath());
+			FileUtils.writeStringToFile(output, "Updating from " + gitPath + " to " + destDir.getAbsolutePath()+"\n",false);
+			try{
+				FileRepositoryBuilder builder = new FileRepositoryBuilder();
+				repository = builder.setGitDir(destDir)
+					.readEnvironment() // scan environment GIT_* variables
+					.findGitDir() // scan up the file system tree
+					.build();
+				
+				FetchResult result = new Git(repository).fetch().setRemote(gitPath).setCheckFetchedObjects(true).call();
+				FileUtils.writeStringToFile(output, result.getMessages(),true);
+				logger.debug("Updated "+gitPath+" repository: " + result.getMessages());
+				
+				//now run npm install
+				runNpmInstall(output, destDir);
+			}catch(Exception e){
+				FileUtils.writeStringToFile(output, e.getMessage(),true);
+				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
+				logger.debug("Error updating "+gitPath+" repository: " + e.getMessage(),e);
+			}
 			return logFile;
-			
 		
 		} finally {
-			repository.close();
+			if(repository!=null)repository.close();
 		}
 		
 	}
