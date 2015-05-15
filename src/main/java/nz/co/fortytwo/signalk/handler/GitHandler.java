@@ -164,7 +164,7 @@ public class GitHandler {
 		}
 		
 	}
-	private void runNpmInstall(File output, File destDir)  throws Exception{
+	private void runNpmInstall(final File output, File destDir)  throws Exception{
 		FileUtils.writeStringToFile(output, "\nBeginning npm install" ,true);
 		ProcessBuilder pb = new ProcessBuilder("npm", "install");
 		Map<String, String> env = System.getenv();
@@ -180,8 +180,27 @@ public class GitHandler {
 		pb.directory(destDir);
 		pb.redirectErrorStream(true);
 		pb.redirectOutput(output);
-		Process p = pb.start();
-		
+		final Process p = pb.start();
+		Thread t = new Thread(){
+
+			@Override
+			public void run() {
+				try {
+					p.waitFor();
+					FileUtils.writeStringToFile(output, "\nDONE: Npm ended sucessfully" ,true);
+				} catch (Exception e) {
+					try {
+						logger.error(e);
+						FileUtils.writeStringToFile(output, "\nNpm ended badly:"+e.getMessage() ,true);
+						FileUtils.writeStringToFile(output, "\n"+e.getStackTrace() ,true);
+					} catch (IOException e1) {
+						logger.error(e1);
+					}
+				}
+			}
+			
+		};
+		t.start();
 	}
 	protected String upgrade(String path) throws Exception{
 		//staticDir.mkdirs();
