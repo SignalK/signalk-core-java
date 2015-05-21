@@ -77,6 +77,11 @@ public class SignalKModelImplTest {
 		signalk.putValue("vessels.self.environment.wind.angleApparent", 256.0d);
 		
 		assertEquals(256.0, signalk.getValue(vessels+dot+JsonConstants.SELF+dot+env_wind_angleApparent));
+		
+		assertEquals(256.0, signalk.getValue(vessels+dot+"self"+dot+env_wind_angleApparent));
+		
+		assertEquals(18, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
+		assertEquals(117, signalk.getSubMap(vessels+dot+"self").size());
 	}
 
 	@Test

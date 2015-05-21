@@ -69,6 +69,9 @@ public class SignalKModelImpl implements SignalKModel {
     private Pattern selfMatch = Pattern.compile("\\.self\\.");
     private static String dot_self_dot = dot+JsonConstants.SELF+dot;
 
+    private Pattern selfEndMatch = Pattern.compile("\\.self$");
+    private static String dot_self = dot+JsonConstants.SELF;
+    
     private int nextrevision;
 
   	private EventBus eventBus = new EventBus();
@@ -143,7 +146,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public boolean put(String key, Object value) throws IllegalArgumentException{
-    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+    	key = fixSelfKey(key);
     	if(value == null){
     		return doDelete(key);
 		}
@@ -158,16 +161,22 @@ public class SignalKModelImpl implements SignalKModel {
     	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value.getClass()+":"+value);
     }
 
-    @Override
-	public boolean put(String key, Object value, String source) throws IllegalArgumentException {
+    private String fixSelfKey(String key) {
     	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+    	key = selfEndMatch.matcher(key).replaceAll(dot_self);
+		return key;
+	}
+
+	@Override
+	public boolean put(String key, Object value, String source) throws IllegalArgumentException {
+    	key = fixSelfKey(key);
     	if(source==null)return (doPut(key, value));
 		return (doPut(key+".value", value)&& doPut(key+".source", source));
 	}
 
 	@Override
 	public boolean put(String key, Object value, String source, String timestamp) throws IllegalArgumentException {
-		key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+		key = fixSelfKey(key);
 		if(source!=null&& timestamp!=null)return (doPut(key+".value", value)&& doPut(key+".source", source)&& doPut(key+".timestamp", timestamp));
 		if(source!=null&& timestamp==null)return (doPut(key+".value", value)&& doPut(key+".source", source));
 		if(source==null&& timestamp!=null)return (doPut(key+".value", value)&& doPut(key+".timestamp", timestamp));
@@ -180,7 +189,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public Object get(String key) {
-    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+    	key = fixSelfKey(key);
     	return root.get(key);
     }
     
@@ -189,7 +198,7 @@ public class SignalKModelImpl implements SignalKModel {
    	 */
        @Override
    	public Object getValue(String key) {
-    	   key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+    	   key = fixSelfKey(key);
                return root.get(key+".value");
        }
 
@@ -198,7 +207,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public NavigableSet<String> getTree(String key) {
-    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+    	key = fixSelfKey(key);
          return getKeys().subSet(key, true, key+".\uFFFD", true);
     }
     
@@ -207,7 +216,7 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public NavigableMap<String, Object> getSubMap(String key) {
-    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+    	key = fixSelfKey(key);
             return root.subMap(key, true, key+".\uFFFD", true);
     }
 
@@ -254,7 +263,7 @@ public class SignalKModelImpl implements SignalKModel {
 
 	@Override
 	public boolean putValue(String key, Object value) {
-		key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+		key = fixSelfKey(key);
 		return put(key+".value", value);
 	}
 

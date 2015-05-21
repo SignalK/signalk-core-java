@@ -102,6 +102,7 @@ public class RestApiHandler {
         if(path.startsWith(SLASH))path=path.substring(1);
         if(path.endsWith(SLASH))path=path.substring(path.length()-1);
         if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path);
+        //list
         if(path.startsWith(LIST)){
         	
         	path=path.substring(LIST.length()).replace(SLASH, SignalKConstants.dot);
@@ -133,8 +134,11 @@ public class RestApiHandler {
 	        response.setStatus(HttpServletResponse.SC_OK);
         	return pathList;
         }
+        //vessel params
         if(path.startsWith(vessels)){
-	        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, SignalKConstants.dot));
+        	//convert .self to .motu
+        	path=path.replace(".self", dot+self);
+	        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, dot));
 	        
 	        if(keys.size()==0){
 	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
