@@ -49,6 +49,11 @@ public class SignalKConstants {
 	public static final String warn = "warn";
 	public static final String normal = "normal";
 	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
+	public static final String type = "type";
+	public static final String routes = "routes";
+	public static final String key= "key";
+	public static final String currentTrack = "currentTrack";
+	
 	
 	public static final String websocketUrl="websocketUrl";
 	
