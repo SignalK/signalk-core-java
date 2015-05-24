@@ -155,14 +155,22 @@ public class RestApiHandler {
         }
         //storage dir
         if(path.startsWith(resources)){
-        	path = path.substring(resources.length()+1);
-	        if(logger.isDebugEnabled())logger.debug("Returning resource:"+path);
-	        String ext = path.substring(path.lastIndexOf(".")+1);
-	        response.setContentType(mimeMap.get(ext));
-	        
-	        // SEND RESPONSE
-	        response.setStatus(HttpServletResponse.SC_OK);
-	        return FileUtils.readFileToString(new File(storageDir,path));
+        	if(path.length()>resources.length()){
+        		path = path.substring(resources.length()+1);
+	        	File target = new File(storageDir,path);
+	        	if(target.exists()){
+			        if(logger.isDebugEnabled())logger.debug("Returning resource:"+path);
+			        String ext = path.substring(path.lastIndexOf(".")+1);
+			        response.setContentType(mimeMap.get(ext));
+			        
+			        // SEND RESPONSE
+			        response.setStatus(HttpServletResponse.SC_OK);
+			        return FileUtils.readFileToString(target);
+	        	}else{
+	        		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	            	return null;
+	        	}
+        	}
         }
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     	return null;
