@@ -48,6 +48,7 @@ public class Constants {
 		
 	// config constants
 	public static final String DEMO = "signalk.demo";
+	public static final String HOSTNAME ="signalk.server.hostname";
 	public static final String WEBSOCKET_PORT = "signalk.websocket.port";
 	public static final String REST_PORT = "signalk.rest.port";
 	public static final String CFG_DIR = "signalk.cfg.dir";

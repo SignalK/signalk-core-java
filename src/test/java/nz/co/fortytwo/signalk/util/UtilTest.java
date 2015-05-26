@@ -58,7 +58,7 @@ public class UtilTest {
 	
 	@Test
 	public void shouldGetAddressesMsg() throws UnknownHostException{
-		Json msg = Util.getAddressesMsg();
+		Json msg = Util.getAddressesMsg("localhost");
 		logger.debug(msg);
 		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","self":"motu"}
 		assertTrue(msg.has(SignalKConstants.stompPort));

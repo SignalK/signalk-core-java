@@ -175,11 +175,11 @@ public class Util {
 	}
 	
 
-	public static Json getAddressesMsg() throws UnknownHostException{
+	public static Json getAddressesMsg(String hostname) throws UnknownHostException{
 		Json msg = Json.object();
-		String hostname = getConfigProperty(Constants.HOSTNAME);
-		if(StringUtils.isBlank(hostname))
-			hostname=InetAddress.getLocalHost().getCanonicalHostName();
+		String cfgHostname = getConfigProperty(Constants.HOSTNAME);
+		if(StringUtils.isNotBlank(cfgHostname))
+			hostname=cfgHostname;
 		msg.set(SignalKConstants.websocketUrl, "ws://"+hostname+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS);
 		msg.set(SignalKConstants.signalkTcpPort,hostname+":"+getConfigProperty(Constants.TCP_PORT));
 		msg.set(SignalKConstants.signalkUdpPort,hostname+":"+getConfigProperty(Constants.UDP_PORT));
