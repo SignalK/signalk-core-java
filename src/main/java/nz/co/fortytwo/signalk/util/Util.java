@@ -177,7 +177,9 @@ public class Util {
 
 	public static Json getAddressesMsg() throws UnknownHostException{
 		Json msg = Json.object();
-		String hostname=InetAddress.getLocalHost().getCanonicalHostName();
+		String hostname = getConfigProperty(Constants.HOSTNAME);
+		if(StringUtils.isBlank(hostname))
+			hostname=InetAddress.getLocalHost().getCanonicalHostName();
 		msg.set(SignalKConstants.websocketUrl, "ws://"+hostname+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS);
 		msg.set(SignalKConstants.signalkTcpPort,hostname+":"+getConfigProperty(Constants.TCP_PORT));
 		msg.set(SignalKConstants.signalkUdpPort,hostname+":"+getConfigProperty(Constants.UDP_PORT));
