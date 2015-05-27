@@ -47,7 +47,7 @@ public class NMEA0183ProducerTest {
 	@Test
 	public void shouldGetRMC() {
 		NMEA0183Producer p = new NMEA0183Producer();
-		SignalKModel model = SignalKModelFactory.getInstance();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
 		model.put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
 		String nmea = p.createRMC(model);
@@ -58,7 +58,7 @@ public class NMEA0183ProducerTest {
 	@Test
 	public void shouldGetMWVApparent() {
 		NMEA0183Producer p = new NMEA0183Producer();
-		SignalKModel model = SignalKModelFactory.getInstance();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		model.putValue(vessels_dot_self_dot+ env_wind_angleApparent, 41.5);
 		model.putValue(vessels_dot_self_dot+ env_wind_speedApparent, 12.5);
 		String nmea = p.createMWVApparent(model);
