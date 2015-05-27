@@ -145,7 +145,7 @@ public class TrueWindHandler {
 		double tspeed = Math.sin(angle) / Math.sin(alpha);
 		if (Double.valueOf(tspeed).isNaN() || Double.isInfinite(tspeed))
 			return windCalc;
-		trueWindSpeed = tspeed * vesselSpd;
+		trueWindSpeed = Math.abs(tspeed * vesselSpd);
 		windCalc[0]=trueWindSpeed;
 		return windCalc;
 	}
