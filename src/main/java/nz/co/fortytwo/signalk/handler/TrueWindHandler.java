@@ -135,7 +135,7 @@ public class TrueWindHandler {
 		} else {
 			trueDirection = tAngle;
 		}
-		windCalc[1]=trueDirection;
+		windCalc[1]=trueDirection%360;
 		
 		if (apparentWnd < 0.1 || vesselSpd < 0.1) {
 			trueWindSpeed = Math.max(apparentWnd, vesselSpd);
