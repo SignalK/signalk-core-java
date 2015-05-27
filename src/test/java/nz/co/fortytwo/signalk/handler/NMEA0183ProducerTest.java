@@ -29,8 +29,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_magneticVariation
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
@@ -52,7 +51,7 @@ public class NMEA0183ProducerTest {
 		model.put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
 		String nmea = p.createRMC(model);
 		
-		assertEquals("$GPRMC,,A,4130.000,S,17230.000,E,,,270515,,,A*68",nmea);
+		assertTrue(nmea.startsWith("$GPRMC,,A,4130.000,S,17230.000,E,,,"));
 	}
 	
 	@Test
