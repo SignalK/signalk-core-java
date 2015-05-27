@@ -153,6 +153,12 @@ public class GitHandler {
 				result.fetch().setRemote(gitPath);
 				logger.debug("Cloned "+gitPath+" repository: " + result.getRepository().getDirectory());
 				FileUtils.writeStringToFile(output, "Cloned "+gitPath+" repository: " + result.getRepository().getDirectory(), true);
+			}catch(Exception e){
+				FileUtils.writeStringToFile(output, e.getMessage(),true);
+				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
+				logger.debug("Error updating "+gitPath+" repository: " + e.getMessage(),e);
+			}
+			try{
 				//now run npm install
 				runNpmInstall(output, destDir);
 			}catch(Exception e){
