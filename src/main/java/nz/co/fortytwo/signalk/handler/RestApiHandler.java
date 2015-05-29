@@ -62,6 +62,7 @@ public class RestApiHandler {
 	private static Logger logger = Logger.getLogger(RestApiHandler.class);
 	private JsonSerializer ser = new JsonSerializer();
 	private JsonListHandler listHandler = new JsonListHandler();
+	private JsonGetHandler getHandler = new JsonGetHandler();
 	private File storageDir = new File(Util.getConfigProperty(STORAGE_ROOT));
 	private Map<String, String> mimeMap = new HashMap<String, String>();
 	
@@ -85,9 +86,9 @@ public class RestApiHandler {
 	 * @param response
 	 * @param signalkModel
 	 * @return
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public Object processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) throws IOException {
+	public Object processGet(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkModel) throws Exception {
 		// use Restlet API to create the response
 		String path = request.getPathInfo();
 		//String path =  exchange.getIn().getHeader(Exchange.HTTP_URI, String.class);
@@ -137,10 +138,25 @@ public class RestApiHandler {
         //vessel params
         if(path.startsWith(vessels)){
         	//convert .self to .motu
+        	path=path.replace(SLASH, SignalKConstants.dot);
         	path=path.replace(".self", dot+self);
-	        NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, dot));
+        	String context = Util.getContext(path);
+        	path = path.substring(context.length());
+        	if(path.startsWith(dot))path=path.substring(1);
+        	if(!path.endsWith("*"))path=path+"*";
+        	Json getJson = Json.object();
+        	getJson.set(JsonConstants.CONTEXT, context);
+        	Json getPath = Json.object();
+        	getPath.set(JsonConstants.PATH,path);
+        	getPath.set(JsonConstants.FORMAT,JsonConstants.FORMAT_FULL);
+        	Json getArray = Json.array();
+        	getArray.add(getPath);
+        	getJson.set(JsonConstants.GET, getArray);
+        	
+        	SignalKModel keys = getHandler.handle(signalkModel, getJson);
+	        //NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, dot));
 	        
-	        if(keys.size()==0){
+	        if(keys.getData().size()==0){
 	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 	        	return null;
 	        }
@@ -151,7 +167,7 @@ public class RestApiHandler {
 	        
 	        // SEND RESPONSE
 	        response.setStatus(HttpServletResponse.SC_OK);
-	        return ser.writeJson(SignalKModelFactory.getWrappedInstance(keys));
+	        return ser.writeJson(keys);
         }
         //storage dir
         if(path.startsWith(resources)){

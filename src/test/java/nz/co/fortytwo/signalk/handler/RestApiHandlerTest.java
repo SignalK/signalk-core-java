@@ -41,7 +41,7 @@ public class RestApiHandlerTest {
 	}
 
 	@Test
-	public void shouldGetSelfPosition() throws IOException {
+	public void shouldGetSelfPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
 		model.getData().clear();
@@ -64,7 +64,7 @@ public class RestApiHandlerTest {
 	}
 	
 	@Test
-	public void shouldGetOtherPosition() throws IOException {
+	public void shouldGetOtherPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
 		model.getData().clear();
@@ -85,7 +85,7 @@ public class RestApiHandlerTest {
 	}
 	
 	@Test
-	public void shouldGetNotFound() throws IOException {
+	public void shouldGetNotFound() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
 		model.getData().clear();
@@ -105,7 +105,7 @@ public class RestApiHandlerTest {
 		//assertEquals(200, mockedResponse.getStatus());
 	}
 	@Test
-	public void shouldGetNotFound1() throws IOException {
+	public void shouldGetNotFound1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
 		model.getData().clear();
@@ -126,7 +126,7 @@ public class RestApiHandlerTest {
 	}
 	
 	@Test
-	public void shouldGetBadRequest1() throws IOException {
+	public void shouldGetBadRequest1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
 		model.getData().clear();

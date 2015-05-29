@@ -24,6 +24,9 @@
 
 package nz.co.fortytwo.signalk.util;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -423,6 +426,16 @@ public class Util {
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat) * Math.cos(anchorLat);
         double c = 2 * Math.asin(Math.sqrt(a));
         return R * c;
+	}
+
+	public static String getContext(String path) {
+		//return vessels.*
+		if(StringUtils.isNotBlank(path)|| path.startsWith(vessels+dot)){
+			int pos = path.indexOf(".", vessels.length()+1);
+			if(pos<0)return path;
+			return path.substring(0, pos);
+		}
+		return null;
 	}
 
 
