@@ -91,6 +91,13 @@ public class Constants {
 	public static final String MIME_TYPE_JSON = "application/vnd.geo+json";
 	public static final String STORAGE_URI="uri";
 
+	public static final String ALLOW_INSTALL = "signalk.allow.install";
+	public static final String ALLOW_UPGRADE = "signalk.allow.upgrade";
+	public static final String GENERATE_NMEA0183 = "signalk.nmea0183.generate";
+	public static final String START_STOMP = "signalk.stomp.start";
+	public static final String START_MQTT = "signalk.mqtt.start";
+	
+
 	
 
 	

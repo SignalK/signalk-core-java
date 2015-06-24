@@ -175,6 +175,12 @@ public class Util {
 		props.setProperty(Constants.HAWTIO_WAR ,"./hawtio/hawtio-default-offline-1.4.48.war");
 		props.setProperty(Constants.HAWTIO_START,"true");
 		props.setProperty(Constants.VERSION, "0.1");
+		props.setProperty(Constants.ALLOW_INSTALL, "true");
+		props.setProperty(Constants.ALLOW_UPGRADE, "true");
+		props.setProperty(Constants.GENERATE_NMEA0183, "true");
+		props.setProperty(Constants.START_MQTT, "true");
+		props.setProperty(Constants.START_STOMP, "true");
+		
 	}
 	
 
@@ -188,8 +194,10 @@ public class Util {
 		msg.set(SignalKConstants.signalkUdpPort,hostname+":"+getConfigProperty(Constants.UDP_PORT));
 		msg.set(SignalKConstants.nmeaTcpPort,hostname+":"+getConfigProperty(Constants.TCP_NMEA_PORT));
 		msg.set(SignalKConstants.nmeaUdpPort,hostname+":"+getConfigProperty(Constants.UDP_NMEA_PORT));
-		msg.set(SignalKConstants.stompPort,hostname+":"+getConfigProperty(Constants.STOMP_PORT));
-		msg.set(SignalKConstants.mqttPort,hostname+":"+getConfigProperty(Constants.MQTT_PORT));
+		if("true".equals(getConfigProperty(Constants.START_STOMP)))
+			msg.set(SignalKConstants.stompPort,hostname+":"+getConfigProperty(Constants.STOMP_PORT));
+		if("true".equals(getConfigProperty(Constants.START_MQTT)))
+			msg.set(SignalKConstants.mqttPort,hostname+":"+getConfigProperty(Constants.MQTT_PORT));
 		
 		return msg;
 	}
@@ -437,7 +445,5 @@ public class Util {
 		}
 		return null;
 	}
-
-
 
 }

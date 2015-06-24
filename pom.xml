@@ -1,17 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>nz.co.fortytwo.signalk.core</groupId>
-  <artifactId>signalk-core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>signalk-core</name>
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>nz.co.fortytwo.signalk.core</groupId>
+	<artifactId>signalk-core</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>signalk-core</name>
+	<properties>
 		<!-- <bundle.name>nsb-${project.version}</bundle.name> -->
 		<jetty.version>9.2.9.v20150224</jetty.version>
-<!-- 		<camel.version>2.14.1</camel.version> -->
-<!-- 		<camel.core.version>2.14.1</camel.core.version> -->
+		<!-- <camel.version>2.14.1</camel.version> -->
+		<!-- <camel.core.version>2.14.1</camel.core.version> -->
 		<jna.version>3.6.0-SNAPSHOT</jna.version>
+		<geotools.version>12-RC1</geotools.version>
 	</properties>
-  <licenses>
+	<licenses>
 		<license>
 			<name>APACHE LICENSE, Version 2</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
@@ -46,10 +48,10 @@
 			<url>http://repository-dma.forge.cloudbees.com/release</url>
 		</repository>
 		<repository>
-		   <id>maven-restlet</id>
-		   <name>Public online Restlet repository</name>
-		   <url>http://maven.restlet.com</url>
-		</repository> 
+			<id>maven-restlet</id>
+			<name>Public online Restlet repository</name>
+			<url>http://maven.restlet.com</url>
+		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -62,26 +64,18 @@
 		</pluginRepository>
 
 	</pluginRepositories>
-	
-  <dependencies>
-  			<!-- serial comms -->
 
-		<!-- jna LGPL, Apache
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna</artifactId>
-			<version>${jna.version}</version>
-		</dependency>-->
-		<!-- BSD 
-		<dependency>
-			<groupId>com.sparetimelabs</groupId>
-			<artifactId>purejavacomm</artifactId>
-			<version>0.0.21</version>
-		</dependency>-->
+	<dependencies>
+		<!-- serial comms -->
 
-	  	<!-- ais -->
-	  	
-	  	<!-- ais  Apache licence-->
+		<!-- jna LGPL, Apache <dependency> <groupId>net.java.dev.jna</groupId> 
+			<artifactId>jna</artifactId> <version>${jna.version}</version> </dependency> -->
+		<!-- BSD <dependency> <groupId>com.sparetimelabs</groupId> <artifactId>purejavacomm</artifactId> 
+			<version>0.0.21</version> </dependency> -->
+
+		<!-- ais -->
+
+		<!-- ais Apache licence -->
 		<!-- <module>ais-lib-messages</module> -->
 		<!-- <module>ais-lib-utils</module> -->
 		<!-- <module>ais-lib-cli</module> -->
@@ -90,19 +84,15 @@
 			<artifactId>ais-lib-communication</artifactId>
 			<version>2.1</version>
 		</dependency>
-	  	<!-- json -  Apache licence
-	  	<dependency>
-	  		<groupId>org.sharegov</groupId>
-	  		<artifactId>mjson</artifactId>
-	  		<version>1.3</version>
-	  	</dependency>-->
-	    <dependency>
+		<!-- json - Apache licence <dependency> <groupId>org.sharegov</groupId> 
+			<artifactId>mjson</artifactId> <version>1.3</version> </dependency> -->
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
-	  	<!-- commons and misc = apache licence -->
-  		<dependency>
+		<!-- commons and misc = apache licence -->
+		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.5</version>
@@ -110,9 +100,9 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
+			<version>3.4</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.6</version>
@@ -122,13 +112,13 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		<!-- time - apache licence-->
+		<!-- time - apache licence -->
 		<dependency>
-		    <groupId>joda-time</groupId>
-		    <artifactId>joda-time</artifactId>
-		    <version>2.4</version>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.4</version>
 		</dependency>
-		<!-- nmea LGPL 3-->
+		<!-- nmea LGPL 3 -->
 		<dependency>
 			<groupId>net.sf.marineapi</groupId>
 			<artifactId>marineapi</artifactId>
@@ -140,7 +130,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!--  jGit -->
+		<!-- jGit -->
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
@@ -157,78 +147,69 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-		
-				
-		<!-- <dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.4</version>
-		</dependency>-->
-		<!-- <dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-exec</artifactId>
-			<version>1.1</version>
-		</dependency>-->
+
+
+		<!-- <dependency> <groupId>commons-lang</groupId> <artifactId>commons-lang</artifactId> 
+			<version>2.4</version> </dependency> -->
+		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-exec</artifactId> 
+			<version>1.1</version> </dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
-		</dependency>	
-		<!-- xml BSD-->
+		</dependency>
+		<!-- xml BSD -->
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
-		</dependency>	
-		<!-- test http and ws - Apache lic-->
-		<dependency>
-		    <groupId>com.jayway.jsonpath</groupId>
-		    <artifactId>json-path</artifactId>
-		    <version>1.2.0</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.ning</groupId> -->
-<!-- 			<artifactId>async-http-client</artifactId> -->
-<!-- 			<version>1.8.14</version> -->
-<!-- 			<scope>test</scope> -->
-<!-- 		</dependency> -->
-		<!--  apache  -->
+		<!-- test http and ws - Apache lic -->
 		<dependency>
-	 		<groupId>com.cedarsoftware</groupId>
-		  	<artifactId>json-io</artifactId>
-		  	<version>3.0.1</version>
-		  	<scope>test</scope>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>com.ning</groupId> -->
+		<!-- <artifactId>async-http-client</artifactId> -->
+		<!-- <version>1.8.14</version> -->
+		<!-- <scope>test</scope> -->
+		<!-- </dependency> -->
+		<!-- apache -->
+		<dependency>
+			<groupId>com.cedarsoftware</groupId>
+			<artifactId>json-io</artifactId>
+			<version>3.0.1</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-core</artifactId>
-		    <version>2.0.5-beta</version>
-		    <scope>test</scope>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.0.5-beta</version>
+			<scope>test</scope>
 		</dependency>
-  </dependencies>
-  <build>
-  	<plugins>
-		  	<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-surefire-plugin</artifactId>
-			   
-			    <configuration>
-			        <forkCount>1</forkCount>
-			        <reuseForks>false</reuseForks>
-			        <argLine>-Xmx512m -XX:MaxPermSize=32m</argLine>
-			    </configuration>
-		    </plugin>
 
-			<!-- Allows the example to be run via 'mvn compile exec:java' 
+	</dependencies>
+	<build>
+		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+
 				<configuration>
-					<mainClass>nz.co.fortytwo.signalk.server.ServerMain</mainClass>
-					<includePluginDependencies>false</includePluginDependencies>
+					<forkCount>1</forkCount>
+					<reuseForks>false</reuseForks>
+					<argLine>-Xmx512m -XX:MaxPermSize=32m</argLine>
 				</configuration>
-			</plugin>-->
+			</plugin>
+
+			<!-- Allows the example to be run via 'mvn compile exec:java' <plugin> 
+				<groupId>org.codehaus.mojo</groupId> <artifactId>exec-maven-plugin</artifactId> 
+				<configuration> <mainClass>nz.co.fortytwo.signalk.server.ServerMain</mainClass> 
+				<includePluginDependencies>false</includePluginDependencies> </configuration> 
+				</plugin> -->
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
@@ -256,8 +237,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<!-- Specify class to be run at startup 
-									<mainClass>nz.co.fortytwo.signalk.server.SignalKServer</mainClass>-->
+									<!-- Specify class to be run at startup <mainClass>nz.co.fortytwo.signalk.server.SignalKServer</mainClass> -->
 								</manifest>
 							</archive>
 						</configuration>
@@ -265,39 +245,16 @@
 							<goal>single</goal>
 						</goals>
 					</execution>
-					<!-- <execution>
-						<id>make-assembly-zip</id>
-						<phase>package</phase>
-						<configuration>
-							<descriptors>
-								
-								<descriptor>src/main/release/assembly.xml</descriptor>
-							</descriptors>
-						</configuration>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution> -->
+					<!-- <execution> <id>make-assembly-zip</id> <phase>package</phase> <configuration> 
+						<descriptors> <descriptor>src/main/release/assembly.xml</descriptor> </descriptors> 
+						</configuration> <goals> <goal>single</goal> </goals> </execution> -->
 				</executions>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>autoincrement-versions-maven-plugin</artifactId>
-				<version>2.0-SNAPSHOT</version>
-				<executions>
-					<execution>
-						<id>update-pom-versions</id>
-						<goals>
-							<goal>increment</goal>
-							<goal>commit</goal>
-						</goals>
-						<phase>install</phase>
-						<configuration>
-							<autoIncrementVersion>true</autoIncrementVersion>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>autoincrement-versions-maven-plugin</artifactId> 
+				<version>2.0-SNAPSHOT</version> <executions> <execution> <id>update-pom-versions</id> 
+				<goals> <goal>increment</goal> <goal>commit</goal> </goals> <phase>install</phase> 
+				<configuration> <autoIncrementVersion>true</autoIncrementVersion> </configuration> 
+				</execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 </project>
