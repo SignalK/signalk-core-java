@@ -27,6 +27,8 @@ public class Constants {
 
 	public static final String VERSION = "signalk.version";
 	
+	public static final String SELF = "signalk.vessel.self";
+	
 	//camel output destination types
 	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";
 	public static final String OUTPUT_MQTT = "OUTPUT_MQTT";
@@ -35,10 +37,12 @@ public class Constants {
 	public static final String OUTPUT_WS = "OUTPUT_WS";
 	public static final String OUTPUT_NMEA = "OUTPUT_NMEA";
 	public static final String OUTPUT_REST = "OUTPUT_REST";
+	
 	//misc camel header constants
 	public static final String DESTINATION = "destination";
 	public static final String REPLY_TO = "reply-to";
 	public static final String CamelMQTTPublishTopic = "CamelMQTTPublishTopic";
+	
 	// attached device types
 	public static final String UID = "UID";
 	public static final String IMU = "IMU";
@@ -47,58 +51,67 @@ public class Constants {
 	public static final String MERGE_MODEL = "MRG"; 
 		
 	// config constants
-	public static final String DEMO = "signalk.demo";
-	public static final String HOSTNAME ="signalk.server.hostname";
-	public static final String WEBSOCKET_PORT = "signalk.websocket.port";
-	public static final String REST_PORT = "signalk.rest.port";
-	public static final String CFG_DIR = "signalk.cfg.dir";
-	public static final String CFG_FILE = "signalk.cfg.file";
-	public static final String STREAM_URL = "signalk.stream.demo.file";
+	public static final String HOSTNAME ="signalk.hostname";
 
-	public static final String USBDRIVE = "signalk.usb.usbdrive";
-
+	public static final String USBDRIVE = "signalk.files.usb.usbdrive";
+	public static final String CLOCK_SOURCE = "signalk.clock.source";
+	
+	//serial ports
 	public static final String SERIAL_PORTS = "signalk.serial.ports";
-	public static final String SERIAL_PORT_BAUD = "signalk.serial.port.baud";
+	public static final String SERIAL_PORT_BAUD = "signalk.serial.baud";
 
 	//debug flags
 	public static final String SEND_MESSAGE = "signalk.debug.sendMessage";
-	public static final String STATIC_DIR = "signalk.static.files.dir";
-	public static final String MAP_DIR = "signalk.maps.dir";
-	public static final String MAP_DIR_FILTER = "signalk.maps.dir.filter";
 	
-	public static final String SELF = "signalk.vessel.self";
+	//directories
+	public static final String STATIC_DIR = "signalk.files.static.dir";
+	public static final String MAP_DIR = "signalk.files.maps.dir";
+	public static final String MAP_DIR_FILTER = "signalk.files.maps.filter";
+	public static final String STORAGE_ROOT = "signalk.files.storage.root";
+	public static final String CFG_DIR = "signalk.files.cfg.dir";
+	public static final String CFG_FILE = "signalk.files.cfg.file";
+	
+	
+	public static final String PAYLOAD = "payload";
+	public static final String MIME_TYPE = "mimetype";
+	public static final String MIME_TYPE_JSON = "application/vnd.geo+json";
+	public static final String STORAGE_URI="uri";
+	
+
+	//demo
+	public static final String DEMO = "signalk.demo.start";
+	public static final String STREAM_URL = "signalk.demo.file";
 //	public static final String SESSIONID = "signalk.session";
 	
-	public static final String TCP_PORT = "signalk.tcp.port";
-	public static final String UDP_PORT = "signalk.udp.port";
-	public static final String TCP_NMEA_PORT = "signalk.tcp.nmea.port";
-	public static final String UDP_NMEA_PORT = "signalk.udp.nmea.port";
-	public static final String CLOCK_SOURCE = "signalk.clock.source";
+	//servers
+	public static final String WEBSOCKET_PORT = "signalk.server.websocket.port";
+	public static final String REST_PORT = "signalk.server.rest.port";
+	public static final String TCP_PORT = "signalk.server.tcp.port";
+	public static final String UDP_PORT = "signalk.server.udp.port";
+	public static final String TCP_NMEA_PORT = "signalk.server.tcp.nmea.port";
+	public static final String UDP_NMEA_PORT = "signalk.server.udp.nmea.port";
+	public static final String GENERATE_NMEA0183 = "signalk.server.nmea.generate0183";
+	//STOMP
+	public static final String STOMP_PORT = "signalk.server.stomp.port";
+	public static final String START_STOMP = "signalk.server.stomp.start";
+	//MQTT 
+	public static final String MQTT_PORT = "signalk.server.mqtt.port";
+	public static final String START_MQTT = "signalk.server.mqtt.start";
+	
+	//clients
+	public static final String CLIENT_TCP = "signalk.client.tcp.connect";
+	public static final String CLIENT_MQTT = "signalk.client.mqtt.connect";
+	
+	//apps
+	public static final String ALLOW_INSTALL = "signalk.apps.install.allow";
+	public static final String ALLOW_UPGRADE = "signalk.apps.upgrade.allow";
+	
+//Hawtio
 	public static final String HAWTIO_PORT = "hawtio.port";
 	public static final String HAWTIO_AUTHENTICATE = "hawtio.authenticationEnabled";
 	public static final String HAWTIO_CONTEXT = "hawtio.context";
 	public static final String HAWTIO_WAR = "hawtio.war";
 	public static final String HAWTIO_START = "hawtio.start";
-
-	public static final String STOMP_PORT = "signalk.stomp.port";
-	public static final String MQTT_PORT = "signalk.mqtt.port";
-	public static final String CLIENT_TCP = "signalk.client.tcp.connect";
-	public static final String CLIENT_MQTT = "signalk.client.mqtt.connect";
-	
-	public static final String STORAGE_ROOT = "signalk.storage.root";
-	public static final String PAYLOAD = "payload";
-	public static final String MIME_TYPE = "mimetype";
-	public static final String MIME_TYPE_JSON = "application/vnd.geo+json";
-	public static final String STORAGE_URI="uri";
-
-	public static final String ALLOW_INSTALL = "signalk.allow.install";
-	public static final String ALLOW_UPGRADE = "signalk.allow.upgrade";
-	public static final String GENERATE_NMEA0183 = "signalk.nmea0183.generate";
-	public static final String START_STOMP = "signalk.stomp.start";
-	public static final String START_MQTT = "signalk.mqtt.start";
-	
-
-	
 
 	
 	

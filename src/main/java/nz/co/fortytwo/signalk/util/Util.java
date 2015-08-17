@@ -154,6 +154,8 @@ public class Util {
 		props.setProperty(Constants.CFG_DIR,"./conf/");
 		props.setProperty(Constants.CFG_FILE,"signalk.cfg");
 		props.setProperty(Constants.STORAGE_ROOT,"./storage/");
+		props.setProperty(Constants.STATIC_DIR, "./signalk-static");
+		props.setProperty(Constants.MAP_DIR, "./mapcache");
 		props.setProperty(Constants.DEMO,"false");
 		props.setProperty(Constants.STREAM_URL,"./src/test/resources/motu.log&scanStream=true&scanStreamDelay=500");
 		props.setProperty(Constants.USBDRIVE,"/media/usb0");
@@ -180,6 +182,9 @@ public class Util {
 		props.setProperty(Constants.GENERATE_NMEA0183, "true");
 		props.setProperty(Constants.START_MQTT, "true");
 		props.setProperty(Constants.START_STOMP, "true");
+		props.setProperty(Constants.CLIENT_TCP, "");
+		props.setProperty(Constants.CLIENT_MQTT, "");
+		
 		
 	}
 	
