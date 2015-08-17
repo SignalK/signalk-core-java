@@ -184,6 +184,7 @@ public class Util {
 		props.setProperty(Constants.START_STOMP, "true");
 		props.setProperty(Constants.CLIENT_TCP, "");
 		props.setProperty(Constants.CLIENT_MQTT, "");
+		props.setProperty(Constants.CLIENT_STOMP, "");
 		
 		
 	}

@@ -101,6 +101,7 @@ public class Constants {
 	//clients
 	public static final String CLIENT_TCP = "signalk.client.tcp.connect";
 	public static final String CLIENT_MQTT = "signalk.client.mqtt.connect";
+	public static final String CLIENT_STOMP = "signalk.client.stomp.connect";
 	
 	//apps
 	public static final String ALLOW_INSTALL = "signalk.apps.install.allow";
