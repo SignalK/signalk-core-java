@@ -67,7 +67,6 @@ public class RestApiHandler {
 	private Map<String, String> mimeMap = new HashMap<String, String>();
 	
 	public RestApiHandler() throws IOException {
-		@SuppressWarnings("unchecked")
 		List<String> lines = FileUtils.readLines(new File("./src/main/resources/mime.types"));
 		for (String line : lines) {
 			String[] parts = line.split("=");
@@ -191,5 +190,23 @@ public class RestApiHandler {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     	return null;
 	}
+	
+//	public Object processPost(HttpServletRequest request, HttpServletResponse response, SignalKModel signalkmodel, String body) {
+//		String path = request.getPathInfo();
+//		//String path =  exchange.getIn().getHeader(Exchange.HTTP_URI, String.class);
+//		if(logger.isDebugEnabled())logger.debug("We are processing the path = "+path);
+//        
+//        //check valid request.
+//        if(path.length()<JsonConstants.SIGNALK_API.length() || !path.startsWith(JsonConstants.SIGNALK_API)){
+//        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//        	return null;
+//        }
+//        
+//        //the request should be a signalk message in the POST body.
+//        
+//        
+//        
+//		return null;
+//	}
 
 }

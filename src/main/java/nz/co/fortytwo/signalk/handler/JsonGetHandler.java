@@ -134,6 +134,8 @@ public class JsonGetHandler {
 		// add to tree
 		for (String p : rslt) {
 			//TODO: this may be calling recursive paths, need to do each path only once
+			if (logger.isTraceEnabled())
+				logger.trace("Parsing key  " + p);
 			Util.populateTree(signalkModel, tree, p);
 		}
 
@@ -156,8 +158,8 @@ public class JsonGetHandler {
 		List<String> paths = new ArrayList<String>();
 		for (String p : signalkModel.getKeys()) {
 			if (pattern.matcher(p).matches()) {
-				if (logger.isDebugEnabled())
-					logger.debug("Adding path:" + p);
+				if (logger.isTraceEnabled())
+					logger.trace("Adding path:" + p);
 				paths.add(p);
 			}
 		}

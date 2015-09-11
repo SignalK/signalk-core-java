@@ -55,15 +55,16 @@ public class SignalKConstants {
 	public static final String currentTrack = "currentTrack";
 	
 	
-	public static final String websocketUrl="websocketUrl";
+	public static final String websocketUrl="signalk-ws";
+	public static final String restUrl="signalk-http";
 	
-	public static final String signalkTcpPort = "signalkTcpPort";
-	public static final String signalkUdpPort = "signalkUdpPort";
-	public static final String nmeaTcpPort = "nmeaTcpPort";
-	public static final String nmeaUdpPort = "nmeaUdpPort";
+	public static final String signalkTcpPort = "signalk-tcp";
+	public static final String signalkUdpPort = "signalk-udp";
+	public static final String nmeaTcpPort = "nmea-tcp";
+	public static final String nmeaUdpPort = "nmea-udp";
 	
-	public static final String stompPort = "stompPort";
-	public static final String mqttPort = "mqttPort";
+	public static final String stompPort = "stomp";
+	public static final String mqttPort = "mqtt";
 	
 	//temp
 	public static final String env_time = "environment.time";

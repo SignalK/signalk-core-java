@@ -1161,7 +1161,9 @@ public class Json
 	 * @return The JSON entity parsed: an object, array, string, number or boolean, or null. Note that
 	 * this method will never return the actual Java <code>null</code>.
 	 */
-	public static Json read(String jsonAsString) { return (Json)new Reader().read(jsonAsString); }
+	public static Json read(String jsonAsString) { 
+		if("{}".equals(jsonAsString))return Json.object();
+		return (Json)new Reader().read(jsonAsString); }
 
 	/**
 	 * <p>
@@ -2533,6 +2535,7 @@ public class Json
 	    {
 	        skipWhiteSpace();
 	        char ch = c;
+	       
 	        next();
 	        switch (ch) 
 	        {

@@ -60,7 +60,7 @@ public class DeltaToMapConverter {
 		//avoid full signalk syntax
 		if(node.has(VESSELS))return null;
 		//deal with diff format
-		if(node.has(CONTEXT)){
+		if(node.has(CONTEXT) && (node.has(UPDATES) || node.has(PUT))){
 			if(logger.isDebugEnabled())logger.debug("processing delta  "+node );
 			//process it
 			SignalKModel temp =  SignalKModelFactory.getCleanInstance();

@@ -33,6 +33,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -148,6 +149,34 @@ public class JsonGetHandlerTest {
 		assertTrue(reply.getData().size()==18); 
 		 
 	}
+	
+	@Test
+	public void shouldIncludeChildren() throws Exception{
+		SignalKModel model = SignalKModelFactory.getInstance();
+		model.getData().clear();
+		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
+		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position\"}]}";
+		Json json = Json.read(request);
+		JsonGetHandler processor = new JsonGetHandler();
+		SignalKModel reply = processor.handle(model,json);
+		assertNotNull(reply);
+		logger.debug(reply);
+		assertEquals(-41.2936935424,reply.get(vessels_dot_self_dot+nav_position_latitude));
+	}
+	@Test
+	public void shouldIncludeLastChild() throws Exception{
+		SignalKModel model = SignalKModelFactory.getInstance();
+		model.getData().clear();
+		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
+		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position.latitude\"}]}";
+		Json json = Json.read(request);
+		JsonGetHandler processor = new JsonGetHandler();
+		SignalKModel reply = processor.handle(model,json);
+		assertNotNull(reply);
+		logger.debug(reply);
+		assertEquals(-41.2936935424,reply.get(vessels_dot_self_dot+nav_position_latitude));
+	}
+	
 	@Test
 	public void shouldProduceSpecificPathList() throws Exception {
 		SignalKModel model = SignalKModelFactory.getInstance();

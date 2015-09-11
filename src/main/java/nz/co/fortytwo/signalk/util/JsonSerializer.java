@@ -52,6 +52,8 @@ public class JsonSerializer {
     	StringBuffer buffer = new StringBuffer();
     	if(signalk!=null && signalk.getData()!=null){
     		write(signalk.getData().entrySet().iterator(),'.',buffer);
+    	}else{
+    		buffer.append("{}");
     	}
 		return buffer.toString();
 	}
@@ -338,6 +340,7 @@ public class JsonSerializer {
 
 
 	public Json writeJson(SignalKModel model) throws IOException {
+		if(model==null || model.getData().size()==0)return Json.object();
 		return Json.read(write(model));
 	}
 

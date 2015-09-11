@@ -164,8 +164,9 @@ public class Util {
 			props.setProperty(Constants.SERIAL_PORTS,"COM1,COM2,COM3,COM4");
 		}
 		props.setProperty(Constants.SERIAL_PORT_BAUD,"38400");
-		props.setProperty(Constants.TCP_PORT,"5555");
-		props.setProperty(Constants.UDP_PORT,"5554");
+		
+		props.setProperty(Constants.TCP_PORT,"55555");
+		props.setProperty(Constants.UDP_PORT,"55554");
 		props.setProperty(Constants.TCP_NMEA_PORT,"5557");
 		props.setProperty(Constants.UDP_NMEA_PORT,"5556");
 		props.setProperty(Constants.STOMP_PORT,"61613");
@@ -190,12 +191,13 @@ public class Util {
 	}
 	
 
-	public static Json getAddressesMsg(String hostname) throws UnknownHostException{
+	public static Json getEndpoints(String hostname) throws UnknownHostException{
 		Json msg = Json.object();
 		String cfgHostname = getConfigProperty(Constants.HOSTNAME);
 		if(StringUtils.isNotBlank(cfgHostname))
 			hostname=cfgHostname;
 		msg.set(SignalKConstants.websocketUrl, "ws://"+hostname+":"+getConfigProperty(Constants.WEBSOCKET_PORT)+JsonConstants.SIGNALK_WS);
+		msg.set(SignalKConstants.restUrl, "http://"+hostname+":"+getConfigProperty(Constants.REST_PORT)+JsonConstants.SIGNALK_API);
 		msg.set(SignalKConstants.signalkTcpPort,hostname+":"+getConfigProperty(Constants.TCP_PORT));
 		msg.set(SignalKConstants.signalkUdpPort,hostname+":"+getConfigProperty(Constants.UDP_PORT));
 		msg.set(SignalKConstants.nmeaTcpPort,hostname+":"+getConfigProperty(Constants.TCP_NMEA_PORT));
@@ -358,6 +360,8 @@ public class Util {
 		newPath = newPath.replace('/', '.');
 		if (newPath.startsWith(JsonConstants.DOT))
 			newPath = newPath.substring(1);
+		if (!newPath.endsWith("*")||!newPath.endsWith("?"))
+			newPath = newPath+"*";
 		
 		return newPath;
 	}
@@ -444,12 +448,16 @@ public class Util {
 
 	public static String getContext(String path) {
 		//return vessels.*
-		if(StringUtils.isNotBlank(path)|| path.startsWith(vessels+dot)){
-			int pos = path.indexOf(".", vessels.length()+1);
+		//TODO; robustness for "signalk/api/v1/", and "vessels.*" and "list/vessels"
+		if(StringUtils.isBlank(path)) return "";
+		if(path.startsWith(vessels+dot) || path.startsWith(JsonConstants.LIST+dot+vessels+dot)){
+			int p1 = path.indexOf(vessels)+vessels.length()+1;
+			
+			int pos = path.indexOf(".", p1);
 			if(pos<0)return path;
 			return path.substring(0, pos);
 		}
-		return null;
+		return "";
 	}
 
 }
