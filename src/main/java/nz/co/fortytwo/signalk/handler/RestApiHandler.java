@@ -24,21 +24,22 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.Constants.STORAGE_ROOT;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.resources;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
@@ -67,12 +68,24 @@ public class RestApiHandler {
 	private Map<String, String> mimeMap = new HashMap<String, String>();
 	
 	public RestApiHandler() throws IOException {
-		List<String> lines = FileUtils.readLines(new File("./src/main/resources/mime.types"));
+		init("./src/main/resources/mime.types");
+	}
+	
+	public RestApiHandler(String mimeTypes) throws IOException {
+		init(mimeTypes);
+	}
+	
+	private void init(String mimeTypes) throws IOException {
+		@SuppressWarnings("unchecked")
+		List<String> lines = FileUtils.readLines(new File(mimeTypes));
 		for (String line : lines) {
 			String[] parts = line.split("=");
-			mimeMap.put(parts[1], parts[0]);
+			mimeMap.put(parts[0], parts[1]);
 		}
+		
 	}
+	
+	
 	/**
 	 * Process a signalk GET message. The method will recover the appropriate json object at the urls path from 
 	 * the provided SignalKModel. 

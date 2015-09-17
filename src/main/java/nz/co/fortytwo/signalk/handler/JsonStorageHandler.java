@@ -22,31 +22,34 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.Constants.*;
-import static nz.co.fortytwo.signalk.util.JsonConstants.*;
+import static nz.co.fortytwo.signalk.util.Constants.MIME_TYPE;
+import static nz.co.fortytwo.signalk.util.Constants.PAYLOAD;
+import static nz.co.fortytwo.signalk.util.Constants.STORAGE_ROOT;
+import static nz.co.fortytwo.signalk.util.Constants.STORAGE_URI;
+import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.JsonConstants.DOT;
+import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
+import static nz.co.fortytwo.signalk.util.JsonConstants.PUT;
+import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
+import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
+import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
+import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.activation.MimeTypeParameterList;
-import javax.activation.MimetypesFileTypeMap;
-
 import mjson.Json;
-import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 /**
- * Handles json messages with 'get' requests
+ * Handles json messages with large blobs 
  * 
  * @author robert
  * 
@@ -58,23 +61,31 @@ public class JsonStorageHandler {
 	private Map<String, String> mimeMap = new HashMap<String, String>();
 
 	/**
-	 * Processes the putNode, saving into the signalKModel
-	 * Returns null if the json is not an update, otherwise return a SignalKModel
-	 * 
-	 * @param signalkModel
-	 * @param putNode
-	 * @return
+	 * Process the message and on ingoing and extract the payload to storage, so we dont pass big blobs into the model
+	 * Extracts them back into the message again on outgoing. Uses the default mimetypes mapping file
 	 * @throws IOException
-	 * @throws Exception
-	 * 
 	 */
 	public JsonStorageHandler() throws IOException {
+		init("./src/main/resources/mime.types");
+		
+	}
+	private void init(String mimeTypes) throws IOException {
 		@SuppressWarnings("unchecked")
-		List<String> lines = FileUtils.readLines(new File("./src/main/resources/mime.types"));
+		List<String> lines = FileUtils.readLines(new File(mimeTypes));
 		for (String line : lines) {
 			String[] parts = line.split("=");
 			mimeMap.put(parts[0], parts[1]);
 		}
+		
+	}
+	/**
+	 * Process the message and on ingoing and extract the payload to storage, so we dont pass big blobs into the model
+	 * Extracts them back into the message again on outgoing
+	 * @param mimeTypes - location of the mimetypes mapping file
+	 * @throws IOException
+	 */
+	public JsonStorageHandler(String mimeTypes) throws IOException {
+		init(mimeTypes);
 	}
 
 	public Json handle(Json node) throws Exception {
