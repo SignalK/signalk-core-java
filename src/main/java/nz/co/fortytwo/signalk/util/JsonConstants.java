@@ -36,8 +36,10 @@ public class JsonConstants extends SignalKConstants {
 	public static final String MSG_APPROVAL = "MSG_APPROVAL";
 	public static final Object REQUIRED = "REQUIRED";
 	
+	public static final String CONFIG = "config";
+	
 	public static final String VESSELS = "vessels";
-	public static final String SELF = Util.getConfigProperty(Constants.SELF);
+	public static String SELF = "self";
 	public static final String CONTEXT = "context";
 	public static final String UPDATES = "updates";
 	public static final String SUBSCRIBE = "subscribe";
@@ -73,7 +75,7 @@ public class JsonConstants extends SignalKConstants {
 	public static final String source = "source";
 	public static final String timezone = "timezone";
 	
-
+	
 	public static final String SIGNALK_AUTH = "/signalk/v1/auth";
 	public static final String SIGNALK_API = "/signalk/v1/api";
 	public static final String SIGNALK_ENDPOINTS = "/signalk/endpoints/v1";

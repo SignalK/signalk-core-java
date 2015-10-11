@@ -36,6 +36,7 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
 import nz.co.fortytwo.signalk.util.JsonConstants;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 
 import org.apache.log4j.Logger;
 
@@ -267,6 +268,12 @@ public class SignalKModelImpl implements SignalKModel {
 		return put(key+".value", value);
 	}
 
+	protected void setSelf(String self){
+		JsonConstants.SELF=self;
+		 dot_self_dot = dot+JsonConstants.SELF+dot;
+		  dot_self = dot+JsonConstants.SELF;
+		  SignalKConstants.self=self;
+	}
 
 }
 

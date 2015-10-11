@@ -38,7 +38,7 @@ public interface SignalKModel{
 
 	/**
 	 * Return a subtree from the Model - the tree is read-only, but is live
-	 * and wil be updated as the Model changes.
+	 * and will be updated as the Model changes.
 	 * @param key the key to retrieve - for example, "vessels.self" will return
 	 * a subtree that may contain keys beginning "navigation", "environment" and so on.
 	 */

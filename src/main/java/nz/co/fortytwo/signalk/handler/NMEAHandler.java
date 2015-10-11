@@ -95,7 +95,7 @@ public class NMEAHandler{
 		//SentenceFactory.getInstance().registerParser("BVE", net.sf.marineapi.nmea.parser.BVEParser.class);
 		//SentenceFactory.getInstance().registerParser("XDR", net.sf.marineapi.nmea.parser.CruzproXDRParser.class);
 		try {
-			if("rmc".equals(Util.getConfig(null).getProperty(Constants.CLOCK_SOURCE))){
+			if("rmc".equals(Util.getConfigProperty(Constants.CLOCK_SOURCE))){
 				rmcClock=true;
 			}
 		} catch (Exception e) {

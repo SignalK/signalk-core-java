@@ -143,6 +143,10 @@ public class JsonSerializer {
     }
 
     private void jsonWrite(String value, Appendable out) throws IOException {
+    	if(value.startsWith("[") && value.endsWith("]")){
+    		jsonWriteArray(value, out);
+    		return;
+    	}
         out.append('"');
         int len = value.length();
         char c = 0;
@@ -194,7 +198,15 @@ public class JsonSerializer {
         out.append('"');
     }
 
-    private void jsonWrite(int value, Appendable out) throws IOException {
+    private void jsonWriteArray(String value, Appendable out) throws IOException {
+    	if("[]".equals(value)){
+    		out.append("null");
+    	}else{
+    		out.append(value);
+    	}
+    }
+
+	private void jsonWrite(int value, Appendable out) throws IOException {
         out.append(Integer.toString(value));
     }
 
@@ -295,7 +307,7 @@ public class JsonSerializer {
     public NavigableMap<String, Object> read(Json json) {
 		//get keys and recurse
     	ConcurrentSkipListMap<String, Object> map = new ConcurrentSkipListMap<String, Object>();
-    	if(json.has(JsonConstants.VESSELS)){
+    	if(json.has(JsonConstants.VESSELS) || json.has(JsonConstants.CONFIG)){
     		recurseJsonFull(json,map,"");
     	}
     	if(json.has(JsonConstants.UPDATES)){

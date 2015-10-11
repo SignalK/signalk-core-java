@@ -25,13 +25,15 @@ package nz.co.fortytwo.signalk.model.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
+import java.util.SortedMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-
+import nz.co.fortytwo.signalk.util.Constants;
+import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 
 /**
@@ -42,6 +44,7 @@ import nz.co.fortytwo.signalk.util.JsonSerializer;
  */
 public class SignalKModelFactory {
 	private static final String SIGNALK_MODEL_SAVE_FILE = "./conf/self.json";
+	private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
 	private static Logger logger = Logger.getLogger(SignalKModelFactory.class);
 	private static SignalKModel signalKModel;
 	static {
@@ -95,6 +98,24 @@ public class SignalKModelFactory {
 			logger.info("   Saved state not found");
 		}
 	}
+	public static void loadConfig(SignalKModel model){
+		File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
+		logger.info("Checking for previous config: "+jsonFile.getAbsolutePath());
+		if(jsonFile.exists()){
+			try{
+				Json temp = Json.read(jsonFile.toURI().toURL());
+				JsonSerializer ser = new JsonSerializer();
+				model.putAll(ser.read(temp));
+				String self = (String) model.get(Constants.SELF);
+				((SignalKModelImpl)model).setSelf(self);
+				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
+			}catch(Exception ex){
+				logger.error(ex.getMessage());
+			}
+		}else{
+			logger.info("   Saved config not found");
+		}
+	}
 	/**
 	 * Save the current state of the signalk model
 	 * 
@@ -104,8 +125,35 @@ public class SignalKModelFactory {
 		if (model != null) {
 			File jsonFile = new File(SIGNALK_MODEL_SAVE_FILE);
 			JsonSerializer ser = new JsonSerializer();
-			FileUtils.writeStringToFile(jsonFile, ser.write(model));
+			Json modelJson = ser.writeJson(model);
+			//remove config
+			if(modelJson.has(JsonConstants.CONFIG)){
+				modelJson = modelJson.delAt(JsonConstants.CONFIG);
+			}
+			FileUtils.writeStringToFile(jsonFile, modelJson.toString());
 			logger.debug("   Saved model state to "+SIGNALK_MODEL_SAVE_FILE);
+		}
+	}
+	
+	/**
+	 * Save the current state of the signalk config
+	 * 
+	 * @throws IOException
+	 */
+	public static void saveConfig(SignalKModel model) throws IOException {
+		if (model != null) {
+			File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
+			NavigableMap<String, Object> config = model.getSubMap(JsonConstants.CONFIG);
+			JsonSerializer ser = new JsonSerializer();
+			ser.setPretty(3);
+			StringBuffer buffer = new StringBuffer();
+	    	if(config!=null && config.size()>0){
+	    		ser.write(config.entrySet().iterator(),'.',buffer);
+	    	}else{
+	    		buffer.append("{}");
+	    	}
+			FileUtils.writeStringToFile(jsonFile, buffer.toString());
+			logger.debug("   Saved model state to "+SIGNALK_CFG_SAVE_FILE);
 		}
 
 	}

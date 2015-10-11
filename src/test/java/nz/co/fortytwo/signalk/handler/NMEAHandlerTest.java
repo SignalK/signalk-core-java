@@ -124,37 +124,37 @@ public class NMEAHandlerTest {
 		assertEquals(12.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_engineTemperature),0.0001);
 	}
 	
-	@Test
-	@Ignore
-	public void shouldHandleSkipValue() throws FileNotFoundException, IOException {
-		NMEAHandler processor = new NMEAHandler();
-	
-		//freeboard.nmea.YXXDR.MaxVu110=RPM,EVV,DBT,EPP,ETT
-		Util.getConfig(null).setProperty("freeboard.nmea.YXXDR.MaxVu110", "RPM,EVV,SKIP,EPP,ETT");
-		
-		Json json = (Json) processor.handle("$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
-		//RPM,EVV,DBT,EPP,ETT
-		assertEquals(4.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_rpm),0.0001);
-		//assertEquals(12.27,map.get(Constants.ENGINE_VOLTS));
-		assertTrue(signalkModel.getValue(vessels_dot_self_dot +env_depth_belowTransducer)==null);
-		assertEquals(3.3,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_oilPressure),0.0001);
-		assertEquals(12.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_engineTemperature),0.0001);
-	}
-	@Test
-	@Ignore
-	public void shouldRejectMismatchedValues() throws FileNotFoundException, IOException {
-		NMEAHandler processor = new NMEAHandler();
-		//HashMap<String, Object> map = new HashMap<String, Object>();
-		//freeboard.nmea.YXXDR.MaxVu110=RPM,EVV,DBT,EPP,ETT
-		Util.getConfig(null).setProperty("freeboard.nmea.YXXDR.MaxVu110", "RPM,EVV,SKIP,EPP");
-		//map.put(Constants.NMEA, "$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
-		Json json = (Json) processor.handle("$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
-		//RPM,EVV,DBT,EPP,ETT
-		assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_id_rpm)==null);
-		//assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_rpm)==null);
-		assertTrue(signalkModel.getValue(vessels_dot_self_dot +env_depth_belowTransducer)==null);
-		assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_id_oilPressure)==null);
-		assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_id_engineTemperature)==null);
-	}
+//	@Test
+//	@Ignore
+//	public void shouldHandleSkipValue() throws FileNotFoundException, IOException {
+//		NMEAHandler processor = new NMEAHandler();
+//	
+//		//freeboard.nmea.YXXDR.MaxVu110=RPM,EVV,DBT,EPP,ETT
+//		Util.setProperty("freeboard.nmea.YXXDR.MaxVu110", "RPM,EVV,SKIP,EPP,ETT");
+//		
+//		Json json = (Json) processor.handle("$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
+//		//RPM,EVV,DBT,EPP,ETT
+//		assertEquals(4.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_rpm),0.0001);
+//		//assertEquals(12.27,map.get(Constants.ENGINE_VOLTS));
+//		assertTrue(signalkModel.getValue(vessels_dot_self_dot +env_depth_belowTransducer)==null);
+//		assertEquals(3.3,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_oilPressure),0.0001);
+//		assertEquals(12.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_engineTemperature),0.0001);
+//	}
+//	@Test
+//	@Ignore
+//	public void shouldRejectMismatchedValues() throws FileNotFoundException, IOException {
+//		NMEAHandler processor = new NMEAHandler();
+//		//HashMap<String, Object> map = new HashMap<String, Object>();
+//		//freeboard.nmea.YXXDR.MaxVu110=RPM,EVV,DBT,EPP,ETT
+//		Util.getConfig(null).setProperty("freeboard.nmea.YXXDR.MaxVu110", "RPM,EVV,SKIP,EPP");
+//		//map.put(Constants.NMEA, "$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
+//		Json json = (Json) processor.handle("$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
+//		//RPM,EVV,DBT,EPP,ETT
+//		assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_id_rpm)==null);
+//		//assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_rpm)==null);
+//		assertTrue(signalkModel.getValue(vessels_dot_self_dot +env_depth_belowTransducer)==null);
+//		assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_id_oilPressure)==null);
+//		assertTrue(signalkModel.getValue(vessels_dot_self_dot +propulsion_id_engineTemperature)==null);
+//	}
 
 }

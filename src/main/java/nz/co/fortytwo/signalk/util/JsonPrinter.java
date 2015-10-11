@@ -132,6 +132,11 @@ public class JsonPrinter {
     }
 
     private void jsonWrite(String value, Appendable out) throws IOException {
+    	//check for config arrays
+    	if(value.startsWith("[") && value.endsWith("]")){
+    		jsonWriteArray(value, out);
+    		return;
+    	}
         out.append('"');
         int len = value.length();
         char c = 0;
@@ -185,6 +190,10 @@ public class JsonPrinter {
 
     private void jsonWrite(int value, Appendable out) throws IOException {
         out.append(Integer.toString(value));
+    }
+    
+    private void jsonWriteArray(String value, Appendable out) throws IOException {
+        out.append(value);
     }
 
     private void jsonNull(Appendable out) throws IOException {

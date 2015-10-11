@@ -29,7 +29,7 @@ public class SignalKConstants {
 
 	//fixed
 	public static final String self_str =  "self";
-	public static final String self =  Util.getConfigProperty(Constants.SELF);
+	public static String self = "self";
 	public static final String version = "version";
 	public static final String timestamp = "timestamp";
 	public static final String source = "source";
