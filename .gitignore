@@ -2,5 +2,10 @@
 /bin
 /signalk-static
 /storage
+
+# exclude eclipse stuff
 .settings
+.project
+.classpath
+
 
