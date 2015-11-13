@@ -18,17 +18,21 @@ import java.io.IOException;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
+import nz.co.fortytwo.signalk.util.Constants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlarmHandlerTest {
 	private static Logger logger = Logger.getLogger(AlarmHandlerTest.class);
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
 	}
 
 	@After
@@ -38,6 +42,8 @@ public class AlarmHandlerTest {
 	@Test
 	public void shouldSetAlarm() throws IOException {
 		SignalKModel model = SignalKModelFactory.getInstance();
+		
+		Util.setSelf("motu");
 		model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		assertEquals(93.0, model.getValue(vessels_dot_self_dot+nav_courseOverGroundMagnetic));

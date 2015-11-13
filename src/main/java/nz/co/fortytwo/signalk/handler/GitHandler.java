@@ -52,9 +52,15 @@ public class GitHandler {
 
 	private static final String SLASH = "/";
 	private static Logger logger = Logger.getLogger(GitHandler.class);
-	private File staticDir = new File(Util.getConfigProperty(STATIC_DIR));
+	private File staticDir = null;
 	
 	private static String github = "https://github.com/SignalK/";
+	
+	
+	public GitHandler() {
+		super();
+		staticDir = new File(Util.getConfigProperty(STATIC_DIR));
+	}
 	/**
 	 * Process a signalk install
 	 * 

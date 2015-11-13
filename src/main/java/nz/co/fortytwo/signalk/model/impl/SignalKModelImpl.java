@@ -35,8 +35,10 @@ import java.util.regex.Pattern;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
+import nz.co.fortytwo.signalk.util.Constants;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
+import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.log4j.Logger;
 
@@ -67,11 +69,6 @@ public class SignalKModelImpl implements SignalKModel {
 	private static Logger logger = Logger.getLogger(SignalKModelImpl.class);
     private final char separator;
     private final NavigableMap<String,Object> root;
-    private Pattern selfMatch = Pattern.compile("\\.self\\.");
-    private static String dot_self_dot = dot+JsonConstants.SELF+dot;
-
-    private Pattern selfEndMatch = Pattern.compile("\\.self$");
-    private static String dot_self = dot+JsonConstants.SELF;
     
     private int nextrevision;
 
@@ -163,9 +160,8 @@ public class SignalKModelImpl implements SignalKModel {
     }
 
     private String fixSelfKey(String key) {
-    	key = selfMatch.matcher(key).replaceAll(dot_self_dot);
-    	key = selfEndMatch.matcher(key).replaceAll(dot_self);
-		return key;
+    
+		return Util.fixSelfKey(key);
 	}
 
 	@Override
@@ -243,6 +239,14 @@ public class SignalKModelImpl implements SignalKModel {
 	 */
     @Override
 	public SortedMap<String,Object> getData() {
+        return getSubMap(vessels);
+    }
+    
+    /* (non-Javadoc)
+	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#getData()
+	 */
+    @Override
+	public SortedMap<String,Object> getFullData() {
         return root;
     }
 
@@ -268,12 +272,7 @@ public class SignalKModelImpl implements SignalKModel {
 		return put(key+".value", value);
 	}
 
-	protected void setSelf(String self){
-		JsonConstants.SELF=self;
-		 dot_self_dot = dot+JsonConstants.SELF+dot;
-		  dot_self = dot+JsonConstants.SELF;
-		  SignalKConstants.self=self;
-	}
+	
 
 }
 

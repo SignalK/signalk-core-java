@@ -6,16 +6,19 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.handler.AlarmHandler;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlarmManagerTest {
 	private static Logger logger = Logger.getLogger(AlarmManagerTest.class);
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
 	}
 
 	@After
@@ -85,6 +88,7 @@ public class AlarmManagerTest {
 		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
 		AlarmManager mgr = new AlarmManager(zones);
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		Util.setSelf("motu");
 		mgr.setAlarm(model, vessels_dot_self_dot+nav_courseOverGroundMagnetic, alarm, "Test msg");
 		logger.debug(model);
 		assertEquals(alarm, model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+alarmState));
@@ -95,6 +99,7 @@ public class AlarmManagerTest {
 		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
 		AlarmManager mgr = new AlarmManager(zones);
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		Util.setSelf("motu");
 		mgr.setAlarm(model, vessels_dot_self_dot+nav_courseOverGroundMagnetic, alarm, null);
 		logger.debug(model);
 		assertEquals(alarm, model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+alarmState));

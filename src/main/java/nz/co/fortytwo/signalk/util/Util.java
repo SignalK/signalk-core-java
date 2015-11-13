@@ -34,6 +34,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -68,13 +70,19 @@ import org.joda.time.DateTimeZone;
 public class Util {
 
 	private static Logger logger = Logger.getLogger(Util.class);
-	//private static Properties props;
+	// private static Properties props;
 	private static SignalKModel model = null;
 	public static SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd_hh:mm:ss");
 	public static File cfg = null;
 	private static boolean timeSet = false;
 	public static final double R = 6372800; // In meters
+
+	private static Pattern selfMatch = Pattern.compile("\\.self\\.");
+	private static String dot_self_dot = dot + JsonConstants.SELF + dot;
+
+	private static Pattern selfEndMatch = Pattern.compile("\\.self$");
+	private static String dot_self = dot + JsonConstants.SELF;
 
 	/**
 	 * Smooth the data a bit
@@ -98,25 +106,13 @@ public class Util {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static void getConfig()
-			throws FileNotFoundException, IOException {
-		model=SignalKModelFactory.getInstance();
-		
+	public static void getConfig() throws FileNotFoundException, IOException {
+		model = SignalKModelFactory.getInstance();
+
 		Util.setDefaults(model);
 		SignalKModelFactory.loadConfig(model);
-		
-	}
-
-	/**
-	 * Save the current config to disk.
-	 * 
-	 * @throws IOException
-	 */
-	public static void saveConfig() throws IOException {
-		if (model == null)
-			return;
-		SignalKModelFactory.saveConfig(model);
-
+		String self = (String) model.get(Constants.SELF);
+		Util.setSelf(self);
 	}
 
 	/**
@@ -127,46 +123,48 @@ public class Util {
 	public static void setDefaults(SignalKModel model) {
 		// populate sensible defaults here
 		model.put(Constants.SELF, "self");
-		model.put(Constants.WEBSOCKET_PORT, "3000");
-		model.put(Constants.REST_PORT, "8080");
+		model.put(Constants.WEBSOCKET_PORT, 3000);
+		model.put(Constants.REST_PORT, 8080);
 		model.put(Constants.CFG_DIR, "./conf/");
 		model.put(Constants.CFG_FILE, "signalk.cfg");
 		model.put(Constants.STORAGE_ROOT, "./storage/");
 		model.put(Constants.STATIC_DIR, "./signalk-static");
 		model.put(Constants.MAP_DIR, "./mapcache");
-		model.put(Constants.DEMO, "false");
+		model.put(Constants.DEMO, false);
 		model.put(Constants.STREAM_URL,
 				"./src/test/resources/motu.log&scanStream=true&scanStreamDelay=500");
 		model.put(Constants.USBDRIVE, "/media/usb0");
-		model.put(Constants.SERIAL_PORTS,
-				"/dev/ttyUSB0,/dev/ttyUSB1,/dev/ttyUSB2,/dev/ttyACM0,/dev/ttyACM1,/dev/ttyACM2");
+		model.put(
+				Constants.SERIAL_PORTS,
+				"[\"/dev/ttyUSB0\",\"/dev/ttyUSB1\",\"/dev/ttyUSB2\",\"/dev/ttyACM0\",\"/dev/ttyACM1\",\"/dev/ttyACM2\"]");
 		if (SystemUtils.IS_OS_WINDOWS) {
-			model.put(Constants.SERIAL_PORTS, "COM1,COM2,COM3,COM4");
+			model.put(Constants.SERIAL_PORTS,
+					"[\"COM1\",\"COM2\",\"COM3\",\"COM4\"]");
 		}
-		model.put(Constants.SERIAL_PORT_BAUD, "38400");
+		model.put(Constants.SERIAL_PORT_BAUD, 38400);
 
-		model.put(Constants.TCP_PORT, "55555");
-		model.put(Constants.UDP_PORT, "55554");
-		model.put(Constants.TCP_NMEA_PORT, "5557");
-		model.put(Constants.UDP_NMEA_PORT, "5556");
-		model.put(Constants.STOMP_PORT, "61613");
-		model.put(Constants.MQTT_PORT, "1883");
+		model.put(Constants.TCP_PORT, 55555);
+		model.put(Constants.UDP_PORT, 55554);
+		model.put(Constants.TCP_NMEA_PORT, 55557);
+		model.put(Constants.UDP_NMEA_PORT, 55556);
+		model.put(Constants.STOMP_PORT, 61613);
+		model.put(Constants.MQTT_PORT, 1883);
 		model.put(Constants.CLOCK_SOURCE, "system");
-		model.put(Constants.HAWTIO_PORT, "8000");
-		model.put(Constants.HAWTIO_AUTHENTICATE, "false");
+		model.put(Constants.HAWTIO_PORT, 8000);
+		model.put(Constants.HAWTIO_AUTHENTICATE, false);
 		model.put(Constants.HAWTIO_CONTEXT, "/hawtio");
 		model.put(Constants.HAWTIO_WAR,
 				"./hawtio/hawtio-default-offline-1.4.48.war");
-		model.put(Constants.HAWTIO_START, "true");
+		model.put(Constants.HAWTIO_START, false);
 		model.put(Constants.VERSION, "0.1");
-		model.put(Constants.ALLOW_INSTALL, "true");
-		model.put(Constants.ALLOW_UPGRADE, "true");
-		model.put(Constants.GENERATE_NMEA0183, "true");
-		model.put(Constants.START_MQTT, "true");
-		model.put(Constants.START_STOMP, "true");
-		model.put(Constants.CLIENT_TCP, "");
-		model.put(Constants.CLIENT_MQTT, "");
-		model.put(Constants.CLIENT_STOMP, "");
+		model.put(Constants.ALLOW_INSTALL, true);
+		model.put(Constants.ALLOW_UPGRADE, true);
+		model.put(Constants.GENERATE_NMEA0183, true);
+		model.put(Constants.START_MQTT, true);
+		model.put(Constants.START_STOMP, true);
+		model.put(Constants.CLIENT_TCP, null);
+		model.put(Constants.CLIENT_MQTT, null);
+		model.put(Constants.CLIENT_STOMP, null);
 
 	}
 
@@ -177,25 +175,25 @@ public class Util {
 		if (StringUtils.isNotBlank(cfgHostname))
 			hostname = cfgHostname;
 		msg.set(SignalKConstants.websocketUrl, "ws://" + hostname + ":"
-				+ getConfigProperty(Constants.WEBSOCKET_PORT)
+				+ getConfigPropertyInt(Constants.WEBSOCKET_PORT)
 				+ JsonConstants.SIGNALK_WS);
 		msg.set(SignalKConstants.restUrl, "http://" + hostname + ":"
-				+ getConfigProperty(Constants.REST_PORT)
+				+ getConfigPropertyInt(Constants.REST_PORT)
 				+ JsonConstants.SIGNALK_API);
 		msg.set(SignalKConstants.signalkTcpPort, hostname + ":"
-				+ getConfigProperty(Constants.TCP_PORT));
+				+ getConfigPropertyInt(Constants.TCP_PORT));
 		msg.set(SignalKConstants.signalkUdpPort, hostname + ":"
-				+ getConfigProperty(Constants.UDP_PORT));
+				+ getConfigPropertyInt(Constants.UDP_PORT));
 		msg.set(SignalKConstants.nmeaTcpPort, hostname + ":"
-				+ getConfigProperty(Constants.TCP_NMEA_PORT));
+				+ getConfigPropertyInt(Constants.TCP_NMEA_PORT));
 		msg.set(SignalKConstants.nmeaUdpPort, hostname + ":"
-				+ getConfigProperty(Constants.UDP_NMEA_PORT));
-		if ("true".equals(getConfigProperty(Constants.START_STOMP)))
+				+ getConfigPropertyInt(Constants.UDP_NMEA_PORT));
+		if (getConfigPropertyBoolean(Constants.START_STOMP))
 			msg.set(SignalKConstants.stompPort, hostname + ":"
-					+ getConfigProperty(Constants.STOMP_PORT));
-		if ("true".equals(getConfigProperty(Constants.START_MQTT)))
+					+ getConfigPropertyInt(Constants.STOMP_PORT));
+		if (getConfigPropertyBoolean(Constants.START_MQTT))
 			msg.set(SignalKConstants.mqttPort, hostname + ":"
-					+ getConfigProperty(Constants.MQTT_PORT));
+					+ getConfigPropertyInt(Constants.MQTT_PORT));
 
 		return msg;
 	}
@@ -225,7 +223,6 @@ public class Util {
 		return iVal / scale;
 	}
 
-	
 	/**
 	 * Attempt to set the system time using the GPS time
 	 * 
@@ -302,7 +299,7 @@ public class Util {
 	public static Json getConfigJsonArray(String prop) {
 		try {
 			String arrayStr = (String) model.get(prop);
-			if(StringUtils.isNotBlank(arrayStr)&& arrayStr.length()>2){
+			if (StringUtils.isNotBlank(arrayStr) && arrayStr.length() > 2) {
 				Json array = Json.read(arrayStr);
 				return array;
 			}
@@ -311,39 +308,43 @@ public class Util {
 		}
 		return null;
 	}
-	
+
 	public static Integer getConfigPropertyInt(String prop) {
 		try {
-			if(model.get(prop) instanceof String){
-				return (Integer.valueOf((String)model.get(prop)));
+			if (model.get(prop) instanceof String) {
+				return (Integer.valueOf((String) model.get(prop)));
 			}
-			if(model.get(prop) instanceof Double){
-				return ((Double)model.get(prop)).intValue();
+			if (model.get(prop) instanceof Double) {
+				return ((Double) model.get(prop)).intValue();
 			}
-			return (Integer)model.get(prop);
+			if (model.get(prop) instanceof Long) {
+				return ((Long) model.get(prop)).intValue();
+			}
+			return (Integer) model.get(prop);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
-	
+
 	public static Double getConfigPropertyDouble(String prop) {
 		try {
-			if(model.get(prop) instanceof String){
-				return (Double.valueOf((String)model.get(prop)));
+			if (model.get(prop) instanceof String) {
+				return (Double.valueOf((String) model.get(prop)));
 			}
-			return (Double)model.get(prop);
+			return (Double) model.get(prop);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
+
 	public static Boolean getConfigPropertyBoolean(String prop) {
 		try {
-			if(model.get(prop) instanceof Boolean){
-				return ((Boolean)model.get(prop));
+			if (model.get(prop) instanceof Boolean) {
+				return ((Boolean) model.get(prop));
 			}
-			return new Boolean((String)model.get(prop));
+			return new Boolean((String) model.get(prop));
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -355,6 +356,12 @@ public class Util {
 		String regex = newPath.replaceAll(".", "[$0]").replace("[*]", ".*")
 				.replace("[?]", ".");
 		return Pattern.compile(regex);
+	}
+
+	public static String fixSelfKey(String key) {
+		key = selfMatch.matcher(key).replaceAll(dot_self_dot);
+		key = selfEndMatch.matcher(key).replaceAll(dot_self);
+		return key;
 	}
 
 	public static String sanitizePath(String newPath) {
@@ -373,7 +380,7 @@ public class Util {
 		if (logger.isDebugEnabled())
 			logger.debug("Found node:" + p + " = " + node);
 		if (node != null && node.size() > 0) {
-			addNodeToTemp(temp, node);
+			addNodeToTemp(signalkModel,temp, node);
 		} else {
 			temp.put(p, signalkModel.get(p));
 		}
@@ -426,6 +433,11 @@ public class Util {
 	public static void addNodeToTemp(SignalKModel temp,
 			NavigableSet<String> node) {
 		SignalKModel model = SignalKModelFactory.getInstance();
+		addNodeToTemp(model, temp, node);
+	}
+	
+	public static void addNodeToTemp(SignalKModel model, SignalKModel temp,
+			NavigableSet<String> node) {
 		for (String key : node) {
 			temp.put(key, model.get(key));
 		}
@@ -465,18 +477,19 @@ public class Util {
 		// "list/vessels"
 		if (StringUtils.isBlank(path))
 			return "";
-		if (path.equals(JsonConstants.CONFIG)){
+		if (path.equals(JsonConstants.CONFIG)) {
 			return path;
 		}
 		if (path.startsWith(JsonConstants.CONFIG + dot)) {
-			int p1 = path.indexOf(JsonConstants.CONFIG) + JsonConstants.CONFIG.length() + 1;
+			int p1 = path.indexOf(JsonConstants.CONFIG)
+					+ JsonConstants.CONFIG.length() + 1;
 
 			int pos = path.indexOf(".", p1);
 			if (pos < 0)
 				return path;
 			return path.substring(0, pos);
 		}
-		if (path.equals(vessels)){
+		if (path.equals(vessels)) {
 			return path;
 		}
 		if (path.startsWith(vessels + dot)
@@ -491,6 +504,49 @@ public class Util {
 		return "";
 	}
 
-	
+	public static void setSelf(String self) {
+		JsonConstants.SELF = self;
+		dot_self_dot = dot + JsonConstants.SELF + dot;
+		dot_self = dot + JsonConstants.SELF;
+		SignalKConstants.self = self;
+		SignalKConstants.vessels_dot_self_dot = vessels + dot + self + dot;
+	}
 
+	public static boolean sameNetwork(String localAddress, String remoteAddress)
+			throws Exception {
+		InetAddress addr = InetAddress.getByName(localAddress);
+		NetworkInterface networkInterface = NetworkInterface.getByInetAddress(addr);
+		short netmask = -1;
+		for (InterfaceAddress address : networkInterface.getInterfaceAddresses()) {
+			if(address.getAddress().equals(addr)){
+				netmask = address.getNetworkPrefixLength();
+			}
+		}
+		byte[] a1 = InetAddress.getByName(localAddress).getAddress();
+		byte[] a2 = InetAddress.getByName(remoteAddress).getAddress();
+		byte[] m = InetAddress.getByName(normalizeFromCIDR(netmask)).getAddress();
+
+		for (int i = 0; i < a1.length; i++)
+			if ((a1[i] & m[i]) != (a2[i] & m[i]))
+				return false;
+
+		return true;
+
+	}
+	
+	/*
+	 * RFC 1518, 1519 - Classless Inter-Domain Routing (CIDR)
+	 * This converts from "prefix + prefix-length" format to
+	 * "address + mask" format, e.g. from xxx.xxx.xxx.xxx/yy
+	 * to xxx.xxx.xxx.xxx/yyy.yyy.yyy.yyy.
+	 */
+	public static String normalizeFromCIDR(short bits)
+	{
+	    final int mask = (bits == 32) ? 0 : 0xFFFFFFFF - ((1 << bits)-1); 
+
+	    return  Integer.toString(mask >> 24 & 0xFF, 10) + "." +
+	            Integer.toString(mask >> 16 & 0xFF, 10) + "." +
+	            Integer.toString(mask >>  8 & 0xFF, 10) + "." +
+	            Integer.toString(mask >>  0 & 0xFF, 10);
+	}
 }

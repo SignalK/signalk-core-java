@@ -27,7 +27,7 @@ public class Constants {
 
 	public static final String VERSION = "config.server.version";
 	
-	public static final String SELF = "config.server.vessel.self";
+	public static final String SELF = "config.server.vessel.uuid";
 	
 	//camel output destination types
 	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";

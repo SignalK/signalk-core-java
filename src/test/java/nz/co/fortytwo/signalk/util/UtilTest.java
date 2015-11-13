@@ -30,6 +30,7 @@ import mjson.Json;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,8 +39,9 @@ public class UtilTest {
 
 	private static Logger logger = Logger.getLogger(UtilTest.class);
 	
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
 	}
 
 	@After

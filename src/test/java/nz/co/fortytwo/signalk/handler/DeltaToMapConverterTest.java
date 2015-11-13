@@ -76,17 +76,17 @@ public class DeltaToMapConverterTest {
 		DeltaToMapConverter processor = new DeltaToMapConverter();
 		SignalKModel output = processor.handle(watch);
 		logger.debug(output);
-		assertEquals("sound", output.get("vessels.motu.navigation.anchor.currentRadius.meta.alarmMethod"));
-		assertEquals("Anchor Watch", output.get("vessels.motu.navigation.anchor.currentRadius.meta.displayName"));
-		assertEquals("Anchor Watch", output.get("vessels.motu.navigation.anchor.currentRadius.meta.shortName"));
-		assertEquals("vessels.self", output.get("vessels.motu.navigation.anchor.currentRadius.meta.source"));
-		assertEquals("2015-05-08T06:29:26.455Z", output.get("vessels.motu.navigation.anchor.currentRadius.meta.timestamp"));
-		assertEquals("visual", output.get("vessels.motu.navigation.anchor.currentRadius.meta.warnMethod"));
-		assertEquals(Json.read("[[0,50,\"normal\"],[50,999999,\"alarm\"]]"), output.get("vessels.motu.navigation.anchor.currentRadius.meta.zones"));
-		assertEquals(50l, output.getValue("vessels.motu.navigation.anchor.maxRadius"));
+		assertEquals("sound", output.get("vessels.self.navigation.anchor.currentRadius.meta.alarmMethod"));
+		assertEquals("Anchor Watch", output.get("vessels.self.navigation.anchor.currentRadius.meta.displayName"));
+		assertEquals("Anchor Watch", output.get("vessels.self.navigation.anchor.currentRadius.meta.shortName"));
+		assertEquals("vessels.self", output.get("vessels.self.navigation.anchor.currentRadius.meta.source"));
+		assertEquals("2015-05-08T06:29:26.455Z", output.get("vessels.self.navigation.anchor.currentRadius.meta.timestamp"));
+		assertEquals("visual", output.get("vessels.self.navigation.anchor.currentRadius.meta.warnMethod"));
+		assertEquals(Json.read("[[0,50,\"normal\"],[50,999999,\"alarm\"]]"), output.get("vessels.self.navigation.anchor.currentRadius.meta.zones"));
+		assertEquals(50l, output.getValue("vessels.self.navigation.anchor.maxRadius"));
 
-		assertEquals(60.08087031, output.get("vessels.motu.navigation.anchor.position.latitude"));
-		assertEquals(23.53406503, output.get("vessels.motu.navigation.anchor.position.longitude"));
+		assertEquals(60.08087031, output.get("vessels.self.navigation.anchor.position.latitude"));
+		assertEquals(23.53406503, output.get("vessels.self.navigation.anchor.position.longitude"));
 
 	}
 

@@ -1,20 +1,17 @@
 package nz.co.fortytwo.signalk.handler;
 
-import static org.junit.Assert.*;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.Util;
 
-import java.util.Map;
-
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.junit.After;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class GitHandlerTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
 	}
 
 	@After
@@ -23,6 +20,7 @@ public class GitHandlerTest {
 
 	@Test
 	public void shouldCloneFreeboardSk() throws Exception {
+		SignalKModelFactory.loadConfig(SignalKModelFactory.getInstance());
 		GitHandler handler = new GitHandler();
 		handler.install("freeboard-sk");
 	}

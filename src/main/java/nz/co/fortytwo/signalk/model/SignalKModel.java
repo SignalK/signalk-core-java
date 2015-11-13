@@ -104,4 +104,10 @@ public interface SignalKModel{
 	 */
 	public boolean putValue(String string, Object value);
 
+	/**
+	 * Gets the full data map. Use with care, it holds the config data too.
+	 * @return
+	 */
+	SortedMap<String, Object> getFullData();
+
 }

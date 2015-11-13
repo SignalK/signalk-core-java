@@ -24,20 +24,15 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.*;
-import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
-import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.TIMESTAMP;
-import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.log4j.Logger;
+
 
 /**
  * Converts SignalK delta format to map format
@@ -67,6 +62,7 @@ public class DeltaToMapConverter {
 			
 			//go to context
 			String ctx = node.at(CONTEXT).asString();
+			ctx = Util.fixSelfKey(ctx);
 			//Json pathNode = temp.addNode(path);
 			Json updates = node.at(UPDATES);
 			if(updates==null)updates = node.at(PUT);

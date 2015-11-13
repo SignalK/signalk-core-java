@@ -128,6 +128,8 @@ public class JsonGetHandler {
 	public void parseGet(SignalKModel signalkModel, String context, Json path, SignalKModel tree) throws Exception {
 		// get values
 		String regexKey = context + JsonConstants.DOT + path.at(PATH).asString();
+		//convert self to SELF
+		regexKey = Util.fixSelfKey(regexKey);
 		if (logger.isDebugEnabled())
 			logger.debug("Parsing get  " + regexKey);
 

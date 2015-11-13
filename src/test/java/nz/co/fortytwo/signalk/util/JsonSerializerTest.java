@@ -2,9 +2,6 @@ package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -18,13 +15,16 @@ import nz.co.fortytwo.signalk.model.impl.SignalKModelImplTest;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JsonSerializerTest {
 
 	private static Logger logger = Logger.getLogger(JsonSerializerTest.class);
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
+		Util.setSelf("motu");
 	}
 
 	@After

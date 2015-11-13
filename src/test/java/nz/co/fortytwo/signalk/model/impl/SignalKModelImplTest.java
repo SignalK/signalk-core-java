@@ -53,14 +53,15 @@ import nz.co.fortytwo.signalk.util.Util;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SignalKModelImplTest {
 
 	private static Logger logger = Logger.getLogger(SignalKModelImplTest.class);
-	@Before
-	public void setUp() throws Exception {
-		
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
 	}
 
 	@After
@@ -71,6 +72,7 @@ public class SignalKModelImplTest {
 	public void shouldSubstituteSelf() throws IOException {
 		
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		logger.debug(signalk);
 		
@@ -88,6 +90,7 @@ public class SignalKModelImplTest {
 	public void shouldReturnBranch() throws IOException {
 		
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		logger.debug(signalk);
 		
@@ -100,6 +103,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldFailAltitudeValue() throws IOException{
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		logger.debug(signalk);
 		try{
@@ -112,6 +116,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldReturnLeaf() throws IOException {
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		logger.debug(signalk);
 		
@@ -123,6 +128,7 @@ public class SignalKModelImplTest {
 	public void shouldMergeBranch() throws IOException {
 		
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		logger.debug(signalk);
 		assertNull(signalk.get(vessels_dot_self_dot+ env_wind));
@@ -140,6 +146,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldSetLeaf() {
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue+dot+SignalKConstants.value,256.3);
 		logger.debug(signalk);
@@ -150,6 +157,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldSetLeafValue() {
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		signalk.putValue(vessels_dot_self_dot+ env_wind_directionTrue,256.3);
 		logger.debug(signalk);
@@ -160,6 +168,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldSetLeafAll() {
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		String ts = Util.getIsoTimeString();
 		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3, "unknown",ts);
@@ -174,6 +183,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldDeleteBranch() throws IOException {
 		SignalKModel signalk = new SignalKModelImpl();
+		Util.setSelf("motu");
 		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		logger.debug(signalk);
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()>0);

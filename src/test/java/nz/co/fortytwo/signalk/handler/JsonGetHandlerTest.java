@@ -49,7 +49,7 @@ public class JsonGetHandlerTest {
 
 	private static Logger logger = Logger.getLogger(JsonGetHandlerTest.class);
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception { 
 		
 	}
 
@@ -73,8 +73,9 @@ public class JsonGetHandlerTest {
 	}
 	@Test
 	public void shouldGetPaths() throws Exception {
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.*\"}]}";
@@ -93,8 +94,9 @@ public class JsonGetHandlerTest {
 	}
 	@Test
 	public void shouldIgnoreListRequest() throws Exception {
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		String request = "{\"context\":\"vessels."+self+"\",\"list\":[{\"path\":\"navigation.position.*\"},{\"path\":\"navigation.course*\"}]}";
@@ -108,8 +110,9 @@ public class JsonGetHandlerTest {
 	
 	@Test
 	public void shouldProduceSingleVesselGet() throws Exception {
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		String request = "{\"context\":\"vessels."+self+"\",\"get\":[{\"path\":\"navigation.position.*\"},{\"path\":\"navigation.course*\"}]}";
@@ -130,8 +133,9 @@ public class JsonGetHandlerTest {
 	
 	@Test
 	public void shouldProduceMultipleVesselGet() throws Exception {
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position.*\"},{\"path\":\"navigation.course*\"}]}";
@@ -152,8 +156,9 @@ public class JsonGetHandlerTest {
 	
 	@Test
 	public void shouldIncludeChildren() throws Exception{
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position\"}]}";
 		Json json = Json.read(request);
@@ -165,8 +170,9 @@ public class JsonGetHandlerTest {
 	}
 	@Test
 	public void shouldIncludeLastChild() throws Exception{
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position.latitude\"}]}";
 		Json json = Json.read(request);
@@ -179,8 +185,9 @@ public class JsonGetHandlerTest {
 	
 	@Test
 	public void shouldProduceSpecificPathList() throws Exception {
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		SignalKModelFactory.loadConfig(model);
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		//test ? works

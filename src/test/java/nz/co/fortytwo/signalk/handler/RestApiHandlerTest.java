@@ -22,6 +22,7 @@ import nz.co.fortytwo.signalk.util.Util;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -32,8 +33,10 @@ public class RestApiHandlerTest {
 
 	private static Logger logger = Logger.getLogger(RestApiHandlerTest.class);
 	
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
+		Util.getConfig();
+		Util.setSelf("motu");
 	}
 
 	@After
@@ -44,7 +47,7 @@ public class RestApiHandlerTest {
 	public void shouldGetSelfPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -67,7 +70,7 @@ public class RestApiHandlerTest {
 	public void shouldGetOtherPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -88,7 +91,7 @@ public class RestApiHandlerTest {
 	public void shouldGetNotFound() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -108,7 +111,7 @@ public class RestApiHandlerTest {
 	public void shouldGetNotFound1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		//model.getData().clear();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		

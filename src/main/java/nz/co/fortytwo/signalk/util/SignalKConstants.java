@@ -29,14 +29,17 @@ public class SignalKConstants {
 
 	//fixed
 	public static final String self_str =  "self";
-	public static String self = "self";
+	public static String self = self_str;
+	public static final String dot = ".";
+	public static final String vessels = "vessels";
+	public static  String vessels_dot_self_dot=vessels+dot+self+dot;
 	public static final String version = "version";
 	public static final String timestamp = "timestamp";
 	public static final String source = "source";
 	public static final String value = "value";
-	public static final String vessels = "vessels";
+	
 	public static final String vessels_id = "vessels.*";
-	public static final String dot = ".";
+	
 	public static final String meta = "meta";
 	public static final String zones = "zones";
 	public static final String attr = "_attr";
@@ -48,7 +51,7 @@ public class SignalKConstants {
 	public static final String message = "message";
 	public static final String warn = "warn";
 	public static final String normal = "normal";
-	public static final String vessels_dot_self_dot=vessels+dot+self+dot;
+	
 	public static final String type = "type";
 	public static final String routes = "routes";
 	public static final String key= "key";
