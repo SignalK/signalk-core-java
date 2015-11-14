@@ -128,10 +128,12 @@ public class NMEAHandler{
 				model = SignalKModelFactory.getCleanInstance();
 				fireSentenceEvent(model, sentence, source);
 				return model;
-			} catch (Exception e) {
+			}catch (IllegalArgumentException e) {
 				logger.debug(e.getMessage(), e);
-				logger.error(e.getMessage() + ":" + bodyStr.getBytes());
-				logger.error("   in hexidecimal : " + Hex.encodeHexString(bodyStr.getBytes()));
+				logger.info(e.getMessage() + ":" + bodyStr);
+				logger.info("   in hexidecimal : " + Hex.encodeHexString(bodyStr.getBytes()));
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return null;

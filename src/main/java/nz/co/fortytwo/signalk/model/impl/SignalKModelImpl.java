@@ -112,7 +112,7 @@ public class SignalKModelImpl implements SignalKModel {
         }
         //meta.zones array
         if (!value.equals(root.put(key, value))) {
-        	logger.debug("doPut "+key+"="+value);
+        	if(logger.isDebugEnabled())logger.debug("doPut "+key+"="+value);
         	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
         		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
         	}
@@ -149,11 +149,11 @@ public class SignalKModelImpl implements SignalKModel {
     		return doDelete(key);
 		}
     	if(value instanceof Boolean || value instanceof Number || value instanceof String){
-    		logger.debug("Put "+key+"="+value);
+    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+value);
     		return doPut(key, value);
     	}
     	if(value instanceof Json && ((Json)value).isArray() ){
-    		logger.debug("Put "+key+"="+value);
+    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+value);
     		return doPut(key, value);
     	}
     	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value.getClass()+":"+value);
@@ -258,11 +258,11 @@ public class SignalKModelImpl implements SignalKModel {
 	public boolean putAll(SortedMap<String, Object> map) {
 		boolean success = true;
 		for(Entry<String, Object> entry: map.entrySet()){
-			logger.debug("Adding "+entry.getKey()+"="+entry.getValue());
+			if(logger.isDebugEnabled())logger.debug("Adding "+entry.getKey()+"="+entry.getValue());
 			boolean s = put(entry.getKey(),entry.getValue());
 			success = success && s;
 		}
-		logger.debug("putAll done: "+this);
+		if(logger.isDebugEnabled())logger.debug("putAll done: "+this);
 		return success;
 	}
 
