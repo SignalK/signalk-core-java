@@ -20,7 +20,7 @@ public class GitHandlerTest {
 
 	@Test
 	public void shouldCloneFreeboardSk() throws Exception {
-		SignalKModelFactory.loadConfig(SignalKModelFactory.getInstance());
+		SignalKModelFactory.getMotuTestInstance();
 		GitHandler handler = new GitHandler();
 		handler.install("freeboard-sk");
 	}

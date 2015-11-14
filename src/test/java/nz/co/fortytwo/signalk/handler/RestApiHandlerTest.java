@@ -46,8 +46,7 @@ public class RestApiHandlerTest {
 	@Test
 	public void shouldGetSelfPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
-		SignalKModel model = SignalKModelFactory.getInstance();
-		//model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -69,8 +68,7 @@ public class RestApiHandlerTest {
 	@Test
 	public void shouldGetOtherPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
-		SignalKModel model = SignalKModelFactory.getInstance();
-		//model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -90,8 +88,7 @@ public class RestApiHandlerTest {
 	@Test
 	public void shouldGetNotFound() throws Exception {
 		RestApiHandler api = new RestApiHandler();
-		SignalKModel model = SignalKModelFactory.getInstance();
-		//model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -110,8 +107,7 @@ public class RestApiHandlerTest {
 	@Test
 	public void shouldGetNotFound1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
-		SignalKModel model = SignalKModelFactory.getInstance();
-		//model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		
@@ -131,8 +127,7 @@ public class RestApiHandlerTest {
 	@Test
 	public void shouldGetBadRequest1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
-		SignalKModel model = SignalKModelFactory.getInstance();
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
 		

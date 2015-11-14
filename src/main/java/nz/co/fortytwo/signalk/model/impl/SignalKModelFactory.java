@@ -73,6 +73,17 @@ public class SignalKModelFactory {
 	public static synchronized SignalKModel getCleanInstance() {
 		return new SignalKModelImpl();
 	}
+	
+	/**
+	 * Returns the signalk instance cleaned out and configured with self=motu - only needed for testing!
+	 * 
+	 * @return
+	 */
+	public static synchronized SignalKModel getMotuTestInstance() {
+		signalKModel.getData().clear();
+		loadConfig(signalKModel, "motu");
+		return signalKModel;
+	}
 
 	/**
 	 * Returns a different clean instance - only needed for testing!
@@ -110,6 +121,26 @@ public class SignalKModelFactory {
 				String self = (String) model.get(Constants.SELF);
 				Util.setSelf(self);
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
+			}catch(Exception ex){
+				logger.error(ex.getMessage(),ex);
+			}
+		}else{
+			logger.info("   Saved config not found");
+		}
+	}
+	
+	private static void loadConfig(SignalKModel model, String self){
+		File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
+		logger.info("Checking for previous config: "+jsonFile.getAbsolutePath());
+		if(jsonFile.exists()){
+			try{
+				Json temp = Json.read(jsonFile.toURI().toURL());
+				JsonSerializer ser = new JsonSerializer();
+				model.putAll(ser.read(temp));
+				model.put(Constants.SELF,self);
+				Util.setSelf(self);
+				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
+				logger.info("   SELF set to: "+self);
 			}catch(Exception ex){
 				logger.error(ex.getMessage(),ex);
 			}

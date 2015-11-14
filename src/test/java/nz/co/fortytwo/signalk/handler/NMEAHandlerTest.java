@@ -54,7 +54,7 @@ import org.junit.Test;
 public class NMEAHandlerTest {
 
 	private static Logger logger = Logger.getLogger(NMEAHandlerTest.class);
-	private SignalKModel signalkModel=SignalKModelFactory.getInstance();
+	private SignalKModel signalkModel=SignalKModelFactory.getMotuTestInstance();
 	
 
 	@Test

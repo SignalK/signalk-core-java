@@ -30,10 +30,7 @@ import org.junit.Test;
 
 public class AlarmHandlerTest {
 	private static Logger logger = Logger.getLogger(AlarmHandlerTest.class);
-	@BeforeClass
-	public static void setUp() throws Exception {
-		Util.getConfig();
-	}
+	
 
 	@After
 	public void tearDown() throws Exception {
@@ -41,10 +38,7 @@ public class AlarmHandlerTest {
 
 	@Test
 	public void shouldSetAlarm() throws IOException {
-		SignalKModel model = SignalKModelFactory.getInstance();
-		
-		Util.setSelf("motu");
-		model.getData().clear();
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
 		assertEquals(93.0, model.getValue(vessels_dot_self_dot+nav_courseOverGroundMagnetic));
 		//now set an alarm
