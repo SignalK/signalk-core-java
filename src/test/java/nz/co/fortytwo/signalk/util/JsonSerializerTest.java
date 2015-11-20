@@ -60,16 +60,26 @@ public class JsonSerializerTest {
 		signalk.putAll(ser.read(temp));
 		logger.debug(signalk.getFullData());
 		assertNotNull(signalk.get("config.server.security.config.ip"));
+		//deny.ip is array
 		assertEquals(null,signalk.get("config.server.security.deny.ip"));
-		String jsonOut = ser.write(signalk);
 		
-		logger.debug(jsonOut);
+		//write out
+		StringBuffer buffer = new StringBuffer();
+		ser.write(signalk.getSubMap(JsonConstants.CONFIG).entrySet().iterator(),'.',buffer);
+		logger.debug(buffer.toString());
+		
+		//read in again
 		signalk = new SignalKModelImpl( );
-		NavigableMap<String, Object> jsonMap = ser.read(jsonOut);
+		NavigableMap<String, Object> jsonMap = ser.read(buffer.toString());
 		signalk.putAll(jsonMap);
-		String jsonMapOut=ser.write(signalk);
+		//write out again
+		buffer = new StringBuffer();
+		ser.write(signalk.getSubMap(JsonConstants.CONFIG).entrySet().iterator(),'.',buffer);
+		String jsonMapOut=buffer.toString();
 		logger.debug(jsonMapOut);
+		//make json object
 		Json json = Json.read(jsonMapOut);
+		//make sure null is now empty array
 		Json deny = json.at("config").at("server").at("security").at("deny").at("ip");
 		assertTrue(deny.isArray());
 		

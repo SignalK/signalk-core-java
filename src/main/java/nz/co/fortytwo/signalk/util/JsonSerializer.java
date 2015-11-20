@@ -23,9 +23,9 @@ public class JsonSerializer {
     
     private String [] arrayKeys = { 
     		//should derive this from schema really...
-    		"config.server.server.security.config.ip",
-    		"config.server.server.security.deny.ip",
-    		"config.server.server.security.white.ip",
+    		"config.server.security.config.ip",
+    		"config.server.security.deny.ip",
+    		"config.server.security.white.ip",
     		"config.server.client.mqtt.connect",
     		"config.server.client.tcp.connect",
     		"config.server.client.stomp.connect",
