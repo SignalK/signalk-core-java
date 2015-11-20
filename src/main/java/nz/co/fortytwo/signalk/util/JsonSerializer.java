@@ -20,6 +20,17 @@ public class JsonSerializer {
     private String indent=null;
     private StringBuilder curindent = new StringBuilder();
     private DecimalFormat[] df = new DecimalFormat[12]; // Up to 12dp for a number.
+    
+    private String [] arrayKeys = { 
+    		//should derive this from schema really...
+    		"config.server.server.security.config.ip",
+    		"config.server.server.security.deny.ip",
+    		"config.server.server.security.white.ip",
+    		"config.server.client.mqtt.connect",
+    		"config.server.client.tcp.connect",
+    		"config.server.client.stomp.connect",
+    		"config.server.serial.ports"
+    	};
     /**
      * Set the ModelPrinter to pretty-print the output
      * The opposite of {@link #setCompact}
@@ -50,8 +61,8 @@ public class JsonSerializer {
     
     public String write(SignalKModel signalk) throws IOException {
     	StringBuffer buffer = new StringBuffer();
-    	if(signalk!=null && signalk.getData()!=null){
-    		write(signalk.getData().entrySet().iterator(),'.',buffer);
+    	if(signalk!=null && signalk.getFullData()!=null){
+    		write(signalk.getFullData().entrySet().iterator(),'.',buffer);
     	}else{
     		buffer.append("{}");
     	}
@@ -114,7 +125,9 @@ public class JsonSerializer {
                 jsonComma(out);
             }
             jsonKey(s[j], out);
-            if (value instanceof String) {
+            if (value== null || "null".equals(value)) {
+                jsonNull(key,out);
+            } else if (value instanceof String) {
                 jsonWrite((String)value, out);
             } else if (value instanceof Integer) {
                 jsonWrite(((Integer)value).intValue(), out);
@@ -124,9 +137,7 @@ public class JsonSerializer {
                 jsonWrite(((Boolean)value).booleanValue(), out);
             } else if (value instanceof Json && ((Json)value).isArray()) {
                 out.append(((Json)value).toString());
-            } else if (value== null) {
-                jsonNull(out);
-            } else {
+            } else  {
                 throw new IllegalStateException("Can't print value of type \""+value.getClass().getName()+"\" for key \""+key+"\"");
             }
             needcomma = true;
@@ -198,9 +209,22 @@ public class JsonSerializer {
         out.append('"');
     }
 
-    private void jsonWriteArray(String value, Appendable out) throws IOException {
+    /**
+     * Use the supplied schema to find if this is an array type, since we cant tell with null values
+     * 
+     * @param value
+     * @return
+     */
+    private boolean isJsonArray(String key) {
+		for(String k:arrayKeys){
+			if(k.equals(key)) return true;
+		}
+		return false;
+	}
+
+	private void jsonWriteArray(String value, Appendable out) throws IOException {
     	if("[]".equals(value)){
-    		out.append("null");
+    		out.append("[]");
     	}else{
     		out.append(value);
     	}
@@ -210,8 +234,13 @@ public class JsonSerializer {
         out.append(Integer.toString(value));
     }
 
-    private void jsonNull(Appendable out) throws IOException {
-        out.append("null");
+    private void jsonNull(String key, Appendable out) throws IOException {
+    	//if we have a null array key, we need to output []
+    	if(isJsonArray(key)){
+    		out.append("[]");
+    	}else{
+    		out.append("null");
+    	}
     }
 
     private void jsonWrite(String key, double value, Appendable out) throws IOException {
@@ -321,8 +350,13 @@ public class JsonSerializer {
 
 	private void recurseJsonFull(Json json, ConcurrentSkipListMap<String, Object> map, String prefix) {
 		for(Entry<String, Json> entry: json.asJsonMap().entrySet()){
+			
 			if(entry.getValue().isPrimitive()){
 				map.put(prefix+entry.getKey(), entry.getValue().getValue());
+			}else if(entry.getValue().isNull()){
+				//we need to add null as string since null cant be used in a ConcurrentSkipList
+				map.put(prefix+entry.getKey(), entry.getValue().toString());
+				
 			}else if(entry.getValue().isArray()){
 				map.put(prefix+entry.getKey(), entry.getValue().toString());
 			}else{
@@ -352,7 +386,7 @@ public class JsonSerializer {
 
 
 	public Json writeJson(SignalKModel model) throws IOException {
-		if(model==null || model.getData().size()==0)return Json.object();
+		if(model==null || model.getFullData().size()==0)return Json.object();
 		return Json.read(write(model));
 	}
 

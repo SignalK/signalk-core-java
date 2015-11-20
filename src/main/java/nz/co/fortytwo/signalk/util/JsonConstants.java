@@ -32,9 +32,14 @@ public class JsonConstants extends SignalKConstants {
 	public static final String SERIAL = "SERIAL";
 	public static final String EXTERNAL_IP = "EXTERNAL_IP";
 	public static final String INTERNAL_IP = "INTERNAL_IP";
-	public static final String MSG_PORT = "MSG_PORT";
+	public static final String MSG_SERIAL_PORT = "MSG_SERIAL_PORT";
+	public static final String MSG_SRC_IP = "MSG_SRC_IP";
+	public static final String MSG_SRC_IP_PORT = "MSG_SRC_IP_PORT";
 	public static final String MSG_APPROVAL = "MSG_APPROVAL";
-	public static final Object REQUIRED = "REQUIRED";
+	public static final String REQUIRED = "REQUIRED";
+	public static final String CONFIG_ACTION = "CONFIG_ACTION";
+	public static final String CONFIG_ACTION_READ = "CONFIG_ACTION_READ";
+	public static final String CONFIG_ACTION_SAVE = "CONFIG_ACTION_SAVE";
 	
 	public static final String CONFIG = "config";
 	
@@ -82,6 +87,7 @@ public class JsonConstants extends SignalKConstants {
 	public static final String SIGNALK_WS = "/signalk/v1/stream";
 	public static final String SIGNALK_INSTALL = "/signalk/v1/install";
 	public static final String SIGNALK_UPGRADE = "/signalk/v1/upgrade";
+	
 	
 	public JsonConstants() {
 		// TODO Auto-generated constructor stub

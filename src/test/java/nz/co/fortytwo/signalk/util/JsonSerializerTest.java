@@ -8,7 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
 
+import mjson.Json;
+import net.minidev.json.JSONArray;
 import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelImplTest;
 
@@ -31,6 +34,46 @@ public class JsonSerializerTest {
 	public void tearDown() throws Exception {
 	}
 
+	@Test
+	public void shouldCreateConfigModel() throws IOException {
+		
+		SignalKModel signalk = new SignalKModelImpl( );
+		File jsonFile = new File("src/test/resources/samples/signalk-config-test.json");
+		Json temp = Json.read(jsonFile.toURI().toURL());
+		JsonSerializer ser = new JsonSerializer();
+		signalk.putAll(ser.read(temp));
+		logger.debug(signalk.getFullData());
+		assertNotNull(signalk.get("config.server.security.config.ip"));
+		
+		String jsonOut = ser.write(signalk);
+		logger.debug(jsonOut);
+		
+	}
+	
+	@Test
+	public void shouldHandleNullArray() throws IOException {
+		
+		SignalKModel signalk = new SignalKModelImpl( );
+		File jsonFile = new File("src/test/resources/samples/signalk-config-test.json");
+		Json temp = Json.read(jsonFile.toURI().toURL());
+		JsonSerializer ser = new JsonSerializer();
+		signalk.putAll(ser.read(temp));
+		logger.debug(signalk.getFullData());
+		assertNotNull(signalk.get("config.server.security.config.ip"));
+		assertEquals(null,signalk.get("config.server.security.deny.ip"));
+		String jsonOut = ser.write(signalk);
+		
+		logger.debug(jsonOut);
+		signalk = new SignalKModelImpl( );
+		NavigableMap<String, Object> jsonMap = ser.read(jsonOut);
+		signalk.putAll(jsonMap);
+		String jsonMapOut=ser.write(signalk);
+		logger.debug(jsonMapOut);
+		Json json = Json.read(jsonMapOut);
+		Json deny = json.at("config").at("server").at("security").at("deny").at("ip");
+		assertTrue(deny.isArray());
+		
+	}
 	
 
 	@Test

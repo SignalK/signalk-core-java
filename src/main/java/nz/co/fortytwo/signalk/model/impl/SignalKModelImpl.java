@@ -187,16 +187,26 @@ public class SignalKModelImpl implements SignalKModel {
     @Override
 	public Object get(String key) {
     	key = fixSelfKey(key);
-    	return root.get(key);
+    	return nullFix(root.get(key));
     }
     
-    /* (non-Javadoc)
+    /**
+     * ConcurrentSkipList cant store nulls so we store "null". Fix that here
+     * @param object
+     * @return
+     */
+    private Object nullFix(Object object) {
+		if("null".equals(object))return null;
+		return object;
+	}
+
+	/* (non-Javadoc)
    	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#get(java.lang.String)
    	 */
        @Override
    	public Object getValue(String key) {
     	   key = fixSelfKey(key);
-               return root.get(key+".value");
+               return nullFix(root.get(key+".value"));
        }
 
     /* (non-Javadoc)

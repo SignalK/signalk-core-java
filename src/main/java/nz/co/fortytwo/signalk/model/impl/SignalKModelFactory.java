@@ -80,8 +80,9 @@ public class SignalKModelFactory {
 	 * @return
 	 */
 	public static synchronized SignalKModel getMotuTestInstance() {
-		signalKModel.getData().clear();
+		signalKModel.getFullData().clear();
 		loadConfig(signalKModel, "motu");
+		signalKModel.put(Constants.DEMO, false);
 		return signalKModel;
 	}
 
