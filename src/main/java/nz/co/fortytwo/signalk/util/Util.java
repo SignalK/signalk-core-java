@@ -97,7 +97,7 @@ public class Util {
 	}
 
 	/**
-	 * Load the config from the named dir, or if the named dir is null, from the
+	 * Load the config from the
 	 * default location The config is cached, subsequent calls get the same
 	 * object
 	 * 
@@ -108,12 +108,26 @@ public class Util {
 	 */
 	public static void getConfig() throws FileNotFoundException, IOException {
 		model = SignalKModelFactory.getInstance();
-
 		Util.setDefaults(model);
 		SignalKModelFactory.loadConfig(model);
 		String self = (String) model.get(Constants.SELF);
 		Util.setSelf(self);
 	}
+	
+	/**
+	 * Load the provided model as the config. The config is cached, subsequent calls get the same
+	 * object
+	 * Useful in tests
+	 * 
+	 * @param dir
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void setConfig(SignalKModel model) throws FileNotFoundException, IOException {
+		Util.model = model;
+	}
+
 
 	/**
 	 * Config defaults
@@ -314,12 +328,10 @@ public class Util {
 			if (model.get(prop) instanceof String) {
 				return (Integer.valueOf((String) model.get(prop)));
 			}
-			if (model.get(prop) instanceof Double) {
-				return ((Double) model.get(prop)).intValue();
+			if (model.get(prop) instanceof Number) {
+				return ((Number) model.get(prop)).intValue();
 			}
-			if (model.get(prop) instanceof Long) {
-				return ((Long) model.get(prop)).intValue();
-			}
+			
 			return (Integer) model.get(prop);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
