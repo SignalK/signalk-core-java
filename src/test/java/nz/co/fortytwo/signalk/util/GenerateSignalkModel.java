@@ -77,11 +77,18 @@ public class GenerateSignalkModel {
 
 	private void printJsonConstants(String k) {
 		//public static final String env_wind_directionChangeAlarm = "environment.wind.directionChangeAlarm";
-		k = k.replace("(^[2-7][0-9]{8,8}$|^[A-F0-9]{8,8}$)", "[ID]");
-		k = k.replace("(^[A-Za-z0-9]+$)", "[ID]");
+		//			(^urn:mrn:(imo|signalk):(mmsi:[2-7][0-9]{8,8}|uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}))|^(http(s?):.*|mailto:.*|tel:(\+?)[0-9]{4,})$
+		//System.out.println(k);
+		k=k.replace("(^[2-7][0-9]{8,8}$|^[A-F0-9]{8,8}$)", "[ID]");
+		k=k.replace("(^[A-Za-z0-9]+$)", "[ID]");
+		k=k.replaceAll("\\(\\^.*\\$", "[ID]");
+		
 		k=k.replace("vessels.[ID].", "");
+		k=k.replace("[0-9]*", "[ID]");
+		k=k.replace("^[A-Z][A-Z][A-Z]$", "[ID]");
+		k=k.replace("..*..*.", ".[ID].[ID].");
 		String c = k;
-		k=k.replaceAll("[ID]", "*");
+		k=k.replace("[ID]", "*");
 		c=c.replace('.','_');
 		c=c.replace("[ID]","id");
 		c=c.replace("navigation", "nav");

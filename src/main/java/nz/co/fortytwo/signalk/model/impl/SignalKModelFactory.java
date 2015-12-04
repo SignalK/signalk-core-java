@@ -35,6 +35,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.Constants;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 /**
@@ -120,7 +121,10 @@ public class SignalKModelFactory {
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
 				String self = (String) model.get(Constants.SELF);
+				
 				Util.setSelf(self);
+				model.put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
+				
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
 			}catch(Exception ex){
 				logger.error(ex.getMessage(),ex);

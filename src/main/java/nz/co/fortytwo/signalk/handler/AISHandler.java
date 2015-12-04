@@ -161,7 +161,7 @@ public class AISHandler {
 						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), sourceRef, ts);
 						if (vInfo.getPosition() != null) {
 							model.put(aisVessel+ nav_position+dot+timestamp, ts);
-							model.put(aisVessel+ nav_position_source, sourceRef);
+							model.put(aisVessel+ nav_position + dot+ source, sourceRef);
 							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
 							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
 						}

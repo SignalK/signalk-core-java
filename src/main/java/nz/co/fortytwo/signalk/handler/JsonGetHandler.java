@@ -67,10 +67,10 @@ public class JsonGetHandler {
 
 		if (logger.isDebugEnabled())
 			logger.debug("Checking for get  " + getNode);
+		//TODO: fails on  {"context":"","get":[{"path":"esources.vessels.s...
 
 		// go to context
 		String context = getNode.at(CONTEXT).asString();
-		// TODO: is the context and path valid? A DOS attack is possible if we allow numerous crap/bad paths?
 
 		Json paths = getNode.at(GET);
 		SignalKModel tree = SignalKModelFactory.getCleanInstance();

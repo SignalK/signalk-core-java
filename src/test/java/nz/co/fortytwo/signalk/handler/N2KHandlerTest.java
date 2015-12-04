@@ -2,13 +2,13 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.communication_callsignVhf;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.design_beam;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.design_loa;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_date;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleTrue;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedOverGround;
@@ -16,23 +16,22 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_current_drift;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_current_setTrue;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_destination;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_headingMagnetic;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_headingTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_log;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_logTrip;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_magneticVariation;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_pitch;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_rateOfTurn;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_roll;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedThroughWater;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_yaw;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_rudderAngle;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
@@ -114,9 +113,9 @@ public class N2KHandlerTest {
 		logger.debug("Converting "+Json.read(json));
 		N2KHandler handler = new N2KHandler();
 		SignalKModel model = handler.handle(json);
-		assertEquals(37.190, model.getValue(vessels_dot_self_dot+nav_yaw));
-		assertEquals(0.464, model.getValue(vessels_dot_self_dot+nav_pitch));
-		assertEquals(-2.496, model.getValue(vessels_dot_self_dot+nav_roll));
+		assertEquals(37.190, model.getValue(vessels_dot_self_dot+nav_attitude_yaw));
+		assertEquals(0.464, model.getValue(vessels_dot_self_dot+nav_attitude_pitch));
+		assertEquals(-2.496, model.getValue(vessels_dot_self_dot+nav_attitude_roll));
 	}
 	
 	@Test
@@ -199,7 +198,7 @@ public class N2KHandlerTest {
 		String target = vessels+dot+"230939100"+dot;
 		assertEquals("OJ7510", model.getValue(target+communication_callsignVhf));
 		assertEquals("RESCUE RAUTAUOMA", model.get(target+name));
-		assertEquals(16.0, model.getValue(target+design_loa));
+		assertEquals(16.0, model.getValue(target+design_length_overall));
 		assertEquals(4.0, model.getValue(target+design_beam));
 		assertEquals("230939100", model.get(target+mmsi));
 		assertEquals("HELSINKI LIFEBOAT", model.getValue(target+nav_destination));
@@ -234,7 +233,7 @@ public class N2KHandlerTest {
 		logger.debug("Converting "+Json.read(json));
 		handler = new N2KHandler();
 		model = handler.handle(json);
-		assertEquals(86.0, model.getValue(vessels_dot_self_dot+env_wind_angleTrue));
+		assertEquals(86.0, model.getValue(vessels_dot_self_dot+env_wind_angleTrueWater));
 		assertEquals(4.89, model.getValue(vessels_dot_self_dot+env_wind_speedTrue));
 		
 		json = "{\"timestamp\":\"2013-10-08-15:47:28.264\",\"prio\":\"2\",\"src\":\"3\",\"dst\":\"255\",\"pgn\":\"130306\",\"description\":\"Wind Data\",\"fields\":{\"SID\":\"94\",\"Wind Speed\":\"4.82\",\"Wind Angle\":\"218.6\",\"Reference\":\"True (ground referenced to North)\"}}";
@@ -242,7 +241,7 @@ public class N2KHandlerTest {
 		handler = new N2KHandler();
 		model = handler.handle(json);
 		assertEquals(4.82, model.getValue(vessels_dot_self_dot+env_wind_speedOverGround));
-		assertEquals(218.6, model.getValue(vessels_dot_self_dot+env_wind_directionTrue));
+		assertEquals(218.6, model.getValue(vessels_dot_self_dot+env_wind_angleTrueGround));
 	}
 	
 	@Test
@@ -254,8 +253,8 @@ public class N2KHandlerTest {
 		
 		assertEquals(206.9, model.getValue(vessels_dot_self_dot+nav_courseOverGroundTrue));
 		assertEquals(3.51, model.getValue(vessels_dot_self_dot+nav_speedOverGround));
-		assertEquals(58.9, model.get(vessels_dot_self_dot+nav_current_setTrue));
-		assertEquals(0.28, model.get(vessels_dot_self_dot+nav_current_drift));
+		assertEquals(58.9, model.get(vessels_dot_self_dot+env_current_setTrue));
+		assertEquals(0.28, model.get(vessels_dot_self_dot+env_current_drift));
 		
 		json = "{\"timestamp\":\"2014-08-15-18:00:00.755\",\"prio\":\"3\",\"src\":\"160\",\"dst\":\"255\",\"pgn\":\"130577\",\"description\":\"Direction Data\",\"fields\":{\"Data Mode\":\"Autonomous\",\"COG Reference\":\"True\",\"SID\":\"84\",\"COG\":\"206.9\",\"SOG\":\"3.51\"}}";
 		logger.debug("Converting "+Json.read(json));
@@ -264,8 +263,8 @@ public class N2KHandlerTest {
 		
 		assertEquals(206.9, model.getValue(vessels_dot_self_dot+nav_courseOverGroundTrue));
 		assertEquals(3.51, model.getValue(vessels_dot_self_dot+nav_speedOverGround));
-		assertNull( model.get(vessels_dot_self_dot+nav_current_setTrue));
-		assertNull( model.get(vessels_dot_self_dot+nav_current_drift));
+		assertNull( model.get(vessels_dot_self_dot+env_current_setTrue));
+		assertNull( model.get(vessels_dot_self_dot+env_current_drift));
 	}
 	
 }

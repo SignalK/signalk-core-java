@@ -31,9 +31,8 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparen
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.propulsion_id_engineTemperature;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.propulsion_id_oilPressure;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.propulsion_id_rpm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -117,11 +116,11 @@ public class NMEAHandlerTest {
 		NMEAHandler processor = new NMEAHandler();
 		Json json = (Json) processor.handle("$YXXDR,G,0004,,G,12.27,,G,,,G,003.3,,G,0012,,MaxVu110*4E");
 		//RPM,EVV,DBT,EPP,ETT
-		assertEquals(4.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_rpm),0.0001);
+		assertEquals(4.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_revolutions),0.0001);
 		//assertEquals(12.27,signalkModel.getValue(vessels_dot_self_dot +propulsion_));
 		assertEquals(null,(double)signalkModel.getValue(vessels_dot_self_dot +env_depth_belowTransducer));
 		assertEquals(3.3,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_oilPressure),0.0001);
-		assertEquals(12.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_engineTemperature),0.0001);
+		assertEquals(12.0,(double)signalkModel.getValue(vessels_dot_self_dot +propulsion_id_temperature),0.0001);
 	}
 	
 //	@Test

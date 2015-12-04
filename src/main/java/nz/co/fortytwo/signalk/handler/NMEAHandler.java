@@ -23,7 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
@@ -33,7 +33,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundT
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_source;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
@@ -292,7 +292,7 @@ public class NMEAHandler{
 						}
 						previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
 						sk.put(vessels_dot_self_dot + nav_position_longitude , previousLon);
-						sk.put(vessels_dot_self_dot + nav_position_source , vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
+						sk.put(vessels_dot_self_dot + nav_position +dot+ source , vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
 						sk.put(vessels_dot_self_dot + nav_position + dot+timestamp , now);
 					}
 	
