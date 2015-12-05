@@ -52,7 +52,7 @@ import org.apache.log4j.Logger;
 
 /**<p>
  * 
- *  Last updated on January 15, 2015</p><p>
+ *  Last updated on May 26, 2015</p><p>
  *  <b>NOTE: </b>Comment out the logger references, and put back in the System.out.println 
  *     statements if not using log4j in your application. Checks are not made on the method inputs
  *     to ensure they are within a valid range.</p><p>
@@ -138,6 +138,15 @@ import org.apache.log4j.Logger;
  *  @version 5.6 January 15, 2015
  *  <p>Updated the internal coefficients to the 2015 values. Passes the new JUnit tests.</p>
  *     
+ *  @version 5.7 May 26, 2015
+ *  <p>Martin Frassl discovered a major bug in the code. I thought that X was in the East direction. It is not. The X axis
+ *     is in the North direction. This is now fixed so that getNorthIntensity and getEastIntensity return the correct values.
+ *     Thank you Martin!. The X, Y, and Z axes are defined in table 1 of the reference:</p>
+ *     <ul>Reference:
+ *     <li>Chulliat, A., S. Macmillan, P. Alken, C. Beggan, M. Nair, B. Hamilton, A. Woods, V. Ridley, S. Maus and A. Thomson,
+ *     2015, The US/UK World Magnetic Model for 2015-2020: Technical Report, National Geophysical Data Center, NOAA.
+ *     doi: 10.7289/V5TB14V7</li></ul>
+ *
  *     <ul>References:
  *
  *       <li>JOHN M. QUINN, DAVID J. KERRIDGE AND DAVID R. BARRACLOUGH,
@@ -443,6 +452,11 @@ public class TSAGeoMag
     /** The date in years, for the start of the valid time of the fit coefficients */
     private double epoch;
     
+    /** bx is the north south field intensity
+     *  by is the east west field intensity
+     *  bz is the vertical field intensity positive downward
+     *  bh is the horizontal field intensity
+     */
     private double bx,by,bz,bh;
     private double re,a2,b2,c2,a4,b4,c4;
     private double r,d,ca,sa,ct, st;  // even though these only occur in one method, they must be
@@ -464,7 +478,7 @@ public class TSAGeoMag
     /**
      *	Reads data from file and initializes magnetic model.  If
      *	the file is not present, or an IO exception occurs, then the internal
-     *	values valid for 2010 will be used. Note that the last line of the
+     *	values valid for 2015 will be used. Note that the last line of the
      *	WMM.COF file must be 9999... for this method to read in the input
      *  file properly.
      */
@@ -1055,7 +1069,7 @@ public class TSAGeoMag
     public double getNorthIntensity( double dlat, double dlong )
     {
             calcGeoMag( dlat, dlong, defaultDate, defaultAltitude );
-            return  by;
+            return  bx;
     }
     
     /**
@@ -1073,7 +1087,7 @@ public class TSAGeoMag
     public double getNorthIntensity( double dlat, double dlong, double year, double altitude )
     {
             calcGeoMag( dlat, dlong, year, altitude );
-            return  by;
+            return  bx;
     }
     /**
      *	Returns the easterly magnetic field intensity from the
@@ -1090,7 +1104,7 @@ public class TSAGeoMag
     public double getEastIntensity( double dlat, double dlong )
     {
             calcGeoMag( dlat, dlong, defaultDate, defaultAltitude );
-            return  bx;
+            return  by;
     }
     
     /**
@@ -1108,7 +1122,7 @@ public class TSAGeoMag
     public double getEastIntensity( double dlat, double dlong, double year, double altitude )
     {
             calcGeoMag( dlat, dlong, year, altitude );
-            return  bx;
+            return  by;
     }
     /**
      *	Returns the magnetic field dip angle from the
