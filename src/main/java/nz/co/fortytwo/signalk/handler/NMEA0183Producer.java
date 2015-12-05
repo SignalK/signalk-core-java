@@ -2,7 +2,6 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;

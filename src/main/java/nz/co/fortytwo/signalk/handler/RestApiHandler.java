@@ -23,10 +23,9 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.Constants.STORAGE_ROOT;
+import static nz.co.fortytwo.signalk.util.ConfigConstants.STORAGE_ROOT;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.resources;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
@@ -40,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
@@ -107,11 +105,11 @@ public class RestApiHandler {
 		if(logger.isDebugEnabled())logger.debug("We are processing the path = "+path);
         
         //check valid request.
-        if(path.length()<JsonConstants.SIGNALK_API.length() || !path.startsWith(JsonConstants.SIGNALK_API)){
+        if(path.length()<SignalKConstants.SIGNALK_API.length() || !path.startsWith(SignalKConstants.SIGNALK_API)){
         	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         	return null;
         }
-        path=path.substring(JsonConstants.SIGNALK_API.length());
+        path=path.substring(SignalKConstants.SIGNALK_API.length());
         if(path.startsWith(SLASH))path=path.substring(1);
         if(path.endsWith(SLASH))path=path.substring(path.length()-1);
         if(logger.isDebugEnabled())logger.debug("We are processing the extension:"+path);
@@ -157,13 +155,13 @@ public class RestApiHandler {
         	if(path.startsWith(dot))path=path.substring(1);
         	if(!path.endsWith("*"))path=path+"*";
         	Json getJson = Json.object();
-        	getJson.set(JsonConstants.CONTEXT, context);
+        	getJson.set(SignalKConstants.CONTEXT, context);
         	Json getPath = Json.object();
-        	getPath.set(JsonConstants.PATH,path);
-        	getPath.set(JsonConstants.FORMAT,JsonConstants.FORMAT_FULL);
+        	getPath.set(SignalKConstants.PATH,path);
+        	getPath.set(SignalKConstants.FORMAT,SignalKConstants.FORMAT_FULL);
         	Json getArray = Json.array();
         	getArray.add(getPath);
-        	getJson.set(JsonConstants.GET, getArray);
+        	getJson.set(SignalKConstants.GET, getArray);
         	
         	SignalKModel keys = getHandler.handle(signalkModel, getJson);
 	        //NavigableMap<String, Object> keys = signalkModel.getSubMap(path.replace(SLASH, dot));
@@ -210,7 +208,7 @@ public class RestApiHandler {
 //		if(logger.isDebugEnabled())logger.debug("We are processing the path = "+path);
 //        
 //        //check valid request.
-//        if(path.length()<JsonConstants.SIGNALK_API.length() || !path.startsWith(JsonConstants.SIGNALK_API)){
+//        if(path.length()<SignalKConstants.SIGNALK_API.length() || !path.startsWith(SignalKConstants.SIGNALK_API)){
 //        	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 //        	return null;
 //        }

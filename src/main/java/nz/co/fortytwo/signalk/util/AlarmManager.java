@@ -1,10 +1,12 @@
 package nz.co.fortytwo.signalk.util;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.alarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarmState;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarms;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.message;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.normal;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.warn;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 

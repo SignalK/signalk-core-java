@@ -12,21 +12,15 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.zones;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
 import java.io.IOException;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
-import nz.co.fortytwo.signalk.util.Constants;
-import nz.co.fortytwo.signalk.util.Util;
 import nz.co.fortytwo.signalk.util.TestHelper;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlarmHandlerTest {

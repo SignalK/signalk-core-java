@@ -22,11 +22,16 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.PATH;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UPDATES;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.attr;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.meta;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import mjson.Json;

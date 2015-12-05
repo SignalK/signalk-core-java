@@ -23,9 +23,8 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
@@ -33,15 +32,12 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundT
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
-
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -63,10 +59,9 @@ import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.VHWSentence;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.Constants;
+import nz.co.fortytwo.signalk.util.ConfigConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -95,7 +90,7 @@ public class NMEAHandler{
 		//SentenceFactory.getInstance().registerParser("BVE", net.sf.marineapi.nmea.parser.BVEParser.class);
 		//SentenceFactory.getInstance().registerParser("XDR", net.sf.marineapi.nmea.parser.CruzproXDRParser.class);
 		try {
-			if("rmc".equals(Util.getConfigProperty(Constants.CLOCK_source))){
+			if("rmc".equals(Util.getConfigProperty(ConfigConstants.CLOCK_source))){
 				rmcClock=true;
 			}
 		} catch (Exception e) {
@@ -358,20 +353,20 @@ public class NMEAHandler{
 							sk.put(json, propulsion_id_fuelUsageRate , sen.getFuelUseRateUnitsPerHour(), "output");
 							
 							// map.put(Constants.FUEL_USED, sen.getFuelUsedOnTrip());
-							// sk.put(tempSignalKConstants.selfNode, JsonConstants.tank_level, sen.getFuelRemaining(), "output");
+							// sk.put(tempSignalKConstants.selfNode, SignalKConstants.tank_level, sen.getFuelRemaining(), "output");
 						}
 						if (sen.isEngineRpm()) {
 							sk.put(json, propulsion_id_rpm , sen.getEngineRpm(), "output");
 							// map.put(Constants.ENGINE_HOURS, sen.getEngineHours());
-							//sk.put(tempSignalKConstants.selfNode, JsonConstants.propulsion_hours, sen.getEngineHours(), "output");
+							//sk.put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_hours, sen.getEngineHours(), "output");
 							// map.put(Constants.ENGINE_MINUTES, sen.getEngineMinutes());
-							//sk.put(tempSignalKConstants.selfNode, JsonConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
+							//sk.put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
 	
 						}
 						if (sen.isTempGuage()) {
 							sk.put(json, propulsion_id_engineTemperature , sen.getEngineTemp(), "output");
 							// map.put(Constants.ENGINE_VOLTS, sen.getVoltage());
-							//sk.put(tempSignalKConstants.selfNode, JsonConstants.propulsion_engineVolts, sen.getVoltage(), "output");
+							//sk.put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_engineVolts, sen.getVoltage(), "output");
 							// map.put(Constants.ENGINE_TEMP_HIGH_ALARM, sen.getHighTempAlarmValue());
 							// map.put(Constants.ENGINE_TEMP_LOW_ALARM, sen.getLowTempAlarmValue());
 	

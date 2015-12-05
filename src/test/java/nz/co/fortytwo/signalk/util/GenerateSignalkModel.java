@@ -24,20 +24,14 @@
  */
 package nz.co.fortytwo.signalk.util;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import mjson.Json;
-import mjson.Json.Schema;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -73,11 +67,11 @@ public class GenerateSignalkModel {
 		}
 		
 		for(String k :keys){
-			printJsonConstants(k);
+			printSignalKConstants(k);
 		}
 	}
 
-	private void printJsonConstants(String k) {
+	private void printSignalKConstants(String k) {
 		//public static final String env_wind_directionChangeAlarm = "environment.wind.directionChangeAlarm";
 		//			(^urn:mrn:(imo|signalk):(mmsi:[2-7][0-9]{8,8}|uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}))|^(http(s?):.*|mailto:.*|tel:(\+?)[0-9]{4,})$
 		//System.out.println(k);

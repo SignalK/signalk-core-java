@@ -22,7 +22,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.Constants.STATIC_DIR;
+import static nz.co.fortytwo.signalk.util.ConfigConstants.STATIC_DIR;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,11 +31,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nz.co.fortytwo.signalk.util.JsonConstants;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
@@ -78,11 +77,11 @@ public class GitHandler {
 			logger.debug("We are processing the path = " + path);
 
 		// check valid request.
-		if (path.length() < JsonConstants.SIGNALK_INSTALL.length() || !path.startsWith(JsonConstants.SIGNALK_INSTALL)) {
+		if (path.length() < SignalKConstants.SIGNALK_INSTALL.length() || !path.startsWith(SignalKConstants.SIGNALK_INSTALL)) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return null;
 		}
-		path = path.substring(JsonConstants.SIGNALK_INSTALL.length());
+		path = path.substring(SignalKConstants.SIGNALK_INSTALL.length());
 		if (path.startsWith(SLASH))
 			path = path.substring(1);
 		if (logger.isDebugEnabled())
@@ -117,11 +116,11 @@ public class GitHandler {
 			logger.debug("We are processing the path = " + path);
 
 		// check valid request.
-		if (path.length() < JsonConstants.SIGNALK_UPGRADE.length() || !path.startsWith(JsonConstants.SIGNALK_UPGRADE)) {
+		if (path.length() < SignalKConstants.SIGNALK_UPGRADE.length() || !path.startsWith(SignalKConstants.SIGNALK_UPGRADE)) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return null;
 		}
-		path = path.substring(JsonConstants.SIGNALK_UPGRADE.length());
+		path = path.substring(SignalKConstants.SIGNALK_UPGRADE.length());
 		if (path.startsWith(SLASH))
 			path = path.substring(1);
 		if (logger.isDebugEnabled())

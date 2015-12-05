@@ -106,7 +106,7 @@ public class Util {
 		model = SignalKModelFactory.getInstance();
 		Util.setDefaults(model);
 		SignalKModelFactory.loadConfig(model);
-		String mySelf = (String) model.get(Constants.UUID);
+		String mySelf = (String) model.get(ConfigConstants.UUID);
 		Util.setSelf(mySelf);
 	}
 	
@@ -132,78 +132,78 @@ public class Util {
 	 */
 	public static void setDefaults(SignalKModel model) {
 		// populate sensible defaults here
-		model.put(Constants.UUID, "self");
-		model.put(Constants.WEBSOCKET_PORT, 3000);
-		model.put(Constants.REST_PORT, 8080);
-		model.put(Constants.CFG_DIR, "./conf/");
-		model.put(Constants.CFG_FILE, "signalk.cfg");
-		model.put(Constants.STORAGE_ROOT, "./storage/");
-		model.put(Constants.STATIC_DIR, "./signalk-static");
-		model.put(Constants.MAP_DIR, "./mapcache");
-		model.put(Constants.DEMO, false);
-		model.put(Constants.STREAM_URL,
+		model.put(ConfigConstants.UUID, "self");
+		model.put(ConfigConstants.WEBSOCKET_PORT, 3000);
+		model.put(ConfigConstants.REST_PORT, 8080);
+		model.put(ConfigConstants.CFG_DIR, "./conf/");
+		model.put(ConfigConstants.CFG_FILE, "signalk.cfg");
+		model.put(ConfigConstants.STORAGE_ROOT, "./storage/");
+		model.put(ConfigConstants.STATIC_DIR, "./signalk-static");
+		model.put(ConfigConstants.MAP_DIR, "./mapcache");
+		model.put(ConfigConstants.DEMO, false);
+		model.put(ConfigConstants.STREAM_URL,
 				"./src/test/resources/motu.log&scanStream=true&scanStreamDelay=500");
-		model.put(Constants.USBDRIVE, "/media/usb0");
+		model.put(ConfigConstants.USBDRIVE, "/media/usb0");
 		model.put(
-				Constants.SERIAL_PORTS,
+				ConfigConstants.SERIAL_PORTS,
 				"[\"/dev/ttyUSB0\",\"/dev/ttyUSB1\",\"/dev/ttyUSB2\",\"/dev/ttyACM0\",\"/dev/ttyACM1\",\"/dev/ttyACM2\"]");
 		if (SystemUtils.IS_OS_WINDOWS) {
-			model.put(Constants.SERIAL_PORTS,
+			model.put(ConfigConstants.SERIAL_PORTS,
 					"[\"COM1\",\"COM2\",\"COM3\",\"COM4\"]");
 		}
-		model.put(Constants.SERIAL_PORT_BAUD, 38400);
+		model.put(ConfigConstants.SERIAL_PORT_BAUD, 38400);
 
-		model.put(Constants.TCP_PORT, 55555);
-		model.put(Constants.UDP_PORT, 55554);
-		model.put(Constants.TCP_NMEA_PORT, 55557);
-		model.put(Constants.UDP_NMEA_PORT, 55556);
-		model.put(Constants.STOMP_PORT, 61613);
-		model.put(Constants.MQTT_PORT, 1883);
-		model.put(Constants.CLOCK_source, "system");
-		model.put(Constants.HAWTIO_PORT, 8000);
-		model.put(Constants.HAWTIO_AUTHENTICATE, false);
-		model.put(Constants.HAWTIO_CONTEXT, "/hawtio");
-		model.put(Constants.HAWTIO_WAR,
+		model.put(ConfigConstants.TCP_PORT, 55555);
+		model.put(ConfigConstants.UDP_PORT, 55554);
+		model.put(ConfigConstants.TCP_NMEA_PORT, 55557);
+		model.put(ConfigConstants.UDP_NMEA_PORT, 55556);
+		model.put(ConfigConstants.STOMP_PORT, 61613);
+		model.put(ConfigConstants.MQTT_PORT, 1883);
+		model.put(ConfigConstants.CLOCK_source, "system");
+		model.put(ConfigConstants.HAWTIO_PORT, 8000);
+		model.put(ConfigConstants.HAWTIO_AUTHENTICATE, false);
+		model.put(ConfigConstants.HAWTIO_CONTEXT, "/hawtio");
+		model.put(ConfigConstants.HAWTIO_WAR,
 				"./hawtio/hawtio-default-offline-1.4.48.war");
-		model.put(Constants.HAWTIO_START, false);
-		model.put(Constants.VERSION, "0.1");
-		model.put(Constants.ALLOW_INSTALL, true);
-		model.put(Constants.ALLOW_UPGRADE, true);
-		model.put(Constants.GENERATE_NMEA0183, true);
-		model.put(Constants.START_MQTT, true);
-		model.put(Constants.START_STOMP, true);
-		model.put(Constants.CLIENT_TCP, null);
-		model.put(Constants.CLIENT_MQTT, null);
-		model.put(Constants.CLIENT_STOMP, null);
+		model.put(ConfigConstants.HAWTIO_START, false);
+		model.put(ConfigConstants.VERSION, "0.1");
+		model.put(ConfigConstants.ALLOW_INSTALL, true);
+		model.put(ConfigConstants.ALLOW_UPGRADE, true);
+		model.put(ConfigConstants.GENERATE_NMEA0183, true);
+		model.put(ConfigConstants.START_MQTT, true);
+		model.put(ConfigConstants.START_STOMP, true);
+		model.put(ConfigConstants.CLIENT_TCP, null);
+		model.put(ConfigConstants.CLIENT_MQTT, null);
+		model.put(ConfigConstants.CLIENT_STOMP, null);
 
 	}
 
 	public static Json getEndpoints(String hostname)
 			throws UnknownHostException {
 		Json msg = Json.object();
-		String cfgHostname = getConfigProperty(Constants.HOSTNAME);
+		String cfgHostname = getConfigProperty(ConfigConstants.HOSTNAME);
 		if (StringUtils.isNotBlank(cfgHostname))
 			hostname = cfgHostname;
 		msg.set(SignalKConstants.websocketUrl, "ws://" + hostname + ":"
-				+ getConfigPropertyInt(Constants.WEBSOCKET_PORT)
-				+ JsonConstants.SIGNALK_WS);
+				+ getConfigPropertyInt(ConfigConstants.WEBSOCKET_PORT)
+				+ SignalKConstants.SIGNALK_WS);
 		msg.set(SignalKConstants.restUrl, "http://" + hostname + ":"
-				+ getConfigPropertyInt(Constants.REST_PORT)
-				+ JsonConstants.SIGNALK_API);
+				+ getConfigPropertyInt(ConfigConstants.REST_PORT)
+				+ SignalKConstants.SIGNALK_API);
 		msg.set(SignalKConstants.signalkTcpPort, hostname + ":"
-				+ getConfigPropertyInt(Constants.TCP_PORT));
+				+ getConfigPropertyInt(ConfigConstants.TCP_PORT));
 		msg.set(SignalKConstants.signalkUdpPort, hostname + ":"
-				+ getConfigPropertyInt(Constants.UDP_PORT));
+				+ getConfigPropertyInt(ConfigConstants.UDP_PORT));
 		msg.set(SignalKConstants.nmeaTcpPort, hostname + ":"
-				+ getConfigPropertyInt(Constants.TCP_NMEA_PORT));
+				+ getConfigPropertyInt(ConfigConstants.TCP_NMEA_PORT));
 		msg.set(SignalKConstants.nmeaUdpPort, hostname + ":"
-				+ getConfigPropertyInt(Constants.UDP_NMEA_PORT));
-		if (getConfigPropertyBoolean(Constants.START_STOMP))
+				+ getConfigPropertyInt(ConfigConstants.UDP_NMEA_PORT));
+		if (getConfigPropertyBoolean(ConfigConstants.START_STOMP))
 			msg.set(SignalKConstants.stompPort, hostname + ":"
-					+ getConfigPropertyInt(Constants.STOMP_PORT));
-		if (getConfigPropertyBoolean(Constants.START_MQTT))
+					+ getConfigPropertyInt(ConfigConstants.STOMP_PORT));
+		if (getConfigPropertyBoolean(ConfigConstants.START_MQTT))
 			msg.set(SignalKConstants.mqttPort, hostname + ":"
-					+ getConfigPropertyInt(Constants.MQTT_PORT));
+					+ getConfigPropertyInt(ConfigConstants.MQTT_PORT));
 
 		return msg;
 	}
@@ -212,12 +212,12 @@ public class Util {
 		Json msg = Json.object();
 		msg.set(SignalKConstants.version, getVersion());
 		msg.set(SignalKConstants.timestamp, getIsoTimeString());
-		msg.set(self_str, Constants.UUID);
+		msg.set(self_str, ConfigConstants.UUID);
 		return msg;
 	}
 
 	public static String getVersion() {
-		return getConfigProperty(Constants.VERSION);
+		return getConfigProperty(ConfigConstants.VERSION);
 	}
 
 	/**
@@ -485,12 +485,12 @@ public class Util {
 		// "list/vessels"
 		if (StringUtils.isBlank(path))
 			return "";
-		if (path.equals(JsonConstants.CONFIG)) {
+		if (path.equals(SignalKConstants.CONFIG)) {
 			return path;
 		}
-		if (path.startsWith(JsonConstants.CONFIG + dot)) {
-			int p1 = path.indexOf(JsonConstants.CONFIG)
-					+ JsonConstants.CONFIG.length() + 1;
+		if (path.startsWith(SignalKConstants.CONFIG + dot)) {
+			int p1 = path.indexOf(SignalKConstants.CONFIG)
+					+ SignalKConstants.CONFIG.length() + 1;
 
 			int pos = path.indexOf(".", p1);
 			if (pos < 0)
@@ -501,7 +501,7 @@ public class Util {
 			return path;
 		}
 		if (path.startsWith(vessels + dot)
-				|| path.startsWith(JsonConstants.LIST + dot + vessels + dot)) {
+				|| path.startsWith(SignalKConstants.LIST + dot + vessels + dot)) {
 			int p1 = path.indexOf(vessels) + vessels.length() + 1;
 
 			int pos = path.indexOf(".", p1);

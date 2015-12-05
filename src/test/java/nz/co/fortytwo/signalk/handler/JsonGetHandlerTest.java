@@ -30,15 +30,12 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitud
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.Util;
 import nz.co.fortytwo.signalk.util.TestHelper;
 
 import org.apache.log4j.Logger;

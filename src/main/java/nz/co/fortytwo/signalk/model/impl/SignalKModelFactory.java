@@ -25,18 +25,16 @@ package nz.co.fortytwo.signalk.model.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
-import java.util.SortedMap;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.util.Constants;
-import nz.co.fortytwo.signalk.util.JsonConstants;
+import nz.co.fortytwo.signalk.util.ConfigConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Factory to get signalKModel singleton
@@ -83,7 +81,7 @@ public class SignalKModelFactory {
 	public static synchronized SignalKModel getMotuTestInstance() {
 		signalKModel.getFullData().clear();
 		loadConfig(signalKModel, "motu");
-		signalKModel.put(Constants.DEMO, false);
+		signalKModel.put(ConfigConstants.DEMO, false);
 		return signalKModel;
 	}
 
@@ -120,7 +118,7 @@ public class SignalKModelFactory {
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				String self = (String) model.get(Constants.UUID);
+				String self = (String) model.get(ConfigConstants.UUID);
 				
 				Util.setSelf(SignalKConstants.self);
 				model.put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
@@ -142,7 +140,7 @@ public class SignalKModelFactory {
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				model.put(Constants.UUID,self);
+				model.put(ConfigConstants.UUID,self);
 				Util.setSelf(self);
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
 				logger.info("   self set to: "+self);
@@ -164,8 +162,8 @@ public class SignalKModelFactory {
 			JsonSerializer ser = new JsonSerializer();
 			Json modelJson = ser.writeJson(model);
 			//remove config
-			if(modelJson.has(JsonConstants.CONFIG)){
-				modelJson = modelJson.delAt(JsonConstants.CONFIG);
+			if(modelJson.has(SignalKConstants.CONFIG)){
+				modelJson = modelJson.delAt(SignalKConstants.CONFIG);
 			}
 			FileUtils.writeStringToFile(jsonFile, modelJson.toString());
 			logger.debug("   Saved model state to "+SIGNALK_MODEL_SAVE_FILE);
@@ -180,7 +178,7 @@ public class SignalKModelFactory {
 	public static void saveConfig(SignalKModel model) throws IOException {
 		if (model != null) {
 			File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
-			NavigableMap<String, Object> config = model.getSubMap(JsonConstants.CONFIG);
+			NavigableMap<String, Object> config = model.getSubMap(SignalKConstants.CONFIG);
 			JsonSerializer ser = new JsonSerializer();
 			ser.setPretty(3);
 			StringBuffer buffer = new StringBuffer();

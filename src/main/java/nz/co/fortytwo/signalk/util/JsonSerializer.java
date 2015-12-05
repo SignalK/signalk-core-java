@@ -336,10 +336,10 @@ public class JsonSerializer {
     public NavigableMap<String, Object> read(Json json) {
 		//get keys and recurse
     	ConcurrentSkipListMap<String, Object> map = new ConcurrentSkipListMap<String, Object>();
-    	if(json.has(JsonConstants.vessels) || json.has(JsonConstants.CONFIG)){
+    	if(json.has(SignalKConstants.vessels) || json.has(SignalKConstants.CONFIG)){
     		recurseJsonFull(json,map,"");
     	}
-    	if(json.has(JsonConstants.UPDATES)){
+    	if(json.has(SignalKConstants.UPDATES)){
     		parseJsonDelta(json,map,"");
     	}
 		return map;

@@ -24,12 +24,14 @@
 package nz.co.fortytwo.signalk.handler;
 
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.LIST;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.PATH;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NavigableMap;
 import java.util.regex.Pattern;
 
 import mjson.Json;

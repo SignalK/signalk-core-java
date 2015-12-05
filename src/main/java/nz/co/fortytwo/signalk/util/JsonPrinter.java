@@ -1,7 +1,10 @@
 package nz.co.fortytwo.signalk.util;
-import java.util.*;
-import java.text.*;
-import java.io.*;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A class to serialize a Map as JSON. This class makes some specific assumptions

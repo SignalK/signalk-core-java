@@ -2,47 +2,47 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.communication_callsignVhf;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.design_beam;
-
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time_date;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.design_length_overall;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_current_drift;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_current_setTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time_date;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time_time;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
-
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleTrueGround;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleTrueWater;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_attitude_pitch;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_attitude_roll;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_attitude_yaw;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
-
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_destination;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_headingMagnetic;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_headingTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_log;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_logTrip;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_magneticVariation;
-
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_rateOfTurn;
-
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedThroughWater;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
-
 import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_rudderAngle;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKExamplesGenerator;
-import nz.co.fortytwo.signalk.util.JsonSerializer;
 
 import org.apache.log4j.Logger;
 import org.junit.After;

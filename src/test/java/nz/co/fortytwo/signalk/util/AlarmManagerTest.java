@@ -1,16 +1,21 @@
 package nz.co.fortytwo.signalk.util;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import static org.junit.Assert.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.alarm;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.alarmState;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.alarms;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.message;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import mjson.Json;
-import nz.co.fortytwo.signalk.handler.AlarmHandler;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

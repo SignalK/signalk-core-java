@@ -23,10 +23,11 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import mjson.Json;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_magneticVariation;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import nz.co.fortytwo.signalk.util.TSAGeoMag;
 import nz.co.fortytwo.signalk.util.Util;
 

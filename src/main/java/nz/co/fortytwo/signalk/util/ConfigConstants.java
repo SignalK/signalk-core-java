@@ -23,7 +23,7 @@
  */
 package nz.co.fortytwo.signalk.util;
 
-public class Constants {
+public class ConfigConstants {
 
 	public static final String VERSION = "config.server.version";
 	
@@ -114,7 +114,7 @@ public class Constants {
 	public static final String HAWTIO_START = "config.hawtio.start";
 
 	
-	public Constants() {
+	public ConfigConstants() {
 		// TODO Auto-generated constructor stub
 	}
 

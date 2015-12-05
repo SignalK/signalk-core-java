@@ -1,7 +1,5 @@
 package nz.co.fortytwo.signalk.util;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 
 import mjson.Json;

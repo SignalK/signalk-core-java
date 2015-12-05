@@ -29,15 +29,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 
 import mjson.Json;
-import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.Constants;
+import nz.co.fortytwo.signalk.util.ConfigConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -58,7 +55,7 @@ public class JsonStorageHandlerTest {
 	@Test
 	public void shouldProcessPut() throws Exception{
 		Json diff = Json.read(jsonDiff);
-		File dataRoot = new File(Util.getConfigProperty(Constants.STORAGE_ROOT));
+		File dataRoot = new File(Util.getConfigProperty(ConfigConstants.STORAGE_ROOT));
 		//empty it
 		FileUtils.deleteDirectory(dataRoot);
 		
@@ -69,7 +66,7 @@ public class JsonStorageHandlerTest {
 		String filePath = output.at("put").at(0).at("values").at(0).at("value").at("uri").asString();
 		logger.debug(filePath);
 		assertNotNull(filePath);
-		File data = new File(Util.getConfigProperty(Constants.STORAGE_ROOT)+filePath);
+		File data = new File(Util.getConfigProperty(ConfigConstants.STORAGE_ROOT)+filePath);
 		assertTrue(data.exists());
 		//logger.debug(filePath);
 		//now retrieve it again

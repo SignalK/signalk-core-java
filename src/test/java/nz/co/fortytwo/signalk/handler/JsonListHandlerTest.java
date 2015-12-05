@@ -25,7 +25,8 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import mjson.Json;
 
 import org.apache.log4j.Logger;

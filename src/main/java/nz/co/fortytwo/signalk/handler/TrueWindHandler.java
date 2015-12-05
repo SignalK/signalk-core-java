@@ -23,9 +23,13 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import mjson.Json;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.Util;
 

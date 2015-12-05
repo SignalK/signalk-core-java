@@ -23,17 +23,16 @@
  */
 package nz.co.fortytwo.signalk.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.net.UnknownHostException;
 
 import mjson.Json;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class UtilTest {
 

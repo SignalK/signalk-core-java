@@ -22,19 +22,18 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.Constants.MIME_TYPE;
-import static nz.co.fortytwo.signalk.util.Constants.PAYLOAD;
-import static nz.co.fortytwo.signalk.util.Constants.STORAGE_ROOT;
-import static nz.co.fortytwo.signalk.util.Constants.STORAGE_URI;
-import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
-
-import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
-import static nz.co.fortytwo.signalk.util.JsonConstants.PUT;
-import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.value;
-
-import static nz.co.fortytwo.signalk.util.JsonConstants.vessels;
+import static nz.co.fortytwo.signalk.util.ConfigConstants.MIME_TYPE;
+import static nz.co.fortytwo.signalk.util.ConfigConstants.PAYLOAD;
+import static nz.co.fortytwo.signalk.util.ConfigConstants.STORAGE_ROOT;
+import static nz.co.fortytwo.signalk.util.ConfigConstants.STORAGE_URI;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.PATH;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.PUT;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +43,6 @@ import java.util.Map;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;

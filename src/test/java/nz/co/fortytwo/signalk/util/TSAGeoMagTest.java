@@ -21,8 +21,6 @@ import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
-import nz.co.fortytwo.signalk.util.TSAGeoMag;;
-
 /**<p>
  *  Test values from
  *  <a href ="http://www.ngdc.noaa.gov/geomag/WMM/soft.shtml"> the National GeoPhysical Data Center.</a>.

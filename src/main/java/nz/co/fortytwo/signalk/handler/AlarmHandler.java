@@ -25,7 +25,6 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarmMessage;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.alarms;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.meta;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.normal;

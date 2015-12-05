@@ -1,23 +1,24 @@
 package nz.co.fortytwo.signalk.util;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import static org.junit.Assert.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
 
 import mjson.Json;
-import net.minidev.json.JSONArray;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelImplTest;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -65,7 +66,7 @@ public class JsonSerializerTest {
 		
 		//write out
 		StringBuffer buffer = new StringBuffer();
-		ser.write(signalk.getSubMap(JsonConstants.CONFIG).entrySet().iterator(),'.',buffer);
+		ser.write(signalk.getSubMap(SignalKConstants.CONFIG).entrySet().iterator(),'.',buffer);
 		logger.debug(buffer.toString());
 		
 		//read in again
@@ -74,7 +75,7 @@ public class JsonSerializerTest {
 		signalk.putAll(jsonMap);
 		//write out again
 		buffer = new StringBuffer();
-		ser.write(signalk.getSubMap(JsonConstants.CONFIG).entrySet().iterator(),'.',buffer);
+		ser.write(signalk.getSubMap(SignalKConstants.CONFIG).entrySet().iterator(),'.',buffer);
 		String jsonMapOut=buffer.toString();
 		logger.debug(jsonMapOut);
 		//make json object
