@@ -42,7 +42,9 @@ import nz.co.fortytwo.signalk.util.TSAGeoMag;;
  * final WMM2010 model coefficients</i></p>
  * @version 1.3 Jan 15, 2015
  * <p>Updated with the test values for the 2015 WMM.COF coefficients. From the test values WMM2015testvalues.pdf
- * from the WMM web site.</p>
+ * from the WMM web site.</p> * @version 1.4 May 26, 2015
+ * <p>Fixed the East-West, North-South bug discovered by Martin Frassl.</p>
+
  */
 public class TSAGeoMagTest 
 {
@@ -121,48 +123,48 @@ public class TSAGeoMagTest
     /**
      * Test method for d3.env.TSAGeoMag.getEastIntensity() in nT
      */
-    @Test public final void getEastIntensity() 
+    @Test public final void getNorthIntensity() 
     {
-        assertEquals(6627.1, magModel.getEastIntensity(80, 0, 2015, 0) , 5.0E-02);
-        assertEquals(39518.2, magModel.getEastIntensity(0, 120, 2015, 0) , 5.0E-02);
-        assertEquals(5797.3, magModel.getEastIntensity(-80, 240, 2015, 0) , 5.0E-02);
-        assertEquals(6314.3, magModel.getEastIntensity(80, 0, 2015, 100) , 5.0E-02);
-        assertEquals(37535.6, magModel.getEastIntensity(0, 120, 2015, 100) , 5.0E-02);
-        assertEquals(5613.1, magModel.getEastIntensity(-80, 240, 2015, 100) , 5.0E-02);
+        assertEquals(6627.1, magModel.getNorthIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(39518.2, magModel.getNorthIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(5797.3, magModel.getNorthIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals(6314.3, magModel.getNorthIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(37535.6, magModel.getNorthIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(5613.1, magModel.getNorthIntensity(-80, 240, 2015, 100) , 5.0E-02);
         
-        assertEquals(6599.4, magModel.getEastIntensity(80, 0, 2017.5, 0) , 5.0E-02);
-        assertEquals(39571.4, magModel.getEastIntensity(0, 120, 2017.5, 0) , 5.0E-02);
-        assertEquals(5873.8, magModel.getEastIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
-        assertEquals(6290.5, magModel.getEastIntensity(80, 0, 2017.5, 100) , 5.0E-02);
-        assertEquals(37585.5, magModel.getEastIntensity(0, 120, 2017.5, 100) , 5.0E-02);
-        assertEquals(5683.5, magModel.getEastIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
+        assertEquals(6599.4, magModel.getNorthIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(39571.4, magModel.getNorthIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(5873.8, magModel.getNorthIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals(6290.5, magModel.getNorthIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(37585.5, magModel.getNorthIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(5683.5, magModel.getNorthIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
         
-        assertEquals(6599.4, magModel.getEastIntensity(80, 0) , 5.0E-02);
-        assertEquals(39571.4, magModel.getEastIntensity(0, 120) , 5.0E-02);
-        assertEquals(5873.8, magModel.getEastIntensity(-80, 240) , 5.0E-02);
+        assertEquals(6599.4, magModel.getNorthIntensity(80, 0) , 5.0E-02);
+        assertEquals(39571.4, magModel.getNorthIntensity(0, 120) , 5.0E-02);
+        assertEquals(5873.8, magModel.getNorthIntensity(-80, 240) , 5.0E-02);
     }
     /**
      * Test method for d3.env.TSAGeoMag.getNorthIntensity() in nT
      */
-    @Test public final void getNorthIntensity() 
+    @Test public final void getEastIntensity()
     {
-        assertEquals( -445.9, magModel.getNorthIntensity(80, 0, 2015, 0) , 5.0E-02);
-        assertEquals(  392.9, magModel.getNorthIntensity(0, 120, 2015, 0) , 5.0E-02);
-        assertEquals(15761.1, magModel.getNorthIntensity(-80, 240, 2015, 0) , 5.0E-02);
-        assertEquals( -471.6, magModel.getNorthIntensity(80, 0, 2015, 100) , 5.0E-02);
-        assertEquals(  364.4, magModel.getNorthIntensity(0, 120, 2015, 100) , 5.0E-02);
-        assertEquals(14791.5, magModel.getNorthIntensity(-80, 240, 2015, 100) , 5.0E-02);
-        
-        assertEquals( -317.1, magModel.getNorthIntensity(80, 0, 2017.5, 0) , 5.0E-02);
-        assertEquals(  222.5, magModel.getNorthIntensity(0, 120, 2017.5, 0) , 5.0E-02);
-        assertEquals(15781.4, magModel.getNorthIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
-        assertEquals( -348.5, magModel.getNorthIntensity(80, 0, 2017.5, 100) , 5.0E-02);
-        assertEquals(  209.5, magModel.getNorthIntensity(0, 120, 2017.5, 100) , 5.0E-02);
-        assertEquals(14808.8, magModel.getNorthIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
-        
-        assertEquals( -317.1, magModel.getNorthIntensity(80, 0) , 5.0E-02);
-        assertEquals(  222.5, magModel.getNorthIntensity(0, 120) , 5.0E-02);
-        assertEquals(15781.4, magModel.getNorthIntensity(-80, 240) , 5.0E-02);
+        assertEquals( -445.9, magModel.getEastIntensity(80, 0, 2015, 0) , 5.0E-02);
+        assertEquals(  392.9, magModel.getEastIntensity(0, 120, 2015, 0) , 5.0E-02);
+        assertEquals(15761.1, magModel.getEastIntensity(-80, 240, 2015, 0) , 5.0E-02);
+        assertEquals( -471.6, magModel.getEastIntensity(80, 0, 2015, 100) , 5.0E-02);
+        assertEquals(  364.4, magModel.getEastIntensity(0, 120, 2015, 100) , 5.0E-02);
+        assertEquals(14791.5, magModel.getEastIntensity(-80, 240, 2015, 100) , 5.0E-02);
+
+        assertEquals( -317.1, magModel.getEastIntensity(80, 0, 2017.5, 0) , 5.0E-02);
+        assertEquals(  222.5, magModel.getEastIntensity(0, 120, 2017.5, 0) , 5.0E-02);
+        assertEquals(15781.4, magModel.getEastIntensity(-80, 240, 2017.5, 0) , 5.0E-02);
+        assertEquals( -348.5, magModel.getEastIntensity(80, 0, 2017.5, 100) , 5.0E-02);
+        assertEquals(  209.5, magModel.getEastIntensity(0, 120, 2017.5, 100) , 5.0E-02);
+        assertEquals(14808.8, magModel.getEastIntensity(-80, 240, 2017.5, 100) , 5.0E-02);
+
+        assertEquals( -317.1, magModel.getEastIntensity(80, 0) , 5.0E-02);
+        assertEquals(  222.5, magModel.getEastIntensity(0, 120) , 5.0E-02);
+        assertEquals(15781.4, magModel.getEastIntensity(-80, 240) , 5.0E-02);
     }
     /**
      * Test method for d3.env.TSAGeoMag.getVerticalIntensity()
