@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.JsonConstants;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
@@ -127,8 +127,8 @@ public class JsonGetHandler {
 	 */
 	public void parseGet(SignalKModel signalkModel, String context, Json path, SignalKModel tree) throws Exception {
 		// get values
-		String regexKey = context + JsonConstants.DOT + path.at(PATH).asString();
-		//convert self to SELF
+		String regexKey = context + SignalKConstants.dot + path.at(PATH).asString();
+		//convert SignalKConstants.self to SignalKConstants.self
 		regexKey = Util.fixSelfKey(regexKey);
 		if (logger.isDebugEnabled())
 			logger.debug("Parsing get  " + regexKey);

@@ -58,7 +58,7 @@ public class DeclinationHandlerTest {
 		DeclinationHandler p = new DeclinationHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
-		//model.putWith(model.self(), JsonConstants.nav_position_longitude, 172.5);
+		//model.putWith(model.SignalKConstants.self(), JsonConstants.nav_position_longitude, 172.5);
 		p.handle(model);
 		Object decl = model.getValue(vessels_dot_self_dot+nav_magneticVariation);
 		assertNull( decl);

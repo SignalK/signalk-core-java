@@ -53,7 +53,7 @@ public class DeltaToMapConverter {
 	 */
 	public SignalKModel  handle(Json node) throws Exception {
 		//avoid full signalk syntax
-		if(node.has(VESSELS))return null;
+		if(node.has(vessels))return null;
 		//deal with diff format
 		if(node.has(CONTEXT) && (node.has(UPDATES) || node.has(PUT))){
 			if(logger.isDebugEnabled())logger.debug("processing delta  "+node );
@@ -86,19 +86,19 @@ public class DeltaToMapConverter {
 		
 		
 	//grab values and add
-		Json array = update.at(VALUES);
+		Json array = update.at(values);
 		for(Json e : array.asJsonList()){
 			String key = e.at(PATH).asString();
-			//temp.put(ctx+"."+key, e.at(VALUE).getValue());
-			addRecursively(temp, ctx+dot+key, e.at(VALUE));
+			//temp.put(ctx+"."+key, e.at(value).getValue());
+			addRecursively(temp, ctx+dot+key, e.at(value));
 			
-			if(update.has(SOURCE)){
+			if(update.has(source)){
 				//TODO:generate a proper src ref.
-				addRecursively(temp, ctx+dot+key, update.at(SOURCE));
+				addRecursively(temp, ctx+dot+key, update.at(source));
 			}
 			
-			if(update.has(TIMESTAMP)){
-				String ts = update.at(TIMESTAMP).asString();
+			if(update.has(timestamp)){
+				String ts = update.at(timestamp).asString();
 				//TODO: should validate the timestamp
 				temp.put(ctx+dot+key+dot+timestamp, ts);
 			}
@@ -116,7 +116,7 @@ public class DeltaToMapConverter {
 			temp.put(ctx+dot+j.getParentKey(), j);
 		}else {
 			for(Json child: j.asJsonMap().values()){
-				if(VALUE.equals(j.getParentKey())){
+				if(value.equals(j.getParentKey())){
 					addRecursively(temp, ctx, child);
 				}else{
 					addRecursively(temp, ctx+dot+j.getParentKey(), child);

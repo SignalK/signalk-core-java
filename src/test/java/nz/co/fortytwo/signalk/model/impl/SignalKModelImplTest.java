@@ -23,7 +23,6 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
@@ -45,22 +44,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
 import java.util.SortedMap;
 
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
-import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.TestHelper;
 import nz.co.fortytwo.signalk.util.Util;
-import nz.co.fortytwo.signalk.util.TestHelper;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -86,7 +80,7 @@ public class SignalKModelImplTest {
 		
 		signalk.putValue("vessels.self.environment.wind.angleApparent", 256.0d);
 		
-		assertEquals(256.0, signalk.getValue(vessels+dot+JsonConstants.SELF+dot+env_wind_angleApparent));
+		assertEquals(256.0, signalk.getValue(vessels+dot+self+dot+env_wind_angleApparent));
 		
 		assertEquals(256.0, signalk.getValue(vessels+dot+"self"+dot+env_wind_angleApparent));
 		
@@ -149,7 +143,7 @@ public class SignalKModelImplTest {
 		assertNull(signalk.get(vessels_dot_self_dot+ env_wind));
 		
 		JsonSerializer ser = new JsonSerializer();
-		Object wind = ser.read("{\"vessels\":{\""+SELF+"\":{\"environment\":{\"airPressureChangeRateAlarm\": {\"value\":0.0000000000},\"airPressure\": {\"value\":1024.0000000000},\"waterTemp\": {\"value\":0.0000000000},\"wind\":{\"speedAlarm\": {\"value\":0.0000000000},\"directionChangeAlarm\": {\"value\":0.0000000000},\"angleApparent\": {\"value\":0.0000000000},\"directionTrue\": {\"value\":256.3},\"speedApparent\": {\"value\":0.0000000000},\"speedTrue\": {\"value\":7.68}}}}}}");
+		Object wind = ser.read("{\"vessels\":{\""+self+"\":{\"environment\":{\"airPressureChangeRateAlarm\": {\"value\":0.0000000000},\"airPressure\": {\"value\":1024.0000000000},\"waterTemp\": {\"value\":0.0000000000},\"wind\":{\"speedAlarm\": {\"value\":0.0000000000},\"directionChangeAlarm\": {\"value\":0.0000000000},\"angleApparent\": {\"value\":0.0000000000},\"directionTrue\": {\"value\":256.3},\"speedApparent\": {\"value\":0.0000000000},\"speedTrue\": {\"value\":7.68}}}}}}");
 		signalk.putAll((SortedMap<String, Object>) wind);
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ env_wind).size()>0);
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
@@ -163,7 +157,7 @@ public class SignalKModelImplTest {
 		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
 		
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
-		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue+dot+SignalKConstants.value,256.3);
+		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue+dot+value,256.3);
 		logger.debug(signalk);
 		
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
@@ -192,7 +186,7 @@ public class SignalKModelImplTest {
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
 		assertEquals(256.3,dirTrue,0.000001);
 		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
-		assertEquals("unknown", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+SignalKConstants.source));
+		assertEquals("unknown", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
 		
 	}
 	@Test

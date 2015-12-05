@@ -84,7 +84,7 @@ public class GenerateSignalkSamples {
 				k = k.replace("(^[A-Za-z0-9]+$)", "366982330");
 				print(k);
 				Json tmp = data;
-				Json attr = Json.object("_mode", 644,"_owner","self", "_group", "self");
+				Json attr = Json.object("_mode", 644,"_owner","SignalKConstants.self", "_group", "SignalKConstants.self");
 				String dt = DateTime.now().toDateTimeISO().toString();
 				tmp.set("sources",Json.object("_attr", attr, "gps_0183_RMC", Json.object("bus", "/dev/ttyUSB1", "src",
 						"$GPRMC,033025.000,A,4115.6426,S,17316.9300,E,0.05,245.69,090113,,*15", "timestamp", dt)));

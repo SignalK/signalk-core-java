@@ -99,8 +99,8 @@ public class RestApiHandlerTest {
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
 		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
-		//assertEquals(-41.2936935424,reply.get(vessels).at(self_dot+nav_position_latitude));
-		//assertEquals(173.2470855712,reply.get(vessels).at(self_dot+nav_position_longitude));
+		//assertEquals(-41.2936935424,reply.get(vessels).at(SignalKConstants.self_dot+nav_position_latitude));
+		//assertEquals(173.2470855712,reply.get(vessels).at(SignalKConstants.self_dot+nav_position_longitude));
 		assertNull(reply); 
 		verify(mockedResponse).setStatus(HttpServletResponse.SC_NOT_FOUND);
 		//assertEquals(200, mockedResponse.getStatus());
@@ -118,8 +118,8 @@ public class RestApiHandlerTest {
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
 		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
-		//assertEquals(-41.2936935424,reply.get(vessels).at(self_dot+nav_position_latitude));
-		//assertEquals(173.2470855712,reply.get(vessels).at(self_dot+nav_position_longitude));
+		//assertEquals(-41.2936935424,reply.get(vessels).at(SignalKConstants.self_dot+nav_position_latitude));
+		//assertEquals(173.2470855712,reply.get(vessels).at(SignalKConstants.self_dot+nav_position_longitude));
 		assertNull(reply); 
 		verify(mockedResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		//assertEquals(200, mockedResponse.getStatus());
@@ -138,8 +138,8 @@ public class RestApiHandlerTest {
 		HttpServletResponse  mockedResponse = Mockito.mock(HttpServletResponse.class);
 		Json reply = (Json)api.processGet(mockedRequest, mockedResponse, model);
 		logger.debug("Repy="+reply);
-		//assertEquals(-41.2936935424,reply.get(vessels).at(self_dot+nav_position_latitude));
-		//assertEquals(173.2470855712,reply.get(vessels).at(self_dot+nav_position_longitude));
+		//assertEquals(-41.2936935424,reply.get(vessels).at(SignalKConstants.self_dot+nav_position_latitude));
+		//assertEquals(173.2470855712,reply.get(vessels).at(SignalKConstants.self_dot+nav_position_longitude));
 		assertNull(reply); 
 		verify(mockedResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		//assertEquals(200, mockedResponse.getStatus());

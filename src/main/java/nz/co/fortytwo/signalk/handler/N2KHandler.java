@@ -22,7 +22,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.SOURCE;
+import static nz.co.fortytwo.signalk.util.JsonConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
@@ -98,7 +98,7 @@ public class N2KHandler {
 						filter=filter.replaceAll("([A-Za-z)]) ([(A-Za-z])", "$1_$2");
 						logger.debug("Converted filter:"+filter);
 					}
-					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(SOURCE).getValue().toString().replaceAll(" ", "_"));
+					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(source).getValue().toString().replaceAll(" ", "_"));
 					String node = j.at(NODE).asString();
 					String type = null;
 					if(j.has(TYPE)){

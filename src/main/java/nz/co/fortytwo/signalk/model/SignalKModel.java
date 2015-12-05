@@ -39,7 +39,7 @@ public interface SignalKModel{
 	/**
 	 * Return a subtree from the Model - the tree is read-only, but is live
 	 * and will be updated as the Model changes.
-	 * @param key the key to retrieve - for example, "vessels.self" will return
+	 * @param key the key to retrieve - for example, "vessels.SignalKConstants.self" will return
 	 * a subtree that may contain keys beginning "navigation", "environment" and so on.
 	 */
 	public abstract NavigableSet<String> getTree(String key);
@@ -88,7 +88,7 @@ public interface SignalKModel{
 	/**
 	 * Return a submap from the Model - the tree is read-only, but is live
 	 * and will be updated as the Model changes.
-	 * @param key the key to retrieve - for example, "vessels.self" will return
+	 * @param key the key to retrieve - for example, "vessels.SignalKConstants.self" will return
 	 * a submap that may contain keys beginning "navigation", "environment" and so on.
 	 */
 	 

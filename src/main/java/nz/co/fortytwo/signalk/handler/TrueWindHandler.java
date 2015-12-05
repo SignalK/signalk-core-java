@@ -23,7 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -66,11 +66,11 @@ public class TrueWindHandler {
 					
 					if (!Double.isNaN(windCalc[1])) {
 						//map.put(Constants.WIND_DIR_TRUE, round(trueDirection, 2));
-						signalkModel.put(vessels_dot_self_dot+ env_wind_directionTrue, Util.round(windCalc[1], 2), SELF, Util.getIsoTimeString());
+						signalkModel.put(vessels_dot_self_dot+ env_wind_directionTrue, Util.round(windCalc[1], 2), self, Util.getIsoTimeString());
 					}
 					if (!Double.isNaN(windCalc[0])) {
 						//map.put(Constants.WIND_SPEED_TRUE, round(trueWindSpeed, 2));
-						signalkModel.put(vessels_dot_self_dot+env_wind_speedTrue, Util.round(windCalc[0], 2), SELF, Util.getIsoTimeString());
+						signalkModel.put(vessels_dot_self_dot+env_wind_speedTrue, Util.round(windCalc[0], 2), self, Util.getIsoTimeString());
 					}
 				}
 

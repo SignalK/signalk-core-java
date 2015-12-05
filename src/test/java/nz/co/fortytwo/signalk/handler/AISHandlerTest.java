@@ -24,10 +24,10 @@
 
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.util.JsonConstants;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class AISHandlerTest{
 	
 	@Test
 	public void shouldPassJson() throws Exception{
-		 String jStr = "{\"vessels\":{\""+JsonConstants.SELF+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
+		 String jStr = "{\"vessels\":{\""+self+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
 		 AISHandler processor = new AISHandler();
 		
 		 SignalKModel model =  processor.handle(jStr);

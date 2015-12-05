@@ -23,16 +23,13 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
-import static nz.co.fortytwo.signalk.util.JsonConstants.DOT;
-import static nz.co.fortytwo.signalk.util.JsonConstants.LIST;
-import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.regex.Pattern;
 
 import mjson.Json;
@@ -61,8 +58,29 @@ public class JsonListHandler {
 		//get a cache all the signalk keys we know about
 		for(Field f: SignalKConstants.class.getFields()){
 			try {
-				keys.add(f.get(null).toString());
-				if(logger.isDebugEnabled())logger.debug("Added "+f.get(null).toString());
+				//we only want the model keys
+				
+				if(f.getName().startsWith("nav")
+					||f.getName().startsWith("resources")
+					||f.getName().startsWith("env")
+					||f.getName().startsWith("alarms")
+					||f.getName().startsWith("communication")
+					||f.getName().startsWith("design")
+					||f.getName().startsWith("electrical")
+					||f.getName().startsWith("performance")
+					||f.getName().startsWith("propulsion")
+					||f.getName().startsWith("sensors")
+					||f.getName().startsWith("sources")
+					||f.getName().startsWith("steering")
+					||f.getName().startsWith("tanks")
+					||f.getName().startsWith("uuid")
+					||f.getName().startsWith("mmsi")
+					||f.getName().startsWith("name")){
+						keys.add(f.get(null).toString());
+						if(logger.isDebugEnabled())logger.debug("Added "+f.get(null).toString());
+					}else{
+						if(logger.isDebugEnabled())logger.debug("AVOID: "+f.get(null).toString());
+					}
 			} catch (IllegalArgumentException e) {
 				logger.warn(e.getMessage());
 			} catch (IllegalAccessException e) {

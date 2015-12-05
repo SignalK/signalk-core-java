@@ -27,7 +27,7 @@ public class Constants {
 
 	public static final String VERSION = "config.server.version";
 	
-	public static final String SELF = "config.server.vessel.uuid";
+	public static final String UUID = "config.server.vessel.uuid";
 	
 	//camel output destination types
 	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";
@@ -47,14 +47,13 @@ public class Constants {
 	public static final String UID = "UID";
 	public static final String IMU = "IMU";
 	public static final String MEGA = "MEGA";
-
-	public static final String MERGE_MODEL = "MRG"; 
+ 
 		
 	// config constants
 	public static final String HOSTNAME ="config.server.hostname";
 
 	public static final String USBDRIVE = "config.server.files.usb.usbdrive";
-	public static final String CLOCK_SOURCE = "config.server.clock.source";
+	public static final String CLOCK_source = "config.server.clock.source";
 	
 	//serial ports
 	public static final String SERIAL_PORTS = "config.server.serial.ports";
@@ -114,9 +113,6 @@ public class Constants {
 	public static final String HAWTIO_WAR = "config.hawtio.war";
 	public static final String HAWTIO_START = "config.hawtio.start";
 
-	
-	
-	
 	
 	public Constants() {
 		// TODO Auto-generated constructor stub

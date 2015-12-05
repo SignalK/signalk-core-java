@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import mjson.Json;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 
 import org.apache.log4j.Logger;
 
@@ -92,11 +93,11 @@ public class FullToDeltaConverter {
 			return list;
 		}
 		// deal with diff format
-		if (node.has(VESSELS)) {
+		if (node.has(vessels)) {
 			if(logger.isDebugEnabled())logger.debug("processing full format  " + node);
 			// find the first branch that splits
 			//Json ctx = getContext();
-			for(Json vessel : node.at(VESSELS).asJsonMap().values()){
+			for(Json vessel : node.at(vessels).asJsonMap().values()){
 				String context = vessel.getPath();
 				// process it
 
@@ -154,9 +155,9 @@ public class FullToDeltaConverter {
 			if (js == null)
 				continue;
 			
-			if (js.isObject() && js.has(SOURCE)) {
+			if (js.isObject() && js.has(source)) {
 				logger.debug("Process source : "+js);
-				Json jsSrc = js.at(SOURCE);
+				Json jsSrc = js.at(source);
 				//has it changed
 				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())){
 						
@@ -168,10 +169,10 @@ public class FullToDeltaConverter {
 					//new entry
 					entry=Json.object();
 					values = Json.array();
-					entry.set(VALUES, values);
-					entry.set(SOURCE, jsSrc.getValue());
-					if(js.has(TIMESTAMP)){
-						entry.set(TIMESTAMP, js.at(TIMESTAMP));
+					entry.set(SignalKConstants.values, values);
+					entry.set(source, jsSrc.getValue());
+					if(js.has(timestamp)){
+						entry.set(timestamp, js.at(timestamp));
 					}
 				}
 				
@@ -182,16 +183,16 @@ public class FullToDeltaConverter {
 				String path = js.getPath().substring(prefix);
 				Json value = Json.object();
 				value.set(PATH, path);
-				value.set(VALUE, js);
+				value.set(SignalKConstants.value, js);
 				values.add(value);
 				continue;
 			}
-			if (js.isObject() && js.has(VALUE)){
+			if (js.isObject() && js.has(SignalKConstants.value)){
 				logger.debug("Process value : "+js);
 				String path = js.getPath().substring(prefix);
 				Json value = Json.object();
 				value.set(PATH, path);
-				value.set(VALUE, js.at(VALUE));
+				value.set(SignalKConstants.value, js.at(SignalKConstants.value));
 				
 				if (js.has(meta)){
 					logger.debug("Process meta : "+js);
@@ -202,16 +203,16 @@ public class FullToDeltaConverter {
 				continue;
 			}
 			
-			if (js.isObject() && js.has(SOURCE) && !js.has(VALUE)) {
+			if (js.isObject() && js.has(source) && !js.has(SignalKConstants.value)) {
 				logger.debug("Process value object : "+js);
 				String path = js.getPath().substring(prefix);
 				Json value = Json.object();
 				value.set(PATH, path);
-				js.delAt(SOURCE);
-				js.delAt(TIMESTAMP);
+				js.delAt(source);
+				js.delAt(timestamp);
 				js.delAt(attr);
 				//js.delAt(meta);
-				value.set(VALUE, js);
+				value.set(SignalKConstants.value, js);
 				if (js.has(meta)){
 					logger.debug("Process meta : "+js);
 					value.set(meta, js.at(meta));
@@ -225,14 +226,14 @@ public class FullToDeltaConverter {
 				String path = js.getPath().substring(prefix);
 				Json value = Json.object();
 				value.set(PATH, path);
-				value.set(VALUE, js);
+				value.set(SignalKConstants.value, js);
 				values.add(value);
 				continue;
 			}
 			if (js.isObject()) {
-				if(js.getParentKey().equals(TIMESTAMP))continue;
-				if(js.getParentKey().equals(SOURCE))continue;
-				if(js.getParentKey().equals(VALUE))continue;
+				if(js.getParentKey().equals(timestamp))continue;
+				if(js.getParentKey().equals(source))continue;
+				if(js.getParentKey().equals(SignalKConstants.value))continue;
 				logger.debug("Recurse : "+js);
 				getEntries(updates, values, jsSrcRef, js, prefix);
 			}
@@ -242,7 +243,7 @@ public class FullToDeltaConverter {
 			updates.add(entry);
 		}else{
 			if(values.asList().size()>0){
-				entry.set(VALUES, values);
+				entry.set(SignalKConstants.values, values);
 				updates.add(entry);
 			}
 		}

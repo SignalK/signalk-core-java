@@ -120,9 +120,9 @@ public class SignalKModelFactory {
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				String self = (String) model.get(Constants.SELF);
+				String self = (String) model.get(Constants.UUID);
 				
-				Util.setSelf(self);
+				Util.setSelf(SignalKConstants.self);
 				model.put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
 				
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
@@ -142,10 +142,10 @@ public class SignalKModelFactory {
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				model.put(Constants.SELF,self);
+				model.put(Constants.UUID,self);
 				Util.setSelf(self);
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
-				logger.info("   SELF set to: "+self);
+				logger.info("   self set to: "+self);
 			}catch(Exception ex){
 				logger.error(ex.getMessage(),ex);
 			}

@@ -95,7 +95,7 @@ public class NMEAHandler{
 		//SentenceFactory.getInstance().registerParser("BVE", net.sf.marineapi.nmea.parser.BVEParser.class);
 		//SentenceFactory.getInstance().registerParser("XDR", net.sf.marineapi.nmea.parser.CruzproXDRParser.class);
 		try {
-			if("rmc".equals(Util.getConfigProperty(Constants.CLOCK_SOURCE))){
+			if("rmc".equals(Util.getConfigProperty(Constants.CLOCK_source))){
 				rmcClock=true;
 			}
 		} catch (Exception e) {
@@ -196,7 +196,7 @@ public class NMEAHandler{
 
 	/**
 	 * Dispatch data to all listeners.
-	 * Puts the nmea string into self.sources.nmea.0183.[sentenceid]
+	 * Puts the nmea string into SignalKConstants.self.sources.nmea.0183.[sentenceid]
 	 * Processes the nmea into signalk position, heading, etc.
 	 * 
 	 * @param map
@@ -358,20 +358,20 @@ public class NMEAHandler{
 							sk.put(json, propulsion_id_fuelUsageRate , sen.getFuelUseRateUnitsPerHour(), "output");
 							
 							// map.put(Constants.FUEL_USED, sen.getFuelUsedOnTrip());
-							// sk.put(tempSelfNode, JsonConstants.tank_level, sen.getFuelRemaining(), "output");
+							// sk.put(tempSignalKConstants.selfNode, JsonConstants.tank_level, sen.getFuelRemaining(), "output");
 						}
 						if (sen.isEngineRpm()) {
 							sk.put(json, propulsion_id_rpm , sen.getEngineRpm(), "output");
 							// map.put(Constants.ENGINE_HOURS, sen.getEngineHours());
-							//sk.put(tempSelfNode, JsonConstants.propulsion_hours, sen.getEngineHours(), "output");
+							//sk.put(tempSignalKConstants.selfNode, JsonConstants.propulsion_hours, sen.getEngineHours(), "output");
 							// map.put(Constants.ENGINE_MINUTES, sen.getEngineMinutes());
-							//sk.put(tempSelfNode, JsonConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
+							//sk.put(tempSignalKConstants.selfNode, JsonConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
 	
 						}
 						if (sen.isTempGuage()) {
 							sk.put(json, propulsion_id_engineTemperature , sen.getEngineTemp(), "output");
 							// map.put(Constants.ENGINE_VOLTS, sen.getVoltage());
-							//sk.put(tempSelfNode, JsonConstants.propulsion_engineVolts, sen.getVoltage(), "output");
+							//sk.put(tempSignalKConstants.selfNode, JsonConstants.propulsion_engineVolts, sen.getVoltage(), "output");
 							// map.put(Constants.ENGINE_TEMP_HIGH_ALARM, sen.getHighTempAlarmValue());
 							// map.put(Constants.ENGINE_TEMP_LOW_ALARM, sen.getLowTempAlarmValue());
 	

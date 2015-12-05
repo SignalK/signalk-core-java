@@ -83,7 +83,7 @@ public class JsonGetHandlerTest {
 		SignalKModel reply = processor.handle(model,json);
 		logger.debug(reply);
 		assertNotNull(reply);
-		//self
+		//SignalKConstants.self
 		assertEquals(-41.2936935424,reply.get(vessels_dot_self_dot+nav_position_latitude));
 		assertEquals(173.2470855712,reply.get(vessels_dot_self_dot+nav_position_longitude));
 		//other
@@ -116,7 +116,7 @@ public class JsonGetHandlerTest {
 		SignalKModel reply = processor.handle(model,json);
 		logger.debug(reply);
 		assertNotNull(reply);
-		//self
+		//SignalKConstants.self
 		assertEquals(-41.2936935424,reply.get(vessels_dot_self_dot+nav_position_latitude));
 		assertEquals(173.2470855712,reply.get(vessels_dot_self_dot+nav_position_longitude));
 		//other
@@ -137,7 +137,7 @@ public class JsonGetHandlerTest {
 		SignalKModel reply = processor.handle(model,json);
 		logger.debug(reply);
 		assertNotNull(reply);
-		//self
+		//SignalKConstants.self
 		assertEquals(-41.2936935424,reply.get(vessels_dot_self_dot+nav_position_latitude));
 		assertEquals(173.2470855712,reply.get(vessels_dot_self_dot+nav_position_longitude));
 		//other

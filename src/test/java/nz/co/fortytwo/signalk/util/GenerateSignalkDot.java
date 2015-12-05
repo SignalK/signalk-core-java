@@ -42,6 +42,7 @@ import mjson.Json.Schema;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class GenerateSignalkDot {
@@ -55,6 +56,7 @@ public class GenerateSignalkDot {
 	}
 
 	@Test
+	@Ignore
 	public void test() throws Exception {
 
 		File schemaFile = new File("./../specification/schemas/signalk.json");

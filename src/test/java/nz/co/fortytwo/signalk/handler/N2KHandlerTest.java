@@ -4,9 +4,9 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.communication_callsig
 import static nz.co.fortytwo.signalk.util.SignalKConstants.design_beam;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_date;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time_date;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_time_time;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
@@ -68,8 +68,8 @@ public class N2KHandlerTest {
 		N2KHandler handler = new N2KHandler();
 		SignalKModel model = handler.handle(json);
 		logger.debug("Model:"+model);
-		assertEquals("16:04:00", model.getValue(vessels_dot_self_dot+env_time));
-		assertEquals("2013.10.08", model.getValue(vessels_dot_self_dot+env_date));
+		assertEquals("16:04:00", model.getValue(vessels_dot_self_dot+env_time_time));
+		assertEquals("2013.10.08", model.getValue(vessels_dot_self_dot+env_time_date));
 	}
 	
 	@Test

@@ -24,7 +24,7 @@
 
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
@@ -58,7 +58,7 @@ public class NMEAHandlerTest {
 
 	@Test
 	public void shouldPassJson(){
-		 String jStr = "{\"vessels\":{\""+SELF+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
+		 String jStr = "{\"vessels\":{\""+self+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
 		 NMEAHandler processor = new NMEAHandler();
 		
 		 SignalKModel model = processor.handle(jStr);

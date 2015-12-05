@@ -28,17 +28,20 @@ package nz.co.fortytwo.signalk.util;
 public class SignalKConstants {
 
 	//fixed
-	public static final String self_str =  "self";
-	public static String self = self_str;
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
-	public static  String vessels_dot_self_dot=vessels+dot+self+dot;
+	public static final String self_str =  "self";
+	
+	public static String self = self_str;
+	public static String vessels_dot_self_dot=vessels+dot+self+dot;
+	public static String vessels_dot_self=vessels+dot+self;
+	
 	public static final String version = "version";
 	public static final String timestamp = "timestamp";
 	public static final String source = "source";
 	public static final String value = "value";
 	
-	public static final String vessels_id = "vessels.*";
+	
 	
 	public static final String meta = "meta";
 	public static final String zones = "zones";
@@ -69,9 +72,75 @@ public class SignalKConstants {
 	public static final String stompPort = "stomp";
 	public static final String mqttPort = "mqtt";
 	
+	
+	//public static final String DOT = ".";
+	public static final String MSG_TYPE = "MSG_TYPE";
+	public static final String SERIAL = "SERIAL";
+	public static final String EXTERNAL_IP = "EXTERNAL_IP";
+	public static final String INTERNAL_IP = "INTERNAL_IP";
+	public static final String MSG_SERIAL_PORT = "MSG_SERIAL_PORT";
+	public static final String MSG_SRC_IP = "MSG_SRC_IP";
+	public static final String MSG_SRC_IP_PORT = "MSG_SRC_IP_PORT";
+	public static final String MSG_APPROVAL = "MSG_APPROVAL";
+	public static final String REQUIRED = "REQUIRED";
+	public static final String CONFIG_ACTION = "CONFIG_ACTION";
+	public static final String CONFIG_ACTION_READ = "CONFIG_ACTION_READ";
+	public static final String CONFIG_ACTION_SAVE = "CONFIG_ACTION_SAVE";
+	
+	public static final String CONFIG = "config";
+	
+	public static final String CONTEXT = "context";
+	public static final String UPDATES = "updates";
+	public static final String SUBSCRIBE = "subscribe";
+	public static final String UNSUBSCRIBE = "unsubscribe";
+	public static final String LIST = "list";
+	public static final String GET = "get";
+	public static final String PUT = "put";
+	public static final String PATHLIST = "pathlist";
+	//public static final String source = "source";
+	//public static final String DEVICE = "device";
+	//public static final String timestamp = "timestamp";
+	//public static final String SRC = "src";
+	//public static final String PGN = "pgn";
+	//public static final String value = "value";
+	
+	public static final String PATH = "path";
+	public static final String PERIOD = "period";
+	public static final String MIN_PERIOD = "minPeriod";
+	public static final String SIGNALK_FORMAT="SIGNALK_FORMAT";
+	public static final String FORMAT="format";
+	public static final String FORMAT_DELTA="delta";
+	public static final String FORMAT_FULL="full";
+	public static final String POLICY="policy";
+	public static final String POLICY_FIXED = "fixed";
+	public static final String POLICY_INSTANT = "instant";
+	public static final String POLICY_IDEAL = "ideal";
+	
+	public static final String N2K_MESSAGE = "N2K_MESSAGE";
+	
+	public static final String SIGNALK_AUTH = "/signalk/v1/auth";
+	public static final String SIGNALK_API = "/signalk/v1/api";
+	public static final String SIGNALK_ENDPOINTS = "/signalk/endpoints/v1";
+	public static final String SIGNALK_WS = "/signalk/v1/stream";
+	public static final String SIGNALK_INSTALL = "/signalk/v1/install";
+	public static final String SIGNALK_UPGRADE = "/signalk/v1/upgrade";
+	
+	//public static final String name = "name";
+	//public static final String mmsi = "mmsi";
+
+	public static final String url="url";
+	public static final String uuid="uuid";
+	public static final String vessels_id = "vessels.*";
+	public static final String pgn = "pgn";
+	public static final String values = "values";
+	
 	//temp
-	public static final String env_time = "environment.time";
-	public static final String env_date = "environment.date";
+	public static final String env_time_time = "environment.time.time";
+	public static final String env_time_date = "environment.time.date";
+	public static final String env_time_millis = "environment.time.millis";
+	public static final String env_time_utc = "environment.time.utc";
+	public static final String env_timezone = "environment.time.timezone";
+
 	//generated
 	public static final String resources="resources";
 	public static final String resources_charts="resources.charts";
@@ -392,9 +461,9 @@ public class SignalKConstants {
 	public static final String nav_gnss_geoidalSeparation="navigation.gnss.geoidalSeparation";
 	public static final String nav_gnss_horizontalDilution="navigation.gnss.horizontalDilution";
 	public static final String nav_gnss_integrity="navigation.gnss.integrity";
-	public static final String nav_gnss_integrity_value="navigation.gnss.integrity.value";
+
 	public static final String nav_gnss_methodQuality="navigation.gnss.methodQuality";
-	public static final String nav_gnss_methodQuality_value="navigation.gnss.methodQuality.value";
+	
 	public static final String nav_gnss_positionDilution="navigation.gnss.positionDilution";
 	public static final String nav_gnss_satellites="navigation.gnss.satellites";
 	public static final String nav_headingMagnetic="navigation.headingMagnetic";
@@ -410,7 +479,7 @@ public class SignalKConstants {
 	public static final String nav_speedOverGround="navigation.speedOverGround";
 	public static final String nav_speedThroughWater="navigation.speedThroughWater";
 	public static final String nav_state="navigation.state";
-	public static final String nav_state_value="navigation.state.value";
+
 	public static final String performance="performance";
 	public static final String performance_beatAngle="performance.beatAngle";
 	public static final String performance_beatAngleTargetSpeed="performance.beatAngleTargetSpeed";
@@ -428,14 +497,14 @@ public class SignalKConstants {
 	public static final String propulsion="propulsion";
 	public static final String propulsion_id="propulsion.*";
 	public static final String propulsion_id_engineType="propulsion.*.engineType";
-	public static final String propulsion_id_engineType_value="propulsion.*.engineType.value";
+	
 	public static final String propulsion_id_exhaustTemperature="propulsion.*.exhaustTemperature";
 	public static final String propulsion_id_fuelRate="propulsion.*.fuelRate";
 	public static final String propulsion_id_oilPressure="propulsion.*.oilPressure";
 	public static final String propulsion_id_oilTemperature="propulsion.*.oilTemperature";
 	public static final String propulsion_id_revolutions="propulsion.*.revolutions";
 	public static final String propulsion_id_state="propulsion.*.state";
-	public static final String propulsion_id_state_value="propulsion.*.state.value";
+
 	public static final String propulsion_id_temperature="propulsion.*.temperature";
 	public static final String propulsion_id_waterTemperature="propulsion.*.waterTemperature";
 	public static final String sensors="sensors";
@@ -461,15 +530,15 @@ public class SignalKConstants {
 	public static final String steering_autopilot_deadZone="steering.autopilot.deadZone";
 	public static final String steering_autopilot_gain="steering.autopilot.gain";
 	public static final String steering_autopilot_headingSource="steering.autopilot.headingSource";
-	public static final String steering_autopilot_headingSource_value="steering.autopilot.headingSource.value";
+	
 	public static final String steering_autopilot_maxDriveCurrent="steering.autopilot.maxDriveCurrent";
 	public static final String steering_autopilot_maxDriveRate="steering.autopilot.maxDriveRate";
 	public static final String steering_autopilot_mode="steering.autopilot.mode";
-	public static final String steering_autopilot_mode_value="steering.autopilot.mode.value";
+	
 	public static final String steering_autopilot_portLock="steering.autopilot.portLock";
 	public static final String steering_autopilot_starboardLock="steering.autopilot.starboardLock";
 	public static final String steering_autopilot_state="steering.autopilot.state";
-	public static final String steering_autopilot_state_value="steering.autopilot.state.value";
+	
 	public static final String steering_autopilot_targetHeadingMagnetic="steering.autopilot.targetHeadingMagnetic";
 	public static final String steering_autopilot_targetHeadingNorth="steering.autopilot.targetHeadingNorth";
 	public static final String steering_rudderAngle="steering.rudderAngle";
@@ -480,8 +549,7 @@ public class SignalKConstants {
 	public static final String tanks_id_level="tanks.*.level";
 	public static final String tanks_id_name="tanks.*.name";
 	public static final String tanks_id_type="tanks.*.type";
-	public static final String url="url";
-	public static final String uuid="uuid";
+	
 	
 	
 

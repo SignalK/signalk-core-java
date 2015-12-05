@@ -25,12 +25,12 @@
 package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self_str;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.InetAddress;
@@ -38,14 +38,10 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import mjson.Json;
@@ -79,10 +75,10 @@ public class Util {
 	public static final double R = 6372800; // In meters
 
 	private static Pattern selfMatch = Pattern.compile("\\.self\\.");
-	private static String dot_self_dot = dot + JsonConstants.SELF + dot;
+	private static String dot_self_dot = dot + self + dot;
 
 	private static Pattern selfEndMatch = Pattern.compile("\\.self$");
-	private static String dot_self = dot + JsonConstants.SELF;
+	private static String dot_self = dot + self;
 
 	/**
 	 * Smooth the data a bit
@@ -110,8 +106,8 @@ public class Util {
 		model = SignalKModelFactory.getInstance();
 		Util.setDefaults(model);
 		SignalKModelFactory.loadConfig(model);
-		String self = (String) model.get(Constants.SELF);
-		Util.setSelf(self);
+		String mySelf = (String) model.get(Constants.UUID);
+		Util.setSelf(mySelf);
 	}
 	
 	/**
@@ -136,7 +132,7 @@ public class Util {
 	 */
 	public static void setDefaults(SignalKModel model) {
 		// populate sensible defaults here
-		model.put(Constants.SELF, "self");
+		model.put(Constants.UUID, "self");
 		model.put(Constants.WEBSOCKET_PORT, 3000);
 		model.put(Constants.REST_PORT, 8080);
 		model.put(Constants.CFG_DIR, "./conf/");
@@ -163,7 +159,7 @@ public class Util {
 		model.put(Constants.UDP_NMEA_PORT, 55556);
 		model.put(Constants.STOMP_PORT, 61613);
 		model.put(Constants.MQTT_PORT, 1883);
-		model.put(Constants.CLOCK_SOURCE, "system");
+		model.put(Constants.CLOCK_source, "system");
 		model.put(Constants.HAWTIO_PORT, 8000);
 		model.put(Constants.HAWTIO_AUTHENTICATE, false);
 		model.put(Constants.HAWTIO_CONTEXT, "/hawtio");
@@ -216,7 +212,7 @@ public class Util {
 		Json msg = Json.object();
 		msg.set(SignalKConstants.version, getVersion());
 		msg.set(SignalKConstants.timestamp, getIsoTimeString());
-		msg.set(SignalKConstants.self_str, JsonConstants.SELF);
+		msg.set(self_str, Constants.UUID);
 		return msg;
 	}
 
@@ -378,7 +374,7 @@ public class Util {
 
 	public static String sanitizePath(String newPath) {
 		newPath = newPath.replace('/', '.');
-		if (newPath.startsWith(JsonConstants.DOT))
+		if (newPath.startsWith(SignalKConstants.dot))
 			newPath = newPath.substring(1);
 		if (!newPath.endsWith("*") || !newPath.endsWith("?"))
 			newPath = newPath + "*";
@@ -517,11 +513,12 @@ public class Util {
 	}
 
 	public static void setSelf(String self) {
-		JsonConstants.SELF = self;
-		dot_self_dot = dot + JsonConstants.SELF + dot;
-		dot_self = dot + JsonConstants.SELF;
+		//self = self;
+		dot_self_dot = dot + self + dot;
+		dot_self = dot + self;
 		SignalKConstants.self = self;
 		SignalKConstants.vessels_dot_self_dot = vessels + dot + self + dot;
+		SignalKConstants.vessels_dot_self = vessels + dot + self;
 	}
 
 	public static boolean sameNetwork(String localAddress, String remoteAddress)

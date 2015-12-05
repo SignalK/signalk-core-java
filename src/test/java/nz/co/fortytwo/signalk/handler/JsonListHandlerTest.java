@@ -53,7 +53,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertTrue(reply.asList().size()>10); 
+		assertEquals(55,reply.asList().size());
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertTrue(reply.asList().size()>4);
+		assertEquals(5,reply.asList().size());
 	}
 	
 	@Test
@@ -75,7 +75,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertTrue(reply.asList().size()>4);
+		assertEquals(5,reply.asList().size());
 	}
 	@Test
 	public void shouldProduceSpecificPathList() throws Exception {
@@ -86,7 +86,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertTrue(reply.asList().size()==1);
+		assertEquals(1,reply.asList().size());
 	}
 
 }

@@ -52,7 +52,7 @@ public class UtilTest {
 	public void shouldGetWelcomeMsg(){
 		Json msg = Util.getWelcomeMsg();
 		logger.debug(msg);
-		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","self":"motu"}
+		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","SignalKConstants.self":"motu"}
 		assertTrue(msg.has(SignalKConstants.timestamp));
 		assertTrue(msg.has(SignalKConstants.version));
 		assertTrue(msg.has(SignalKConstants.self_str));
@@ -62,7 +62,7 @@ public class UtilTest {
 	public void shouldGetAddressesMsg() throws UnknownHostException{
 		Json msg = Util.getEndpoints("localhost");
 		logger.debug(msg);
-		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","self":"motu"}
+		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","SignalKConstants.self":"motu"}
 		assertTrue(msg.has(SignalKConstants.stompPort));
 		assertTrue(msg.has(SignalKConstants.mqttPort));
 		assertTrue(msg.has(SignalKConstants.websocketUrl));

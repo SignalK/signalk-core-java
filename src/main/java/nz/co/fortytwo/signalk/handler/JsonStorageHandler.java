@@ -27,13 +27,13 @@ import static nz.co.fortytwo.signalk.util.Constants.PAYLOAD;
 import static nz.co.fortytwo.signalk.util.Constants.STORAGE_ROOT;
 import static nz.co.fortytwo.signalk.util.Constants.STORAGE_URI;
 import static nz.co.fortytwo.signalk.util.JsonConstants.CONTEXT;
-import static nz.co.fortytwo.signalk.util.JsonConstants.DOT;
+
 import static nz.co.fortytwo.signalk.util.JsonConstants.PATH;
 import static nz.co.fortytwo.signalk.util.JsonConstants.PUT;
 import static nz.co.fortytwo.signalk.util.JsonConstants.UPDATES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUE;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VALUES;
-import static nz.co.fortytwo.signalk.util.JsonConstants.VESSELS;
+import static nz.co.fortytwo.signalk.util.JsonConstants.value;
+
+import static nz.co.fortytwo.signalk.util.JsonConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 
 import java.io.File;
@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 import mjson.Json;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
@@ -90,7 +92,7 @@ public class JsonStorageHandler {
 
 	public Json handle(Json node) throws Exception {
 		// avoid full signalk syntax
-		if (node.has(VESSELS))
+		if (node.has(vessels))
 			return null;
 		// deal with diff format
 		if (node.has(CONTEXT)) {
@@ -125,11 +127,11 @@ public class JsonStorageHandler {
 		// DateTime timestamp = DateTime.parse(ts,fmt);
 
 		// grab values and add
-		Json array = update.at(VALUES);
+		Json array = update.at(values);
 		for (Json e : array.asJsonList()) {
 			String key = e.at(PATH).asString();
-			// temp.put(ctx+"."+key, e.at(VALUE).getValue());
-			process( ctx + dot + key, e.at(VALUE));
+			// temp.put(ctx+"."+key, e.at(value).getValue());
+			process( ctx + dot + key, e.at(value));
 
 		}
 
@@ -141,7 +143,7 @@ public class JsonStorageHandler {
 			if (j.has(PAYLOAD)) {
 
 				String ext = getExtension(j);
-				String filePath = ctx.replace('.', '/') + DOT + ext;
+				String filePath = ctx.replace('.', '/') + SignalKConstants.dot + ext;
 
 				String payload = null;
 				if (j.at(PAYLOAD).isString()) {

@@ -336,7 +336,7 @@ public class JsonSerializer {
     public NavigableMap<String, Object> read(Json json) {
 		//get keys and recurse
     	ConcurrentSkipListMap<String, Object> map = new ConcurrentSkipListMap<String, Object>();
-    	if(json.has(JsonConstants.VESSELS) || json.has(JsonConstants.CONFIG)){
+    	if(json.has(JsonConstants.vessels) || json.has(JsonConstants.CONFIG)){
     		recurseJsonFull(json,map,"");
     	}
     	if(json.has(JsonConstants.UPDATES)){

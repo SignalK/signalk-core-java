@@ -43,7 +43,7 @@ import org.junit.Test;
 
 public class JsonStorageHandlerTest {
 
-	String jsonDiff = "{\"context\":\"resources\",\"put\":[{\"timestamp\":\"2015-03-23T01:57:01.856Z\",\"values\":[{\"path\":\"routes.self.currentTrack\",\"value\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\",\"mimetype\":\"application/vnd.geo+json\",\"payload\":{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[23.366832680000005,59.85969252999999],[23.367125929999997,59.85961481000001],[23.367415009999995,59.85953943999999]]},\"properties\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\"}}}}],\"source\":\"vessels.motu\"}]}";
+	String jsonDiff = "{\"context\":\"resources\",\"put\":[{\"timestamp\":\"2015-03-23T01:57:01.856Z\",\"values\":[{\"path\":\"routes.SignalKConstants.self.currentTrack\",\"value\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\",\"mimetype\":\"application/vnd.geo+json\",\"payload\":{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[23.366832680000005,59.85969252999999],[23.367125929999997,59.85961481000001],[23.367415009999995,59.85953943999999]]},\"properties\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\"}}}}],\"source\":\"vessels.motu\"}]}";
 	
 	private static Logger logger = Logger.getLogger(JsonStorageHandlerTest.class);
 	@BeforeClass

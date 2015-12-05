@@ -27,66 +27,7 @@ package nz.co.fortytwo.signalk.util;
 public class JsonConstants extends SignalKConstants {
 
 	
-	public static final String DOT = ".";
-	public static final String MSG_TYPE = "MSG_TYPE";
-	public static final String SERIAL = "SERIAL";
-	public static final String EXTERNAL_IP = "EXTERNAL_IP";
-	public static final String INTERNAL_IP = "INTERNAL_IP";
-	public static final String MSG_SERIAL_PORT = "MSG_SERIAL_PORT";
-	public static final String MSG_SRC_IP = "MSG_SRC_IP";
-	public static final String MSG_SRC_IP_PORT = "MSG_SRC_IP_PORT";
-	public static final String MSG_APPROVAL = "MSG_APPROVAL";
-	public static final String REQUIRED = "REQUIRED";
-	public static final String CONFIG_ACTION = "CONFIG_ACTION";
-	public static final String CONFIG_ACTION_READ = "CONFIG_ACTION_READ";
-	public static final String CONFIG_ACTION_SAVE = "CONFIG_ACTION_SAVE";
 	
-	public static final String CONFIG = "config";
-	
-	public static final String VESSELS = "vessels";
-	public static String SELF = "self";
-	public static final String CONTEXT = "context";
-	public static final String UPDATES = "updates";
-	public static final String SUBSCRIBE = "subscribe";
-	public static final String UNSUBSCRIBE = "unsubscribe";
-	public static final String LIST = "list";
-	public static final String GET = "get";
-	public static final String PUT = "put";
-	public static final String PATHLIST = "pathlist";
-	public static final String SOURCE = "source";
-	public static final String DEVICE = "device";
-	public static final String TIMESTAMP = "timestamp";
-	public static final String SRC = "src";
-	public static final String PGN = "pgn";
-	public static final String VALUE = "value";
-	public static final String VALUES = "values";
-	public static final String PATH = "path";
-	public static final String PERIOD = "period";
-	public static final String MIN_PERIOD = "minPeriod";
-	public static final String SIGNALK_FORMAT="SIGNALK_FORMAT";
-	public static final String FORMAT="format";
-	public static final String FORMAT_DELTA="delta";
-	public static final String FORMAT_FULL="full";
-	public static final String POLICY="policy";
-	public static final String POLICY_FIXED = "fixed";
-	public static final String POLICY_INSTANT = "instant";
-	public static final String POLICY_IDEAL = "ideal";
-	
-	public static final String N2K_MESSAGE = "N2K_MESSAGE";
-	
-	
-	//public static final String name = "name";
-	//public static final String mmsi = "mmsi";
-	public static final String source = "source";
-	public static final String timezone = "timezone";
-	
-	
-	public static final String SIGNALK_AUTH = "/signalk/v1/auth";
-	public static final String SIGNALK_API = "/signalk/v1/api";
-	public static final String SIGNALK_ENDPOINTS = "/signalk/endpoints/v1";
-	public static final String SIGNALK_WS = "/signalk/v1/stream";
-	public static final String SIGNALK_INSTALL = "/signalk/v1/install";
-	public static final String SIGNALK_UPGRADE = "/signalk/v1/upgrade";
 	
 	
 	public JsonConstants() {
