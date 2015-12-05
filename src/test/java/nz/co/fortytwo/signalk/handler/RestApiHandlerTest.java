@@ -18,6 +18,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.Util;
+import nz.co.fortytwo.signalk.util.TestHelper;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -47,8 +48,8 @@ public class RestApiHandlerTest {
 	public void shouldGetSelfPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		
 		HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+vessels+"/"+self+"/"+nav+"/position");
@@ -69,8 +70,8 @@ public class RestApiHandlerTest {
 	public void shouldGetOtherPosition() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		
 		HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+vessels+"/other/"+nav+"/position");
@@ -89,8 +90,8 @@ public class RestApiHandlerTest {
 	public void shouldGetNotFound() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		
 		HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+vessels+"/"+self+"/"+nav+"/not_here");
@@ -108,8 +109,8 @@ public class RestApiHandlerTest {
 	public void shouldGetNotFound1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		
 		HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API+"vess/"+self+"/"+nav+"/");
@@ -128,8 +129,8 @@ public class RestApiHandlerTest {
 	public void shouldGetBadRequest1() throws Exception {
 		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		
 		HttpServletRequest  mockedRequest = Mockito.mock(HttpServletRequest.class);
 		when(mockedRequest.getPathInfo()).thenReturn(JsonConstants.SIGNALK_API.substring(0,11));

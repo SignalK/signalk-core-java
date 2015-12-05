@@ -39,6 +39,7 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.Util;
+import nz.co.fortytwo.signalk.util.TestHelper;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -73,11 +74,9 @@ public class JsonGetHandlerTest {
 	}
 	@Test
 	public void shouldGetPaths() throws Exception {
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.*\"}]}";
 		Json json = Json.read(request);
 		JsonGetHandler processor = new JsonGetHandler();
@@ -90,31 +89,27 @@ public class JsonGetHandlerTest {
 		//other
 		assertEquals(-41.2936935424,reply.get(vessels+".other."+nav_position_latitude));
 		assertEquals(173.2470855712,reply.get(vessels+".other."+nav_position_longitude));
-		assertTrue(reply.getData().size()>89); 
+		assertEquals(84, reply.getData().size()); 
 	}
 	@Test
 	public void shouldIgnoreListRequest() throws Exception {
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		String request = "{\"context\":\"vessels."+self+"\",\"list\":[{\"path\":\"navigation.position.*\"},{\"path\":\"navigation.course*\"}]}";
 		Json json = Json.read(request);
 		JsonGetHandler processor = new JsonGetHandler();
 		SignalKModel reply = processor.handle(model,json);
 		logger.debug(reply);
 		assertNotNull(reply);
-		assertTrue(reply.getData().size()==0); 
+		assertEquals(0,reply.getData().size()); 
 	}
 	
 	@Test
 	public void shouldProduceSingleVesselGet() throws Exception {
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		String request = "{\"context\":\"vessels."+self+"\",\"get\":[{\"path\":\"navigation.position.*\"},{\"path\":\"navigation.course*\"}]}";
 		Json json = Json.read(request);
 		JsonGetHandler processor = new JsonGetHandler();
@@ -127,17 +122,15 @@ public class JsonGetHandlerTest {
 		//other
 		assertNull(reply.get(vessels+".other."+nav_position_latitude));
 		assertNull(reply.get(vessels+".other."+nav_position_longitude));
-		assertTrue(reply.getData().size()==9); 
+		assertEquals(9,reply.getData().size()); 
 		 
 	}
 	
 	@Test
 	public void shouldProduceMultipleVesselGet() throws Exception {
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position.*\"},{\"path\":\"navigation.course*\"}]}";
 		Json json = Json.read(request);
 		JsonGetHandler processor = new JsonGetHandler();
@@ -150,16 +143,15 @@ public class JsonGetHandlerTest {
 		//other
 		assertEquals(-41.2936935424,reply.get(vessels+".other."+nav_position_latitude));
 		assertEquals(173.2470855712,reply.get(vessels+".other."+nav_position_longitude));
-		assertTrue(reply.getData().size()==18); 
+		assertEquals(18,reply.getData().size()); 
 		 
 	}
 	
 	@Test
 	public void shouldIncludeChildren() throws Exception{
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position\"}]}";
 		Json json = Json.read(request);
 		JsonGetHandler processor = new JsonGetHandler();
@@ -170,10 +162,9 @@ public class JsonGetHandlerTest {
 	}
 	@Test
 	public void shouldIncludeLastChild() throws Exception{
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position.latitude\"}]}";
 		Json json = Json.read(request);
 		JsonGetHandler processor = new JsonGetHandler();
@@ -185,11 +176,9 @@ public class JsonGetHandlerTest {
 	
 	@Test
 	public void shouldProduceSpecificPathList() throws Exception {
-		SignalKModel model = SignalKModelFactory.getCleanInstance();
-		SignalKModelFactory.loadConfig(model);
-		//model.getData().clear();
-		model = Util.populateModel(model, new File("src/test/resources/samples/basicModel.txt"));
-		model = Util.populateModel(model, new File("src/test/resources/samples/otherModel.txt"));
+		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		model.putAll(TestHelper.getBasicModel().getFullData());
+		model.putAll(TestHelper.getOtherModel().getFullData());
 		//test ? works
 		String request = "{\"context\":\"vessels.*\",\"get\":[{\"path\":\"navigation.position.l?t*\"}]}";
 		Json json = Json.read(request);
@@ -201,7 +190,7 @@ public class JsonGetHandlerTest {
 		assertNull(reply.get(vessels_dot_self_dot+nav_position_longitude));
 		assertEquals(-41.2936935424,reply.get(vessels+".other."+nav_position_latitude));
 		assertNull(reply.get(vessels+".other."+nav_position_longitude));
-		assertTrue(reply.getData().size()==2);
+		assertEquals(2,reply.getData().size()); 
 	}
 
 }

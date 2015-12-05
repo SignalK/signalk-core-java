@@ -27,11 +27,17 @@ import static nz.co.fortytwo.signalk.util.JsonConstants.SELF;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionChangeAlarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedAlarm;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_altitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
@@ -48,7 +54,9 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.JsonConstants;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
+import nz.co.fortytwo.signalk.util.TestHelper;
 import nz.co.fortytwo.signalk.util.Util;
+import nz.co.fortytwo.signalk.util.TestHelper;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -71,9 +79,9 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldSubstituteSelf() throws IOException {
 		
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
-		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
 		logger.debug(signalk);
 		
 		signalk.putValue("vessels.self.environment.wind.angleApparent", 256.0d);
@@ -83,28 +91,35 @@ public class SignalKModelImplTest {
 		assertEquals(256.0, signalk.getValue(vessels+dot+"self"+dot+env_wind_angleApparent));
 		
 		assertEquals(18, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
-		assertEquals(117, signalk.getSubMap(vessels+dot+"self").size());
+		assertEquals(111, signalk.getSubMap(vessels+dot+"self").size());
 	}
 
 	@Test
 	public void shouldReturnBranch() throws IOException {
 		
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
-		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
 		logger.debug(signalk);
 		
-		String wind = "{vessels."+self+".environment.wind.angleApparent.source=unknown, vessels."+self+".environment.wind.angleApparent.timestamp=2015-03-16T03:31:22.325Z, vessels."+self+".environment.wind.angleApparent.value=0.0, vessels."+self+".environment.wind.directionChangeAlarm.source=unknown, vessels."+self+".environment.wind.directionChangeAlarm.timestamp=2015-03-16T03:31:22.326Z, vessels."+self+".environment.wind.directionChangeAlarm.value=0.0, vessels."+self+".environment.wind.directionTrue.source=unknown, vessels."+self+".environment.wind.directionTrue.timestamp=2015-03-16T03:31:22.327Z, vessels."+self+".environment.wind.directionTrue.value=256.3, vessels."+self+".environment.wind.speedAlarm.source=unknown, vessels."+self+".environment.wind.speedAlarm.timestamp=2015-03-16T03:31:22.327Z, vessels."+self+".environment.wind.speedAlarm.value=0.0, vessels."+self+".environment.wind.speedApparent.source=unknown, vessels."+self+".environment.wind.speedApparent.timestamp=2015-03-16T03:31:22.328Z, vessels."+self+".environment.wind.speedApparent.value=0.0, vessels."+self+".environment.wind.speedTrue.source=unknown, vessels."+self+".environment.wind.speedTrue.timestamp=2015-03-16T03:31:22.329Z, vessels."+self+".environment.wind.speedTrue.value=7.68}";
+		//String wind = "{vessels."+self+".environment.wind.angleApparent.source=unknown, vessels."+self+".environment.wind.angleApparent.timestamp=2015-03-16T03:31:22.325Z, vessels."+self+".environment.wind.angleApparent.value=0.0, vessels."+self+".environment.wind.directionChangeAlarm.source=unknown, vessels."+self+".environment.wind.directionChangeAlarm.timestamp=2015-03-16T03:31:22.326Z, vessels."+self+".environment.wind.directionChangeAlarm.value=0.0, vessels."+self+".environment.wind.directionTrue.source=unknown, vessels."+self+".environment.wind.directionTrue.timestamp=2015-03-16T03:31:22.327Z, vessels."+self+".environment.wind.directionTrue.value=256.3, vessels."+self+".environment.wind.speedAlarm.source=unknown, vessels."+self+".environment.wind.speedAlarm.timestamp=2015-03-16T03:31:22.327Z, vessels."+self+".environment.wind.speedAlarm.value=0.0, vessels."+self+".environment.wind.speedApparent.source=unknown, vessels."+self+".environment.wind.speedApparent.timestamp=2015-03-16T03:31:22.328Z, vessels."+self+".environment.wind.speedApparent.value=0.0, vessels."+self+".environment.wind.speedTrue.source=unknown, vessels."+self+".environment.wind.speedTrue.timestamp=2015-03-16T03:31:22.329Z, vessels."+self+".environment.wind.speedTrue.value=7.68}";
 		logger.debug("Submap for: "+vessels_dot_self_dot+env_wind);
 		NavigableMap<String, Object> branch = signalk.getSubMap(vessels_dot_self_dot+env_wind);
 		logger.debug(branch);
-		assertEquals(wind, branch.toString());
+		
+		assertEquals(branch.get(vessels_dot_self_dot+env_wind_angleApparent+dot+value),0d);
+		assertEquals(branch.get(vessels_dot_self_dot+env_wind_directionChangeAlarm+dot+value),0d);
+		assertEquals(branch.get(vessels_dot_self_dot+env_wind_directionTrue+dot+value),0d);
+		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedAlarm+dot+value),0d);
+		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedApparent+dot+value),0d);
+		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedTrue+dot+value),7.68d);
+		
 	}
 	@Test
 	public void shouldFailAltitudeValue() throws IOException{
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
-		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
 		logger.debug(signalk);
 		try{
 		signalk.put(vessels_dot_self_dot+nav_position_altitude+dot+"value", 90);
@@ -115,21 +130,21 @@ public class SignalKModelImplTest {
 	}
 	@Test
 	public void shouldReturnLeaf() throws IOException {
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
-		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+	
 		logger.debug(signalk);
 		
-		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
-		assertEquals(256.3,dirTrue,0.000001);
+		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_speedTrue);
+		assertEquals(7.68,dirTrue,0.000001);
 	}
 	
 	@Test
 	public void shouldMergeBranch() throws IOException {
 		
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
-		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
 		logger.debug(signalk);
 		assertNull(signalk.get(vessels_dot_self_dot+ env_wind));
 		
@@ -145,8 +160,8 @@ public class SignalKModelImplTest {
 	
 	@Test
 	public void shouldSetLeaf() {
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue+dot+SignalKConstants.value,256.3);
 		logger.debug(signalk);
@@ -156,8 +171,8 @@ public class SignalKModelImplTest {
 	}
 	@Test
 	public void shouldSetLeafValue() {
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+	
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		signalk.putValue(vessels_dot_self_dot+ env_wind_directionTrue,256.3);
 		logger.debug(signalk);
@@ -167,8 +182,8 @@ public class SignalKModelImplTest {
 	}
 	@Test
 	public void shouldSetLeafAll() {
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		String ts = Util.getIsoTimeString();
 		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3, "unknown",ts);
@@ -182,9 +197,9 @@ public class SignalKModelImplTest {
 	}
 	@Test
 	public void shouldDeleteBranch() throws IOException {
-		SignalKModel signalk = new SignalKModelImpl();
-		Util.setSelf("motu");
-		signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
 		logger.debug(signalk);
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()>0);
 		signalk.put(vessels_dot_self_dot+nav_position,null);
@@ -194,6 +209,7 @@ public class SignalKModelImplTest {
 	@Test
 	public void shouldNotOverwriteWithEmptyBranch() {
 		//TODO: should this fail?
+		
 	}
 
 	
