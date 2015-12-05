@@ -52,7 +52,7 @@ public class AlarmHandler {
 	
 	/**
 	 * Scans the signal k model for alarm conditions and sets/unsets alarms
-	 * Only looks at vessels.SignalKConstants.self
+	 * Only looks at vessels.self
 	 * @param signalkModel
 	 */
 	public  void handle(SignalKModel signalkModel) {
@@ -81,7 +81,7 @@ public class AlarmHandler {
 					if(logger.isDebugEnabled())logger.debug("Checking value:"+value+"="+alarmManager.isAlarm(value));
 					//get key.value
 					if(alarmManager.isAlarm(value)){
-						//set the alarm in vessels.SignalKConstants.self.alarms.key
+						//set the alarm in vessels.self.alarms.key
 						String msg = (String) signalkModel.get(key+dot+meta+dot+alarmMessage);
 						alarmManager.setAlarm(signalkModel,key, alarm, msg);
 						

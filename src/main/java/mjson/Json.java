@@ -95,7 +95,7 @@ import com.google.common.cache.LoadingCache;
  * <tr><td>{@link #make(Object)}</td>
  * <td>Creates a Json instance based on the concrete type of the parameter. The types
  * recognized are null, numbers, primitives, String, Map, Collection, Java arrays
- * and <code>Json</code> itSignalKConstants.self.</td>
+ * and <code>Json</code> itself.</td>
  * </tr>
  * <tr><td>{@link #nil()}</td>
  * <td>Return a <code>Json</code> instance representing JSON <code>null</code>.</td>
@@ -140,9 +140,9 @@ import com.google.common.cache.LoadingCache;
  * <p>
  * If you want to add properties to an object in bulk or append a sequence of elements to array, 
  * use the {@link #with(Json, Json...opts)} method. When used on an object, this method expects another
- * object as its argument and it will copy all properties of that argument into itSignalKConstants.self. Similarly,
+ * object as its argument and it will copy all properties of that argument into itself. Similarly,
  * when called on array, the method expects another array and it will append all elements of its
- * argument to itSignalKConstants.self.
+ * argument to itself.
  * </p>
  * 
  * <p>
@@ -1300,7 +1300,7 @@ public class Json
 	public String getParentKey(){return this.parentKey;}
 	
 	/**
-	 * Set the parentKey value. This does not set the parent itSignalKConstants.self, but records the key (property) on the parent to which this object belongs.
+	 * Set the parentKey value. This does not set the parent itself, but records the key (property) on the parent to which this object belongs.
 	 * This is set automatically in most cases, this method is for special cases
 	 * @param parentKey
 	 */
@@ -1650,7 +1650,7 @@ public class Json
 	/**
 	 * <p>Return the underlying map of properties of a <code>Json</code> object. The returned
 	 * map is the actual object representation so any modifications to it are modifications
-	 * of the <code>Json</code> object itSignalKConstants.self. Call
+	 * of the <code>Json</code> object itself. Call
 	 * {@link #isObject()} first if you're not sure this instance is indeed a
 	 * <code>Json</code> object.
 	 * </p>
@@ -1669,7 +1669,7 @@ public class Json
 	/**
 	 * <p>Return the underlying {@link List} representation of a <code>Json</code> array.
 	 * The returned list is the actual array representation so any modifications to it 
-	 * are modifications of the <code>Json</code> array itSignalKConstants.self. Call
+	 * are modifications of the <code>Json</code> array itself. Call
 	 * {@link #isArray()} first if you're not sure this instance is indeed a
 	 * <code>Json</code> array.
 	 * </p>

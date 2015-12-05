@@ -147,9 +147,9 @@ public class RestApiHandler {
         }
         //vessel params
         if(path.startsWith(vessels)){
-        	//convert .SignalKConstants.self to .motu
+        	//convert .self to .motu
         	path=path.replace(SLASH, SignalKConstants.dot);
-        	path=path.replace(".SignalKConstants.self", dot+SignalKConstants.self);
+        	path=path.replace(".self", dot+SignalKConstants.self);
         	String context = Util.getContext(path);
         	path = path.substring(context.length());
         	if(path.startsWith(dot))path=path.substring(1);

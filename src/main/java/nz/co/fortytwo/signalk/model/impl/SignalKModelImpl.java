@@ -52,10 +52,10 @@ import com.google.common.eventbus.EventBus;
  * of it without locking and without needing to synchronized on the returned tree.
  * </p><pre>
 
- * model.put("vessels.SignalKConstants.self.navigation.position.latitude", 57.9);
- * model.put("vessels.SignalKConstants.self.navigation.position.longitude", 17.2);
- * model.put("vessels.SignalKConstants.self.navigation.position.source", "gps");
- * model.put("vessels.SignalKConstants.self.navigation.position.teimstamp", model.timestamp());
+ * model.put("vessels.self.navigation.position.latitude", 57.9);
+ * model.put("vessels.self.navigation.position.longitude", 17.2);
+ * model.put("vessels.self.navigation.position.source", "gps");
+ * model.put("vessels.self.navigation.position.teimstamp", model.timestamp());
 
  * </pre>
  * <p>
