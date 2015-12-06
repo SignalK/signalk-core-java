@@ -3,9 +3,10 @@
 /signalk-static
 /storage
 
-# exclude eclipse stuff
+# exclude IDE stuff
 .settings
 .project
 .classpath
-
+.idea
+*.iml
 
