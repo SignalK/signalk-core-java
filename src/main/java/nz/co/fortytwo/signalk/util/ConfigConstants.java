@@ -60,7 +60,7 @@ public class ConfigConstants {
 	public static final String SERIAL_PORT_BAUD = "config.server.serial.baud";
 
 	//debug flags
-	public static final String SEND_MESSAGE = "config.server.debug.sendMessage";
+	public static final String ENABLE_SERIAL = "config.server.serial.enable";
 	
 	//directories
 	public static final String STATIC_DIR = "config.server.files.static.dir";

@@ -152,7 +152,7 @@ public class Util {
 					"[\"COM1\",\"COM2\",\"COM3\",\"COM4\"]");
 		}
 		model.put(ConfigConstants.SERIAL_PORT_BAUD, 38400);
-
+		model.put(ConfigConstants.ENABLE_SERIAL, true);
 		model.put(ConfigConstants.TCP_PORT, 55555);
 		model.put(ConfigConstants.UDP_PORT, 55554);
 		model.put(ConfigConstants.TCP_NMEA_PORT, 55557);

@@ -50,7 +50,7 @@ public class GenerateSignalkModel {
 	}
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void test() throws Exception {
 
 		File schemaFile = new File("./../specification/schemas/signalk.json");
@@ -79,7 +79,7 @@ public class GenerateSignalkModel {
 		k=k.replace("(^[A-Za-z0-9]+$)", "[ID]");
 		k=k.replaceAll("\\(\\^.*\\$", "[ID]");
 		
-		k=k.replace("vessels.[ID].", "");
+		//k=k.replace("vessels.[ID].", "");
 		k=k.replace("[0-9]*", "[ID]");
 		k=k.replace("^[A-Z][A-Z][A-Z]$", "[ID]");
 		k=k.replace("..*..*.", ".[ID].[ID].");
