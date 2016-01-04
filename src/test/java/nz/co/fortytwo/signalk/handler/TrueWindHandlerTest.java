@@ -50,28 +50,28 @@ public class TrueWindHandlerTest {
 		assertEquals(0.0, windcalc[0], 0.1);
 
 		// test 10 wind, 90deg, 0spd
-		windcalc = wp.calcTrueWindDirection(10, 90, 0);
-		assertEquals(90.0, windcalc[1], 1.0);
+		windcalc = wp.calcTrueWindDirection(10, Math.toRadians(90), 0);
+		assertEquals(Math.toRadians(90.0), windcalc[1], 1.0);
 		assertEquals(10.0, windcalc[0], 0.1);
 		
 		// test 10 wind, 900deg, 10spd = 135deg 14.14
-		windcalc = wp.calcTrueWindDirection(10, 90, 10);
-		assertEquals(135.0, windcalc[1], 1.0);
+		windcalc = wp.calcTrueWindDirection(10, Math.toRadians(90), 10);
+		assertEquals(Math.toRadians(135.0), windcalc[1], 1.0);
 		assertEquals(14.14, windcalc[0], 0.1);
 		
 		// test 10 wind, 270deg, 10spd = 360-135, 14.14
-		windcalc = wp.calcTrueWindDirection(10, 270, 10);
-		assertEquals(225.0, windcalc[1], 1.0);
+		windcalc = wp.calcTrueWindDirection(10, Math.toRadians(270), 10);
+		assertEquals(Math.toRadians(225.0), windcalc[1], 1.0);
 		assertEquals(14.14, windcalc[0], 0.1);
 		
 		// test .3 wind, 80deg, 0.5spd = 146, 0.9
-		windcalc = wp.calcTrueWindDirection(.3, 80, .5);
-		assertEquals(146.0, windcalc[1], 1.0);
+		windcalc = wp.calcTrueWindDirection(.3, Math.toRadians(80), .5);
+		assertEquals(Math.toRadians(146.0), windcalc[1], 1.0);
 		assertEquals(0.5, windcalc[0], 0.1);
 		
 		// test 10 wind, -90deg, 6.5spd = 146, 0.9
-		windcalc = wp.calcTrueWindDirection(10, 270, 6.5);
-		assertEquals(360-123.0, windcalc[1], 1.0);
+		windcalc = wp.calcTrueWindDirection(10, Math.toRadians(270), 6.5);
+		assertEquals(Math.toRadians(360-123.0), windcalc[1], 1.0);
 		assertEquals(11.9, windcalc[0], 0.1);
 
 	}

@@ -23,7 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
@@ -90,13 +90,12 @@ public class TrueWindHandler {
 	 * Calculates the true wind direction from apparent wind on vessel
 	 * Result is relative to bow
 	 * 
-	 * @param apparentWnd
+	 * @param apparentWnd in m/s
 	 * @param apparentDir
-	 *            0 to 360 deg to the bow
-	 * @param vesselSpd
-	 * @param trueDirection 
-	 * @param trueWindSpeed 
-	 * @return trueDirection 0 to 360 deg to the bow
+	 *            0 to 360 deg to the bow in radians
+	 * @param vesselSpd in m/s
+	
+	 * @return array of [true speed in m/s, trueDirection 0 to 360 deg to the bow, in radians ]
 	 */
 	public double[] calcTrueWindDirection(double apparentWnd, double apparentDir, double vesselSpd) {
 		double trueDirection = 0.0;
@@ -110,10 +109,11 @@ public class TrueWindHandler {
 		 * True-Wind Speed = (( a * a ) + ( b * b )) 1/2
 		 * True-Wind Angle = 90-arctangent ( b / a )
 		 */
-		apparentDir = apparentDir % 360;
-		boolean port = apparentDir > 180;
+		
+		apparentDir = apparentDir % TWO_PI;
+		boolean port = apparentDir > Math.PI;
 		if (port) {
-			apparentDir = 360 - apparentDir;
+			apparentDir = TWO_PI - apparentDir;
 		}
 
 		/*
@@ -124,22 +124,22 @@ public class TrueWindHandler {
 		 * tdiff = rad2deg(angle + alpha);
 		 * tspeed = Math.sin(angle)/Math.sin(alpha);
 		 */
-		double aspeed = Math.max(apparentDir, vesselSpd);
+		double aspeed = Math.max(apparentWnd, vesselSpd);
 		if (apparentWnd > 0 && vesselSpd > 0.0) {
 			aspeed = apparentWnd / vesselSpd;
 		}
-		double angle = Math.toRadians(apparentDir);
+		double angle = apparentDir;
 		double tan_alpha = (Math.sin(angle) / (aspeed - Math.cos(angle)));
 		double alpha = Math.atan(tan_alpha);
-		double tAngle = Math.toDegrees(alpha + angle);
+		double tAngle = alpha + angle;
 		if (Double.valueOf(tAngle).isNaN() || Double.isInfinite(tAngle))
 			return windCalc;
 		if (port) {
-			trueDirection = (360 - tAngle);
+			trueDirection = (TWO_PI - tAngle);
 		} else {
 			trueDirection = tAngle;
 		}
-		windCalc[1]=trueDirection%360;
+		windCalc[1]=trueDirection%TWO_PI;
 		
 		if (apparentWnd < 0.1 || vesselSpd < 0.1) {
 			trueWindSpeed = Math.max(apparentWnd, vesselSpd);
