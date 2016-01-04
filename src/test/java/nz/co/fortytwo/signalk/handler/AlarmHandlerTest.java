@@ -36,7 +36,7 @@ public class AlarmHandlerTest {
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
 		model.putAll(TestHelper.getBasicModel().getFullData());
 
-		assertEquals(93d, model.getValue(vessels_dot_self_dot+nav_courseOverGroundMagnetic));
+		assertEquals(Math.toRadians(93d), model.getValue(vessels_dot_self_dot+nav_courseOverGroundMagnetic));
 		//now set an alarm
 		model.put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+meta+dot+zones, Json.read("[[0,91,\"alarm\"],[93,95,\"normal\"],[95,360,\"alarm\"]]"));
 		AlarmHandler handler = new AlarmHandler();

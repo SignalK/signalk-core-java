@@ -1,5 +1,9 @@
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.MS_TO_KM;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.MS_TO_KNOTS;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.MTR_TO_FATHOM;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.MTR_TO_FEET;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
@@ -46,15 +50,15 @@ public class NMEA0183Producer {
 			sen.setPosition(new Position((double) model.get(vessels_dot_self_dot + nav_position_latitude), (double) model.get(vessels_dot_self_dot
 					+ nav_position_longitude)));
 			if (model.getValue(vessels_dot_self_dot + nav_speedOverGround) != null) {
-				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * 1.94384);
+				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * MS_TO_KNOTS);
 			}
 			if (model.get(vessels_dot_self_dot + nav_courseOverGroundTrue) != null) {
-				sen.setCourse((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue));
+				sen.setCourse(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue)));
 			}
 			if (model.get(vessels_dot_self_dot + nav_magneticVariation) != null) {
 				Double variation = (Double) model.getValue(vessels_dot_self_dot + nav_magneticVariation);
 				if (variation != null) {
-					sen.setVariation(Math.abs(variation));
+					sen.setVariation(Math.toDegrees(Math.abs(variation)));
 					sen.setDirectionOfVariation((variation < 0) ? CompassPoint.WEST : CompassPoint.EAST);
 				}
 			}
@@ -82,11 +86,11 @@ public class NMEA0183Producer {
 				|| model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic) != null) {
 			VHWSentence sen = (VHWSentence) sf.createParser(TalkerId.II, SentenceId.VHW);
 			if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue) != null)
-				sen.setHeading((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue));
+				sen.setHeading(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue)));
 			if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic) != null)
-				sen.setMagneticHeading((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround));
-			if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic) != null)
-				sen.setSpeedKnots((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * 1.94384);
+				sen.setMagneticHeading(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround)));
+			if (model.getValue(vessels_dot_self_dot + nav_speedOverGround) != null)
+				sen.setSpeedKnots((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * MS_TO_KNOTS);
 			return sen.toSentence();
 		}
 		return null;
@@ -95,7 +99,7 @@ public class NMEA0183Producer {
 	public String createHDT(SignalKModel model) {
 		if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue) != null) {
 			HDTSentence sen = (HDTSentence) sf.createParser(TalkerId.II, SentenceId.HDT);
-			sen.setHeading((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue));
+			sen.setHeading(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue)));
 
 			return sen.toSentence();
 		}
@@ -105,7 +109,7 @@ public class NMEA0183Producer {
 	public String createHDM(SignalKModel model) {
 		if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic) != null) {
 			HDMSentence sen = (HDMSentence) sf.createParser(TalkerId.II, SentenceId.HDM);
-			sen.setHeading((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic));
+			sen.setHeading(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic)));
 
 			return sen.toSentence();
 		}
@@ -115,9 +119,9 @@ public class NMEA0183Producer {
 	public String createHDG(SignalKModel model) {
 		if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic) != null) {
 			HDGSentence sen = (HDGSentence) sf.createParser(TalkerId.II, SentenceId.HDG);
-			sen.setHeading((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic));
+			sen.setHeading(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic)));
 			if (model.getValue(vessels_dot_self_dot + nav_magneticVariation) != null)
-				sen.setVariation((double) model.getValue(vessels_dot_self_dot + nav_magneticVariation));
+				sen.setVariation(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_magneticVariation)));
 			return sen.toSentence();
 		}
 		return null;
@@ -130,10 +134,10 @@ public class NMEA0183Producer {
 			MWVSentence sen = (MWVSentence) sf.createParser(TalkerId.II, SentenceId.MWV);
 			sen.setStatus(DataStatus.ACTIVE);
 			if (model.getValue(vessels_dot_self_dot + env_wind_angleApparent) != null)
-				sen.setAngle((double) model.getValue(vessels_dot_self_dot + env_wind_angleApparent));
+				sen.setAngle(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + env_wind_angleApparent)));
 			sen.setTrue(false);
 			if (model.getValue(vessels_dot_self_dot + env_wind_speedApparent) != null)
-				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + env_wind_speedApparent) * 1.94384);
+				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + env_wind_speedApparent) * MS_TO_KNOTS);
 			sen.setSpeedUnit(Units.KNOT);
 			return sen.toSentence();
 		}
@@ -146,13 +150,13 @@ public class NMEA0183Producer {
 			MWVSentence sen = (MWVSentence) sf.createParser(TalkerId.II, SentenceId.MWV);
 			sen.setStatus(DataStatus.ACTIVE);
 			if (model.getValue(vessels_dot_self_dot + env_wind_directionTrue) != null)
-				sen.setAngle((double) model.getValue(vessels_dot_self_dot + env_wind_directionTrue));
+				sen.setAngle(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + env_wind_directionTrue)));
 			sen.setTrue(true);
 			if (model.getValue(vessels_dot_self_dot + env_wind_speedTrue) != null) {
-				double speed = (double) model.getValue(vessels_dot_self_dot + env_wind_speedTrue) * 1.94384;
+				double speed = (double) model.getValue(vessels_dot_self_dot + env_wind_speedTrue) * MS_TO_KNOTS;
 				if (speed < 0.0)
 					speed = 0.0;
-				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + env_wind_speedTrue) * 1.94384);
+				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + env_wind_speedTrue) * MS_TO_KNOTS);
 			}
 			sen.setSpeedUnit(Units.KNOT);
 			return sen.toSentence();
@@ -165,8 +169,8 @@ public class NMEA0183Producer {
 		if (model.getValue(vessels_dot_self_dot + env_depth_belowTransducer) != null) {
 			DBTSentence sen = (DBTSentence) sf.createParser(TalkerId.II, SentenceId.DBT);
 				sen.setDepth((double) model.getValue(vessels_dot_self_dot + env_depth_belowTransducer));
-				sen.setFeet((double) model.getValue(vessels_dot_self_dot + env_depth_belowTransducer) * 3.28084);
-				sen.setFathoms((double) model.getValue(vessels_dot_self_dot + env_depth_belowTransducer) * 0.546806649);
+				sen.setFeet((double) model.getValue(vessels_dot_self_dot + env_depth_belowTransducer) * MTR_TO_FEET);
+				sen.setFathoms((double) model.getValue(vessels_dot_self_dot + env_depth_belowTransducer) * MTR_TO_FATHOM);
 			return sen.toSentence();
 		}
 		return null;
@@ -179,12 +183,12 @@ public class NMEA0183Producer {
 			VTGSentence sen = (VTGSentence) sf.createParser(TalkerId.II, SentenceId.VTG);
 			sen.setMode(FaaMode.AUTOMATIC);
 			if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic) != null)
-				sen.setMagneticCourse((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic));
+				sen.setMagneticCourse(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundMagnetic)));
 			if (model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue) != null)
-				sen.setTrueCourse((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue));
+				sen.setTrueCourse(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue)));
 			if (model.getValue(vessels_dot_self_dot + nav_speedOverGround) != null) {
-				sen.setSpeedKmh((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * 3.6);
-				sen.setSpeedKnots((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * 1.94384);
+				sen.setSpeedKmh((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * MS_TO_KM);
+				sen.setSpeedKnots((double) model.getValue(vessels_dot_self_dot + nav_speedOverGround) * MS_TO_KNOTS);
 			}
 
 			return sen.toSentence();

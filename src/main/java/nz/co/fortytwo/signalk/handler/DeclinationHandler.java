@@ -54,10 +54,13 @@ public class DeclinationHandler {
 		if (lat!=null && lon!=null) {
 			if(logger.isDebugEnabled())logger.debug("Declination  for "+lat+", "+lon );
 			
-			double declination = geoMag.getDeclination(lat, lon, DateTime.now().getYear(), 0.0d);
+			double declination = Math.toRadians(geoMag.getDeclination(lat, lon, DateTime.now().getYear(), 0.0d));
 			
-			declination = Util.round(declination, 1);
-			if(logger.isDebugEnabled())logger.debug("Declination = " + declination);
+			declination = Util.round(declination, 6);
+			if(logger.isDebugEnabled()){
+				logger.debug("Declination (rad)= " + declination);
+				logger.debug("Declination (deg)= " + Math.toDegrees(declination));
+			}
 			signalkModel.putValue(vessels_dot_self_dot+nav_magneticVariation, declination);	
 		}
 		

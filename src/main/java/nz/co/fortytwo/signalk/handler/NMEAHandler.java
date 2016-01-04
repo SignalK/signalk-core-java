@@ -300,12 +300,12 @@ public class NMEAHandler{
 							if (sen.isTrue()) {
 								try {
 									sk.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+source+dot+"src",sen.toSentence());
-									sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , sen.getHeading(),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
+									sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
 								} catch (Exception e) {
 									logger.error(e.getMessage());
 								}
 							} else {
-								sk.put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , sen.getHeading(),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
+								sk.put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getHeading()),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
 							}
 						}
 					}
@@ -320,8 +320,8 @@ public class NMEAHandler{
 						VHWSentence sen = (VHWSentence) evt.getSentence();
 						//VHW sentence types have both, but true can be empty
 						try {
-							sk.put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , sen.getMagneticHeading(), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
-							sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , sen.getHeading(), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+							sk.put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getMagneticHeading()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+							sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
 							
 						} catch (DataNotAvailableException e) {
 							logger.error(e.getMessage());
@@ -338,7 +338,7 @@ public class NMEAHandler{
 						//TODO: check relative to bow or compass + sen.getSpeedUnit()
 						// relative to bow
 						double angle = sen.getAngle();
-						sk.put(vessels_dot_self_dot + env_wind_angleApparent , angle, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						sk.put(vessels_dot_self_dot + env_wind_angleApparent , Math.toRadians(angle), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
 						sk.put(vessels_dot_self_dot + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
 						//sk.put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
 						//sk.put(vessels_dot_self_dot + env_wind + dot+timestamp , now);

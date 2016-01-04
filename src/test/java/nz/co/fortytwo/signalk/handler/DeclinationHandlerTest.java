@@ -50,7 +50,7 @@ public class DeclinationHandlerTest {
 		model.put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
 		p.handle(model);
 		double decl = (double) model.getValue(vessels_dot_self_dot+nav_magneticVariation);
-		assertEquals(22.1, decl, 001);
+		assertEquals(Math.toRadians(22.1), decl, 001);
 	}
 	
 	@Test

@@ -28,6 +28,12 @@ package nz.co.fortytwo.signalk.util;
 public class SignalKConstants {
 
 	//fixed
+	public static final double MS_TO_KNOTS = 1.94384;
+	public static final double MS_TO_KM = 3.6;
+	public static final double KNOTS_TO_MS = 0.51444;
+	public static final double MTR_TO_FEET = 3.28084;
+	public static final double MTR_TO_FATHOM = 0.546806649;
+	
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
 	public static final String self_str =  "self";

@@ -177,9 +177,9 @@ public class AISHandler {
 							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
 							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
 						}
-						model.put(aisVessel+ nav_courseOverGroundTrue, ((double) vInfo.getCog()) / 10, sourceRef, ts);
+						model.put(aisVessel+ nav_courseOverGroundTrue, Math.toRadians(((double) vInfo.getCog()) / 10), sourceRef, ts);
 						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), sourceRef, ts);
-						model.put(aisVessel+ nav_headingTrue, ((double) vInfo.getTrueHeading()) / 10, sourceRef);
+						model.put(aisVessel+ nav_headingTrue, Math.toRadians(((double) vInfo.getTrueHeading()) / 10), sourceRef);
 						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), sourceRef, ts);
 					}
 				}

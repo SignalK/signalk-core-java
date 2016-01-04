@@ -24,7 +24,7 @@
 
 package nz.co.fortytwo.signalk.util;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self_str;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
@@ -290,11 +290,11 @@ public class Util {
 	}
 
 	public static double kntToMs(double speed) {
-		return speed * 0.51444;
+		return speed * KNOTS_TO_MS;
 	}
 
 	public static double msToKnts(double speed) {
-		return speed * 1.943844492;
+		return speed * MS_TO_KNOTS;
 	}
 
 	public static String getConfigProperty(String prop) {
