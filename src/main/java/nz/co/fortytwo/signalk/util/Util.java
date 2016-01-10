@@ -178,6 +178,8 @@ public class Util {
 
 	}
 
+	// TODO: This is determined by server configuration - should be moved to signalk-server-java
+	@Deprecated
 	public static Json getEndpoints(String hostname)
 			throws UnknownHostException {
 		Json msg = Json.object();

@@ -125,6 +125,7 @@ public class SignalKConstants {
 	
 	public static final String N2K_MESSAGE = "N2K_MESSAGE";
 	
+	public static final String SIGNALK_DISCOVERY = "/signalk";
 	public static final String SIGNALK_AUTH = "/signalk/v1/auth";
 	public static final String SIGNALK_API = "/signalk/v1/api";
 	public static final String SIGNALK_ENDPOINTS = "/signalk/endpoints/v1";
