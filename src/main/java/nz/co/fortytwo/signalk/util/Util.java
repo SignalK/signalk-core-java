@@ -176,36 +176,6 @@ public class Util {
 
 	}
 
-	public static Json getEndpoints(String hostname)
-			throws UnknownHostException {
-		Json msg = Json.object();
-		String cfgHostname = getConfigProperty(ConfigConstants.HOSTNAME);
-		if (StringUtils.isNotBlank(cfgHostname))
-			hostname = cfgHostname;
-		msg.set(SignalKConstants.websocketUrl, "ws://" + hostname + ":"
-				+ getConfigPropertyInt(ConfigConstants.WEBSOCKET_PORT)
-				+ SignalKConstants.SIGNALK_WS);
-		msg.set(SignalKConstants.restUrl, "http://" + hostname + ":"
-				+ getConfigPropertyInt(ConfigConstants.REST_PORT)
-				+ SignalKConstants.SIGNALK_API);
-		msg.set(SignalKConstants.signalkTcpPort, hostname + ":"
-				+ getConfigPropertyInt(ConfigConstants.TCP_PORT));
-		msg.set(SignalKConstants.signalkUdpPort, hostname + ":"
-				+ getConfigPropertyInt(ConfigConstants.UDP_PORT));
-		msg.set(SignalKConstants.nmeaTcpPort, hostname + ":"
-				+ getConfigPropertyInt(ConfigConstants.TCP_NMEA_PORT));
-		msg.set(SignalKConstants.nmeaUdpPort, hostname + ":"
-				+ getConfigPropertyInt(ConfigConstants.UDP_NMEA_PORT));
-		if (getConfigPropertyBoolean(ConfigConstants.START_STOMP))
-			msg.set(SignalKConstants.stompPort, hostname + ":"
-					+ getConfigPropertyInt(ConfigConstants.STOMP_PORT));
-		if (getConfigPropertyBoolean(ConfigConstants.START_MQTT))
-			msg.set(SignalKConstants.mqttPort, hostname + ":"
-					+ getConfigPropertyInt(ConfigConstants.MQTT_PORT));
-
-		return msg;
-	}
-
 	public static Json getWelcomeMsg() {
 		Json msg = Json.object();
 		msg.set(SignalKConstants.version, getVersion());

@@ -62,20 +62,9 @@ public class UtilTest {
 		assertTrue(msg.has(SignalKConstants.version));
 		assertTrue(msg.has(SignalKConstants.self_str));
 	}
+
 	
-	@Test
-	public void shouldGetAddressesMsg() throws UnknownHostException{
-		Json msg = Util.getEndpoints("localhost");
-		logger.debug(msg);
-		//{"timestamp":"2015-04-13T23:04:03.826Z","version":"0.1","SignalKConstants.self":"motu"}
-		assertTrue(msg.has(SignalKConstants.stompPort));
-		assertTrue(msg.has(SignalKConstants.mqttPort));
-		assertTrue(msg.has(SignalKConstants.websocketUrl));
-		assertTrue(msg.has(SignalKConstants.signalkTcpPort));
-		assertTrue(msg.has(SignalKConstants.signalkUdpPort));
-		assertTrue(msg.has(SignalKConstants.nmeaUdpPort));
-		assertTrue(msg.has(SignalKConstants.nmeaTcpPort));
-	}
+	
 
 	@Test
 	public void shouldCreateDefaultJson() {
@@ -125,4 +114,5 @@ public class UtilTest {
 			fail();
 		}
 	}
+
 }
