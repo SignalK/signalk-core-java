@@ -176,8 +176,10 @@ public class SignalKModelFactory {
 	 * @throws IOException
 	 */
 	public static void saveConfig(SignalKModel model) throws IOException {
+		saveConfig(model,new File(SIGNALK_CFG_SAVE_FILE));
+	}
+	public static void saveConfig(SignalKModel model, File jsonFile ) throws IOException {
 		if (model != null) {
-			File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
 			NavigableMap<String, Object> config = model.getSubMap(SignalKConstants.CONFIG);
 			JsonSerializer ser = new JsonSerializer();
 			ser.setPretty(3);

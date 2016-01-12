@@ -135,8 +135,6 @@ public class Util {
 		model.put(ConfigConstants.UUID, "self");
 		model.put(ConfigConstants.WEBSOCKET_PORT, 3000);
 		model.put(ConfigConstants.REST_PORT, 8080);
-		model.put(ConfigConstants.CFG_DIR, "./conf/");
-		model.put(ConfigConstants.CFG_FILE, "signalk.cfg");
 		model.put(ConfigConstants.STORAGE_ROOT, "./storage/");
 		model.put(ConfigConstants.STATIC_DIR, "./signalk-static");
 		model.put(ConfigConstants.MAP_DIR, "./mapcache");

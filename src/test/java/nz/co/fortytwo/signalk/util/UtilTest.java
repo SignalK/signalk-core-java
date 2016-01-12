@@ -23,12 +23,18 @@
  */
 package nz.co.fortytwo.signalk.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 import mjson.Json;
+import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -71,4 +77,52 @@ public class UtilTest {
 		assertTrue(msg.has(SignalKConstants.nmeaTcpPort));
 	}
 
+	@Test
+	public void shouldCreateDefaultJson() {
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		Util.setDefaults(model);
+		try {
+			File tmp = File.createTempFile("jUnit", "_cfg");
+			SignalKModelFactory.saveConfig(model,tmp);
+			String jsonCfg = FileUtils.readFileToString(tmp);
+			logger.debug(jsonCfg);
+			assertNotNull(model.get(ConfigConstants.UUID));
+			assertNotNull(model.get(ConfigConstants.WEBSOCKET_PORT));
+			assertNotNull(model.get(ConfigConstants.REST_PORT));
+			assertNotNull(model.get(ConfigConstants.STORAGE_ROOT));
+			assertNotNull(model.get(ConfigConstants.STATIC_DIR));
+			assertNotNull(model.get(ConfigConstants.MAP_DIR));
+			assertNotNull(model.get(ConfigConstants.DEMO));
+			assertNotNull(model.get(ConfigConstants.STREAM_URL));
+			assertNotNull(model.get(ConfigConstants.USBDRIVE));
+			assertNotNull(model.get(ConfigConstants.SERIAL_PORTS));
+			
+			assertNotNull(model.get(ConfigConstants.SERIAL_PORT_BAUD));
+			assertNotNull(model.get(ConfigConstants.ENABLE_SERIAL));
+			assertNotNull(model.get(ConfigConstants.TCP_PORT));
+			assertNotNull(model.get(ConfigConstants.UDP_PORT));
+			assertNotNull(model.get(ConfigConstants.TCP_NMEA_PORT));
+			assertNotNull(model.get(ConfigConstants.UDP_NMEA_PORT));
+			assertNotNull(model.get(ConfigConstants.STOMP_PORT));
+			assertNotNull(model.get(ConfigConstants.MQTT_PORT));
+			assertNotNull(model.get(ConfigConstants.CLOCK_source));
+			assertNotNull(model.get(ConfigConstants.HAWTIO_PORT));
+			assertNotNull(model.get(ConfigConstants.HAWTIO_AUTHENTICATE));
+			assertNotNull(model.get(ConfigConstants.HAWTIO_CONTEXT));
+			assertNotNull(model.get(ConfigConstants.HAWTIO_WAR));
+			assertNotNull(model.get(ConfigConstants.HAWTIO_START));
+			assertNotNull(model.get(ConfigConstants.VERSION));
+			assertNotNull(model.get(ConfigConstants.ALLOW_INSTALL));
+			assertNotNull(model.get(ConfigConstants.ALLOW_UPGRADE));
+			assertNotNull(model.get(ConfigConstants.GENERATE_NMEA0183));
+			assertNotNull(model.get(ConfigConstants.START_MQTT));
+			assertNotNull(model.get(ConfigConstants.START_STOMP));
+			assertNull(model.get(ConfigConstants.CLIENT_TCP));
+			assertNull(model.get(ConfigConstants.CLIENT_MQTT));
+			assertNull(model.get(ConfigConstants.CLIENT_STOMP));
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
 }
