@@ -70,7 +70,7 @@ public class Util {
 	private static SignalKModel model = null;
 	public static SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd_hh:mm:ss");
-	public static File cfg = null;
+	//public static File cfg = null;
 	private static boolean timeSet = false;
 	public static final double R = 6372800; // In meters
 
@@ -104,10 +104,10 @@ public class Util {
 	 */
 	public static void getConfig() throws FileNotFoundException, IOException {
 		model = SignalKModelFactory.getInstance();
-		Util.setDefaults(model);
-		SignalKModelFactory.loadConfig(model);
-		String mySelf = (String) model.get(ConfigConstants.UUID);
-		Util.setSelf(mySelf);
+		//Util.setDefaults(model);
+		//SignalKModelFactory.loadConfig(model);
+		//String mySelf = (String) model.get(ConfigConstants.UUID);
+		//Util.setSelf(mySelf);
 	}
 	
 	/**

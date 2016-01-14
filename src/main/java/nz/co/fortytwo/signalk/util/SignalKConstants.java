@@ -80,7 +80,7 @@ public class SignalKConstants {
 	public static final String mqttPort = "mqtt";
 	
 	
-	//public static final String DOT = ".";
+	
 	public static final String MSG_TYPE = "MSG_TYPE";
 	public static final String SERIAL = "SERIAL";
 	public static final String EXTERNAL_IP = "EXTERNAL_IP";
@@ -125,6 +125,7 @@ public class SignalKConstants {
 	
 	public static final String N2K_MESSAGE = "N2K_MESSAGE";
 	
+	public static final String URN_UUID = "urn:mrn:signalk:uuid:";
 	public static final String SIGNALK_DISCOVERY = "/signalk";
 	public static final String SIGNALK_AUTH = "/signalk/v1/auth";
 	public static final String SIGNALK_API = "/signalk/v1/api";

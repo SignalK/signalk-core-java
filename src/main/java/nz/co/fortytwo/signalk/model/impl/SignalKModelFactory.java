@@ -25,6 +25,7 @@ package nz.co.fortytwo.signalk.model.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
+import java.util.UUID;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -50,6 +51,14 @@ public class SignalKModelFactory {
 	static {
 		if (signalKModel == null)
 			signalKModel = new SignalKModelImpl();
+		Util.setDefaults(signalKModel);
+		try {
+			SignalKModelFactory.loadConfig(signalKModel);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	/**
@@ -110,7 +119,7 @@ public class SignalKModelFactory {
 			logger.info("   Saved state not found");
 		}
 	}
-	public static void loadConfig(SignalKModel model){
+	public static void loadConfig(SignalKModel model) throws IOException{
 		File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
 		logger.info("Checking for previous config: "+jsonFile.getAbsolutePath());
 		if(jsonFile.exists()){
@@ -128,7 +137,14 @@ public class SignalKModelFactory {
 				logger.error(ex.getMessage(),ex);
 			}
 		}else{
-			logger.info("   Saved config not found");
+			logger.info("   Saved config not found, creating default");
+			//write a new one for next time
+			//create a uuid
+			String self = SignalKConstants.URN_UUID+UUID.randomUUID().toString();
+			model.put(ConfigConstants.UUID, self);
+			saveConfig(model);
+			Util.setSelf(SignalKConstants.self);
+			model.put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
 		}
 	}
 	

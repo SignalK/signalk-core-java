@@ -54,6 +54,48 @@ public class UtilTest {
 	}
 
 	@Test
+	public void shouldGetUuidContext(){
+		String path = "vessels.urn:mrn:signalk:uuid:28f9a6ae-ee66-4464-9ce4-a6dca3e33c7c";
+		String ctx = path;
+		String context = Util.getContext(path);
+		logger.debug(context);
+		assertEquals(ctx, context);
+		
+		path = path+".navigation.position";
+		context = Util.getContext(path);
+		logger.debug(context);
+		assertEquals(ctx, context);
+	}
+	
+	@Test
+	public void shouldGetMMSIContext(){
+		String path = "vessels.urn:mrn:imo:mmsi:230099999";
+		String ctx = path;
+		String context = Util.getContext(path);
+		logger.debug(context);
+		assertEquals(ctx, context);
+		
+		path = path+".navigation.position";
+		context = Util.getContext(path);
+		logger.debug(context);
+		assertEquals(ctx, context);
+	}
+	
+	/*@Test
+	public void shouldGetUrlContext(){
+		String path = "vessels.urn:mrn:signalk:https://motu.42.co.nz";
+		String ctx = path;
+		String context = Util.getContext(path);
+		logger.debug(context);
+		assertEquals(ctx, context);
+		
+		path = path+".navigation.position";
+		context = Util.getContext(path);
+		logger.debug(context);
+		assertEquals(ctx, context);
+	}*/
+	
+	@Test
 	public void shouldGetWelcomeMsg(){
 		Json msg = Util.getWelcomeMsg();
 		logger.debug(msg);
