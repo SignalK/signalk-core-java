@@ -62,7 +62,7 @@ public class FullToDeltaConverter {
 	 * "pgn":"128267"
 	 * },
 	 * "values": [
-	 * { "path": "courseOverGroundTrue","value": 172.9 },
+	 * { "path": "courseOverGroundTrue","value": 3.0176 },
 	 * { "path": "speedOverGround","value": 3.85 }
 	 * ]
 	 * },
@@ -74,7 +74,7 @@ public class FullToDeltaConverter {
 	 * "pgn":"128267"
 	 * },
 	 * "values": [
-	 * { "path": "courseOverGroundTrue","value": 172.9 },
+	 * { "path": "courseOverGroundTrue","value": 3.0176 },
 	 * { "path": "speedOverGround","value": 3.85 }
 	 * ]
 	 * }

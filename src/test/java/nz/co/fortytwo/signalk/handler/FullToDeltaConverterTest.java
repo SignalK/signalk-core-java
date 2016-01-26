@@ -50,7 +50,7 @@ public class FullToDeltaConverterTest {
 	@Test
 	public void shouldCreateDelta() {
 		Json data = Json
-				.read("{\"vessels\":{\"motu\":{\"navigation\":{\"courseOverGroundTrue\":{\"timestamp\":\"2015-03-18T04:53:26.367Z\",\"source\":{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\"},\"value\":172.9},\"speedOverGround\":{\"timestamp\":\"2015-03-18T04:53:26.462Z\",\"source\":{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\"},\"value\":3.85}}}}}");
+				.read("{\"vessels\":{\"motu\":{\"navigation\":{\"courseOverGroundTrue\":{\"timestamp\":\"2015-03-18T04:53:26.367Z\",\"source\":{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\"},\"value\":3.0176},\"speedOverGround\":{\"timestamp\":\"2015-03-18T04:53:26.462Z\",\"source\":{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\"},\"value\":3.85}}}}}");
 		
 		FullToDeltaConverter processor = new FullToDeltaConverter();
 		Json out = processor.handle(data).get(0);
