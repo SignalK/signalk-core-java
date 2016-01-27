@@ -164,7 +164,7 @@ public class Util {
 		model.put(ConfigConstants.HAWTIO_WAR,
 				"./hawtio/hawtio-default-offline-1.4.48.war");
 		model.put(ConfigConstants.HAWTIO_START, false);
-		model.put(ConfigConstants.VERSION, "0.1");
+		model.put(ConfigConstants.VERSION, "v1.0.0");
 		model.put(ConfigConstants.ALLOW_INSTALL, true);
 		model.put(ConfigConstants.ALLOW_UPGRADE, true);
 		model.put(ConfigConstants.GENERATE_NMEA0183, true);
