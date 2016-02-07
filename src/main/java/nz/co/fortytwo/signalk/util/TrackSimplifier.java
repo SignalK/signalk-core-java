@@ -15,6 +15,7 @@
  */
 package nz.co.fortytwo.signalk.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -41,7 +42,7 @@ public class TrackSimplifier {
             return track;
         }
 
-        ImmutableList.Builder<Position> result = ImmutableList.builder();
+        ArrayList<Position> result =new ArrayList<Position>();
         double tol2 = tolerance * tolerance;
 
         Position last = track.get(0);
@@ -54,7 +55,7 @@ public class TrackSimplifier {
                 last = current;
             }
         }
-        return result.build();
+        return result;
     }
 
     static List<Position> dpReduction(List<Position> track, double tolerance) {
