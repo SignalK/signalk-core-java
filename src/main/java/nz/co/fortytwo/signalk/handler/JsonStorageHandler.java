@@ -35,10 +35,12 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import mjson.Json;
@@ -66,26 +68,14 @@ public class JsonStorageHandler {
 	 * @throws IOException
 	 */
 	public JsonStorageHandler() throws IOException {
-		init("./src/main/resources/mime.types");
-		
-	}
-	private void init(String mimeTypes) throws IOException {
-		@SuppressWarnings("unchecked")
-		List<String> lines = FileUtils.readLines(new File(mimeTypes));
-		for (String line : lines) {
-			String[] parts = line.split("=");
-			mimeMap.put(parts[0], parts[1]);
+		try (InputStream is = getClass().getResourceAsStream("/mime.types")) {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				String[] parts = line.split("=");
+				mimeMap.put(parts[0], parts[1]);
+			}
 		}
-		
-	}
-	/**
-	 * Process the message and on ingoing and extract the payload to storage, so we dont pass big blobs into the model
-	 * Extracts them back into the message again on outgoing
-	 * @param mimeTypes - location of the mimetypes mapping file
-	 * @throws IOException
-	 */
-	public JsonStorageHandler(String mimeTypes) throws IOException {
-		init(mimeTypes);
 	}
 
 	public Json handle(Json node) throws Exception {
