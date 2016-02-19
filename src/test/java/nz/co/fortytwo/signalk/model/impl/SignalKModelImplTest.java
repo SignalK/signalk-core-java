@@ -189,6 +189,54 @@ public class SignalKModelImplTest {
 		assertEquals("unknown", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
 		
 	}
+	
+	@Test
+	public void shouldHandleMultipleValues(){
+		/*
+		"navigation": {
+		    "courseOverGround": {
+		        "value": 123,
+		        "$source": "nmea1.RMC",
+		        "timestamp": "2099-0-01",
+		        "values": {
+		            "nmea1.RMC": {
+		                "value": 123,
+		                "timestamp": "2099-0-01",
+		            },
+		            "nmea2.RMC": {
+		                "value": 120,
+		                "timestamp": "2099-0-01",
+		            }
+		        }
+		    }
+		}
+		*/
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		
+		String ts = Util.getIsoTimeString();
+		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3, "masthead",ts);
+		logger.debug(signalk);
+		
+		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
+		assertEquals(256.3,dirTrue,0.000001);
+		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
+		assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+		//second source
+		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,250.0, "bow",ts);
+		logger.debug(signalk);
+		dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
+		assertEquals(256.3,dirTrue,0.000001);
+		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
+		assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+		
+		//values
+		NavigableMap<String, Object> values = signalk.getValues(vessels_dot_self_dot+ env_wind_directionTrue);
+		logger.debug(signalk);
+		//Double altTrue = (Double)values.get("a").get(value); 
+		//assertEquals(250,dirTrue,0.000001);
+		//assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
+		//assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+	}
 	@Test
 	public void shouldDeleteBranch() throws IOException {
 		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();

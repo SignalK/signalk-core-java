@@ -110,4 +110,10 @@ public interface SignalKModel{
 	 */
 	SortedMap<String, Object> getFullData();
 
+	/**Get the multiple values object 'values' or null if it doesnt exist
+	 * @param string
+	 * @return
+	 */
+	public abstract NavigableMap<String, Object> getValues(String string);
+
 }
