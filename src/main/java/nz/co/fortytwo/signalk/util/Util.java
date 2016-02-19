@@ -140,7 +140,7 @@ public class Util {
 		model.put(ConfigConstants.MAP_DIR, "./mapcache");
 		model.put(ConfigConstants.DEMO, false);
 		model.put(ConfigConstants.STREAM_URL,
-				"./src/test/resources/motu.log&scanStream=true&scanStreamDelay=500");
+				"motu.log");
 		model.put(ConfigConstants.USBDRIVE, "/media/usb0");
 		model.put(
 				ConfigConstants.SERIAL_PORTS,

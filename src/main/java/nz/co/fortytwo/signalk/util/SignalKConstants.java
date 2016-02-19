@@ -47,6 +47,7 @@ public class SignalKConstants {
 	public static final String timestamp = "timestamp";
 	public static final String source = "source";
 	public static final String value = "value";
+	public static final String values = "values";
 	
 	
 	
@@ -141,7 +142,7 @@ public class SignalKConstants {
 	public static final String uuid="uuid";
 	public static final String vessels_id = "vessels.*";
 	public static final String pgn = "pgn";
-	public static final String values = "values";
+	
 	
 	//temp
 	public static final String env_time_time = "environment.time.time";

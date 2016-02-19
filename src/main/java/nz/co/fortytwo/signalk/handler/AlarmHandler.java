@@ -28,6 +28,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.alarmMessage;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.meta;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.normal;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.warn;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.warnMessage;
@@ -63,7 +64,7 @@ public class AlarmHandler {
 				if(!key.startsWith(vessels_dot_self_dot))continue;
 				if(logger.isDebugEnabled())logger.debug("Checking :"+key);
 				//remove .value
-				key=key.replace(".value","");
+				key=key.replace(dot+value,"");
 				Object metaZones = signalkModel.get(key+dot+meta+dot+zones);
 				
 				if(metaZones!=null && metaZones instanceof Json && ((Json)metaZones).isArray()){
@@ -77,22 +78,22 @@ public class AlarmHandler {
 						//clear all alarms.
 						alarmManager.setAlarm(signalkModel,key, normal,null);
 					}
-					Number value = (Number)signalkModel.getValue(key);
-					if(logger.isDebugEnabled())logger.debug("Checking value:"+value+"="+alarmManager.isAlarm(value));
+					Number val = (Number)signalkModel.getValue(key);
+					if(logger.isDebugEnabled())logger.debug("Checking value:"+val+"="+alarmManager.isAlarm(val));
 					//get key.value
-					if(alarmManager.isAlarm(value)){
+					if(alarmManager.isAlarm(val)){
 						//set the alarm in vessels.self.alarms.key
 						String msg = (String) signalkModel.get(key+dot+meta+dot+alarmMessage);
 						alarmManager.setAlarm(signalkModel,key, alarm, msg);
 						
 					}
-					if(alarmManager.isWarn(value)){
+					if(alarmManager.isWarn(val)){
 						//set the alarm
 						String msg = (String) signalkModel.get(key+dot+meta+dot+warnMessage);
 						alarmManager.setAlarm(signalkModel,key, warn, msg);
 						
 					}
-					if(alarmManager.isNormal(value)){
+					if(alarmManager.isNormal(val)){
 						//clear the alarms
 						alarmManager.setAlarm(signalkModel,key, normal,null);
 						

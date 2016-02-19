@@ -32,7 +32,7 @@ import com.google.common.eventbus.EventBus;
 public interface SignalKModel{
 		
 	/**
-	 * Get a value from the Model
+	 * Get a val from the Model
 	 */
 	public abstract Object get(String key);
 
@@ -80,10 +80,10 @@ public interface SignalKModel{
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public boolean put(String key, Object value) throws IllegalArgumentException;
+	public boolean put(String key, Object val) throws IllegalArgumentException;
 	
-	public boolean put(String key, Object value, String source) throws IllegalArgumentException;
-	public boolean put(String key, Object value, String source, String timestamp) throws IllegalArgumentException;
+	public boolean put(String key, Object val, String source) throws IllegalArgumentException;
+	public boolean put(String key, Object val, String source, String timestamp) throws IllegalArgumentException;
 
 	/**
 	 * Return a submap from the Model - the tree is read-only, but is live
@@ -99,10 +99,10 @@ public interface SignalKModel{
 	/**
 	 * Same as put, but it adds the suffix '.value' to the key
 	 * @param string
-	 * @param value
+	 * @param val
 	 * @return
 	 */
-	public boolean putValue(String string, Object value);
+	public boolean putValue(String string, Object val);
 
 	/**
 	 * Gets the full data map. Use with care, it holds the config data too.

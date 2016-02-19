@@ -25,6 +25,8 @@ package nz.co.fortytwo.signalk.model.impl;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.util.Iterator;
@@ -100,8 +102,8 @@ public class SignalKModelImpl implements SignalKModel {
     }
 
 
-    private boolean doPut(String key, Object value) {
-        // If value = "aa.bb.cc", fail if map contains "aa.bb" or "aa.bb.cc.dd"
+    private boolean doPut(String key, Object val) {
+        // If val = "aa.bb.cc", fail if map contains "aa.bb" or "aa.bb.cc.dd"
         String othkey = root.lowerKey(key);
         if (othkey != null && key.startsWith(othkey) && key.charAt(othkey.length()) == separator) {
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
@@ -111,8 +113,8 @@ public class SignalKModelImpl implements SignalKModel {
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
         }
         //meta.zones array
-        if (!value.equals(root.put(key, value))) {
-        	if(logger.isDebugEnabled())logger.debug("doPut "+key+"="+value);
+        if (!val.equals(root.put(key, val))) {
+        	if(logger.isDebugEnabled())logger.debug("doPut "+key+"="+val);
         	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
         		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
         	}
@@ -143,24 +145,24 @@ public class SignalKModelImpl implements SignalKModel {
 	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#put(java.lang.String, boolean)
 	 */
     @Override
-	public boolean put(String key, Object value) throws IllegalArgumentException{
+	public boolean put(String key, Object val) throws IllegalArgumentException{
     	key = fixSelfKey(key);
-    	if(value == null){
-    		//TODO: we delete the value, and the values equiv, then promote the next values object
+    	if(val == null){
+    		//TODO: we delete the val, and the values equiv, then promote the next values object
     		
     		return doDelete(key, root);
 		}
-    	if(value instanceof Boolean 
-    			|| value instanceof Number 
-    			|| value instanceof String){
-    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+value);
-    		return doPut(key, value);
+    	if(val instanceof Boolean 
+    			|| val instanceof Number 
+    			|| val instanceof String){
+    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+val);
+    		return doPut(key, val);
     	}
-    	if(value instanceof Json && ((Json)value).isArray() ){
-    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+value);
-    		return doPut(key, value);
+    	if(val instanceof Json && ((Json)val).isArray() ){
+    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+val);
+    		return doPut(key, val);
     	}
-    	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+value.getClass()+":"+value);
+    	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+val.getClass()+":"+val);
     }
 
     private String fixSelfKey(String key) {
@@ -169,42 +171,42 @@ public class SignalKModelImpl implements SignalKModel {
 	}
 
 	@Override
-	public boolean put(String key, Object value, String source) throws IllegalArgumentException {
-		return put(key,value,source,Util.getIsoTimeString());
+	public boolean put(String key, Object val, String source) throws IllegalArgumentException {
+		return put(key,val,source,Util.getIsoTimeString());
     	//key = fixSelfKey(key);
-    	//if(source==null)return (doPut(key, value));
-		//return (doPut(key+".value", value)&& doPut(key+".source", source));
+    	//if(source==null)return (doPut(key, val));
+		//return (doPut(key+dot+value, val)&& doPut(key+dot+source, source));
 	}
 
 	@Override
-	public boolean put(String key, Object value, String source, String timestamp) throws IllegalArgumentException {
+	public boolean put(String key, Object val, String source, String ts) throws IllegalArgumentException {
 		key = fixSelfKey(key);
 		if(StringUtils.isBlank(source)) source="default";
-		boolean success = putValues(key, value, source, timestamp);
-		String src = (String) root.get(key+".source");
+		boolean success = putValues(key, val, source, ts);
+		String src = (String) root.get(key+dot+source);
 		if(success && (StringUtils.isBlank(src)||StringUtils.equals(src,source))){
-			if(timestamp!=null)return(doPut(key+".value", value)&& doPut(key+".source", source)&& doPut(key+".timestamp", timestamp));
-			if(timestamp==null)return(doPut(key+".value", value)&& doPut(key+".source", source));
+			if(ts!=null)return(doPut(key+dot+value, val)&& doPut(key+dot+source, source)&& doPut(key+dot+timestamp, ts));
+			if(ts==null)return(doPut(key+dot+value, val)&& doPut(key+dot+source, source));
 		}
 		return success;
 	}
     
 
 	/**
-	 * Adds the value to the values arr
+	 * Adds the val to the values arr
 	 * @param string
-	 * @param value
+	 * @param val
 	 * @param timestamp 
 	 * @param source 
 	 * @return
 	 */
-	private boolean putValues(String key, Object value, String source, String timestamp) {
+	private boolean putValues(String key, Object val, String source, String ts) {
 				
 		String vKey = key+".values."+source;
-		if(timestamp!=null){
-			return (doPut(vKey+".value", value)&& doPut(vKey+".source", source)&& doPut(vKey+".timestamp", timestamp));
+		if(ts!=null){
+			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, source)&& doPut(vKey+dot+timestamp, ts));
 		}else{
-			return (doPut(vKey+".value", value)&& doPut(vKey+".source", source));
+			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, source));
 		}
 		
 
@@ -235,7 +237,7 @@ public class SignalKModelImpl implements SignalKModel {
        @Override
    	public Object getValue(String key) {
     	   key = fixSelfKey(key);
-               return nullFix(root.get(key+".value"));
+               return nullFix(root.get(key+dot+value));
        }
 
     /* (non-Javadoc)
@@ -306,15 +308,15 @@ public class SignalKModelImpl implements SignalKModel {
 	}
 
 	@Override
-	public boolean putValue(String key, Object value) {
+	public boolean putValue(String key, Object val) {
 		key = fixSelfKey(key);
-		return put(key+".value", value);
+		return put(key+dot+value, val);
 	}
 
 	@Override
 	public NavigableMap<String, Object> getValues(String key) {
 		key = fixSelfKey(key);
-        return getSubMap(key+".values");
+        return getSubMap(key+dot+values);
 	}
 
 	
