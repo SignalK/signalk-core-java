@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
@@ -179,14 +180,14 @@ public class SignalKModelImpl implements SignalKModel {
 	}
 
 	@Override
-	public boolean put(String key, Object val, String source, String ts) throws IllegalArgumentException {
+	public boolean put(String key, Object val, String src, String ts) throws IllegalArgumentException {
 		key = fixSelfKey(key);
-		if(StringUtils.isBlank(source)) source="default";
-		boolean success = putValues(key, val, source, ts);
-		String src = (String) root.get(key+dot+source);
-		if(success && (StringUtils.isBlank(src)||StringUtils.equals(src,source))){
-			if(ts!=null)return(doPut(key+dot+value, val)&& doPut(key+dot+source, source)&& doPut(key+dot+timestamp, ts));
-			if(ts==null)return(doPut(key+dot+value, val)&& doPut(key+dot+source, source));
+		if(StringUtils.isBlank(src)) src="default";
+		boolean success = putValues(key, val, src, ts);
+		String curSource = (String) root.get(key+dot+SignalKConstants.source);
+		if(success && (StringUtils.isBlank(curSource)||StringUtils.equals(curSource, src))){
+			if(ts!=null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.source, src)&& doPut(key+dot+timestamp, ts));
+			if(ts==null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.source, src));
 		}
 		return success;
 	}
@@ -197,16 +198,16 @@ public class SignalKModelImpl implements SignalKModel {
 	 * @param string
 	 * @param val
 	 * @param timestamp 
-	 * @param source 
+	 * @param src 
 	 * @return
 	 */
-	private boolean putValues(String key, Object val, String source, String ts) {
+	private boolean putValues(String key, Object val, String src, String ts) {
 				
 		String vKey = key+".values."+source;
 		if(ts!=null){
-			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, source)&& doPut(vKey+dot+timestamp, ts));
+			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, src)&& doPut(vKey+dot+timestamp, ts));
 		}else{
-			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, source));
+			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, src));
 		}
 		
 
