@@ -16,6 +16,9 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
+
+import org.apache.log4j.Logger;
+
 import net.sf.marineapi.nmea.parser.SentenceFactory;
 import net.sf.marineapi.nmea.sentence.DBTSentence;
 import net.sf.marineapi.nmea.sentence.GLLSentence;
@@ -37,9 +40,10 @@ import net.sf.marineapi.nmea.util.Time;
 import net.sf.marineapi.nmea.util.Units;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
+
 public class NMEA0183Producer {
 	private SentenceFactory sf = SentenceFactory.getInstance();
-
+	private static Logger logger = Logger.getLogger(NMEA0183Producer.class);
 	// RMC,GLL, GGA = position
 	public String createRMC(SignalKModel model) {
 		if (model.get(vessels_dot_self_dot + nav_position_latitude) != null && model.get(vessels_dot_self_dot + nav_position_longitude) != null) {
@@ -133,8 +137,10 @@ public class NMEA0183Producer {
 				|| model.getValue(vessels_dot_self_dot + env_wind_speedApparent) != null) {
 			MWVSentence sen = (MWVSentence) sf.createParser(TalkerId.II, SentenceId.MWV);
 			sen.setStatus(DataStatus.ACTIVE);
-			if (model.getValue(vessels_dot_self_dot + env_wind_angleApparent) != null)
+			if (model.getValue(vessels_dot_self_dot + env_wind_angleApparent) != null){
+				if(logger.isDebugEnabled())logger.debug("Apparent dir:"+model.getValue(vessels_dot_self_dot + env_wind_angleApparent));
 				sen.setAngle(Math.toDegrees((double) model.getValue(vessels_dot_self_dot + env_wind_angleApparent)));
+			}
 			sen.setTrue(false);
 			if (model.getValue(vessels_dot_self_dot + env_wind_speedApparent) != null)
 				sen.setSpeed((double) model.getValue(vessels_dot_self_dot + env_wind_speedApparent) * MS_TO_KNOTS);
