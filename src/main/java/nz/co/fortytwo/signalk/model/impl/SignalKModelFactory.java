@@ -74,12 +74,13 @@ public class SignalKModelFactory {
 	}
 
 	/**
-	 * Returns a different clean instance - only needed for testing!
+	 * Returns a different clean instance - used for incoming message creation and testing!
+	 * The model returned does not handle multiple values, if required this must be done manually
 	 * 
 	 * @return
 	 */
 	public static synchronized SignalKModel getCleanInstance() {
-		return new SignalKModelImpl();
+		return new SignalKModelImpl(true);
 	}
 	
 	/**
@@ -89,6 +90,7 @@ public class SignalKModelFactory {
 	 */
 	public static synchronized SignalKModel getMotuTestInstance() {
 		signalKModel.getFullData().clear();
+		Util.setDefaults(signalKModel);
 		loadConfig(signalKModel, "motu");
 		signalKModel.put(ConfigConstants.DEMO, false);
 		return signalKModel;

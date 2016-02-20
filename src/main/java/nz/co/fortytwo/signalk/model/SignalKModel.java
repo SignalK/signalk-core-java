@@ -74,7 +74,7 @@ public interface SignalKModel{
 	 */
 	public boolean putAll(SortedMap<String, Object> map);
 	/**
-	 * Generic put that accepts only null, boolean, Number, String
+	 * Generic put that accepts only null, boolean, Number, String and jsonArray
 	 * @param key
 	 * @param value
 	 * @return
@@ -94,6 +94,11 @@ public interface SignalKModel{
 	 
 	public NavigableMap<String, Object> getSubMap(String key);
 
+	/**
+	 * Adds the '.value' suffic and returns the value. It will be boolean, number, string, jsonArray or null
+	 * @param key
+	 * @return
+	 */
 	public Object getValue(String key);
 
 	/**

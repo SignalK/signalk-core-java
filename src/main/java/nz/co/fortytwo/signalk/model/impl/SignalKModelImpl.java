@@ -76,6 +76,7 @@ public class SignalKModelImpl implements SignalKModel {
     private int nextrevision;
 
   	private EventBus eventBus = new EventBus();
+	private boolean handleMultipleValues=true;
     
   	 /**
      * Create a new Model
@@ -95,7 +96,13 @@ public class SignalKModelImpl implements SignalKModel {
     }
     
     
-    /**
+    public SignalKModelImpl(boolean handleMultipleValues) {
+		this.handleMultipleValues=handleMultipleValues;
+		this.separator = '.';
+        this.root = new ConcurrentSkipListMap<String,Object>();
+	}
+
+	/**
      * Return the hierarchy separator
      */
     public char getSeparator() {
@@ -150,7 +157,6 @@ public class SignalKModelImpl implements SignalKModel {
     	key = fixSelfKey(key);
     	if(val == null){
     		//TODO: we delete the val, and the values equiv, then promote the next values object
-    		
     		return doDelete(key, root);
 		}
     	if(val instanceof Boolean 
@@ -183,6 +189,7 @@ public class SignalKModelImpl implements SignalKModel {
 	public boolean put(String key, Object val, String src, String ts) throws IllegalArgumentException {
 		key = fixSelfKey(key);
 		if(StringUtils.isBlank(src)) src="default";
+		
 		boolean success = putValues(key, val, src, ts);
 		String curSource = (String) root.get(key+dot+SignalKConstants.source);
 		if(success && (StringUtils.isBlank(curSource)||StringUtils.equals(curSource, src))){
@@ -202,8 +209,9 @@ public class SignalKModelImpl implements SignalKModel {
 	 * @return
 	 */
 	private boolean putValues(String key, Object val, String src, String ts) {
-				
-		String vKey = key+".values."+source;
+		if(!handleMultipleValues)return true;
+		
+		String vKey = key+".values."+src;
 		if(ts!=null){
 			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, src)&& doPut(vKey+dot+timestamp, ts));
 		}else{
