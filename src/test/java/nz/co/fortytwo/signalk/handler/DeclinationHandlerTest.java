@@ -46,8 +46,8 @@ public class DeclinationHandlerTest {
 	public void shouldGetDeclination() {
 		DeclinationHandler p = new DeclinationHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
-		model.put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
+		model.getFullData().put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
+		model.getFullData().put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
 		p.handle(model);
 		double decl = (double) model.getValue(vessels_dot_self_dot+nav_magneticVariation);
 		assertEquals(Math.toRadians(22.1), decl, 001);
@@ -57,7 +57,7 @@ public class DeclinationHandlerTest {
 	public void shouldNotGetDeclination() {
 		DeclinationHandler p = new DeclinationHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
+		model.getFullData().put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
 		//model.putWith(model.SignalKConstants.self(), SignalKConstants.nav_position_longitude, 172.5);
 		p.handle(model);
 		Object decl = model.getValue(vessels_dot_self_dot+nav_magneticVariation);

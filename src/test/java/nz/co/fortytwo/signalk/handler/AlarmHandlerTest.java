@@ -38,7 +38,7 @@ public class AlarmHandlerTest {
 
 		assertEquals(Math.toRadians(93d), model.getValue(vessels_dot_self_dot+nav_courseOverGroundMagnetic));
 		//now set an alarm
-		model.put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+meta+dot+zones, Json.read("[[0,91,\"alarm\"],[93,95,\"normal\"],[95,360,\"alarm\"]]"));
+		model.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+meta+dot+zones, Json.read("[[0,91,\"alarm\"],[93,95,\"normal\"],[95,360,\"alarm\"]]"));
 		AlarmHandler handler = new AlarmHandler();
 		handler.handle(model);
 		assertNull(model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic));
@@ -59,7 +59,7 @@ public class AlarmHandlerTest {
 		handler.handle(model);
 		assertEquals(alarm, model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+alarmState));
 		
-		model.put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+meta+dot+zones, Json.read("[]"));
+		model.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+meta+dot+zones, Json.read("[]"));
 		handler.handle(model);
 		logger.debug(model);
 		logger.debug(model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+alarmState));

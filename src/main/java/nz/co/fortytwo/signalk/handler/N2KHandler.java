@@ -71,6 +71,7 @@ public class N2KHandler {
 	
 	private static final String TYPE = "type";
 	private static final CharSequence STRING = "string";
+	private static final String VALUE = "value";
 
 	private static Logger logger = Logger.getLogger(N2KHandler.class);
 
@@ -104,7 +105,11 @@ public class N2KHandler {
 					if(j.has(TYPE)){
 						type = j.at(TYPE).asString();
 					}
-					nodeMap.put(pgn, new N2KHolder(node, compiledPath, type));
+					boolean val=false;
+					if(j.has(VALUE)){
+						val = j.at(VALUE).asBoolean();
+					}
+					nodeMap.put(pgn, new N2KHolder(node, compiledPath, type, val));
 				}
 			}
 
@@ -171,9 +176,8 @@ public class N2KHandler {
 			String ts = Util.getIsoTimeString();
 			if(StringUtils.isBlank(device))device = "unknown";
 			//add the actual source
-			temp.put(sourceRef+dot+value, n2kmsg);
-			temp.put(sourceRef+dot+timestamp, ts);
-			temp.put(sourceRef+dot+SignalKConstants.source, device);
+			temp.put(sourceRef, n2kmsg,device, ts);
+			
 			
 			// mapping contains an array
 			for (N2KHolder entry : entries) {
@@ -184,21 +188,27 @@ public class N2KHandler {
 					
 					if(val instanceof JSONArray){
 						if(!((JSONArray)val).isEmpty()){
-							temp.put(target + entry.node, resolve(((JSONArray)val).get(0),entry.type));
-							// put in signalk tree
-							if(entry.parent!=null){
-								temp.put(target + entry.parent+dot+SignalKConstants.source, sourceRef);
-								temp.put(target + entry.parent+dot+SignalKConstants.timestamp, ts);
+							if(entry.value){
+								temp.getFullData().put(target + entry.node, resolve(((JSONArray)val).get(0),entry.type));
+								if(entry.parent!=null){
+									temp.getFullData().put(target + entry.parent+dot+source, sourceRef);
+									temp.getFullData().put(target + entry.parent+dot+timestamp, ts);
+								}
+							}else{
+								temp.put(target + entry.node, resolve(((JSONArray)val).get(0),entry.type),sourceRef,ts);
 							}
 						}
 						continue;
 					}
-					// put in signalk tree
-					if(entry.parent!=null){
-						temp.put(target + entry.parent+dot+SignalKConstants.source, sourceRef);
-						temp.put(target + entry.parent+dot+SignalKConstants.timestamp, ts);
+					if(entry.value){
+						temp.getFullData().put(target + entry.node, val);
+						if(entry.parent!=null){
+							temp.getFullData().put(target + entry.parent+dot+source, sourceRef);
+							temp.getFullData().put(target + entry.parent+dot+timestamp, ts);
+						}
+					}else{
+						temp.put(target + entry.node, val,sourceRef,ts);
 					}
-					temp.put(target + entry.node, val);
 					
 				}catch(PathNotFoundException p){
 					logger.error(p);
@@ -234,11 +244,13 @@ public class N2KHandler {
 		String node = null;
 		JsonPath path = null;
 		String type = null;
+		boolean value = false;
 
-		public N2KHolder(String node, JsonPath path, String type) {
+		public N2KHolder(String node, JsonPath path, String type, boolean value) {
 			this.node = node;
 			this.path = path;
 			this.type = type;
+			this.value=value;
 			int p = node.lastIndexOf(dot);
 			if(p>0)parent=node.substring(0,p);
 		}

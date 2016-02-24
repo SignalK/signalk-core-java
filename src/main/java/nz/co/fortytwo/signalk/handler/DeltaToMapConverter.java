@@ -107,7 +107,7 @@ public class DeltaToMapConverter {
 			if(update.has(timestamp)){
 				String ts = update.at(timestamp).asString();
 				//TODO: should validate the timestamp
-				temp.put(ctx+dot+key+dot+timestamp, ts);
+				temp.getFullData().put(ctx+dot+key+dot+timestamp, ts);
 			}
 		}
 		
@@ -118,9 +118,9 @@ public class DeltaToMapConverter {
 		if(logger.isDebugEnabled())logger.debug("Key:"+ctx+dot+j.getParentKey()+", Object: "+j );
 		preProcess(temp,ctx,j);
 		if(j.isPrimitive()){
-			temp.put(ctx+dot+j.getParentKey(), j.getValue());
+			temp.getFullData().put(ctx+dot+j.getParentKey(), j.getValue());
 		}else if(j.isArray()){
-			temp.put(ctx+dot+j.getParentKey(), j);
+			temp.getFullData().put(ctx+dot+j.getParentKey(), j);
 		}else {
 			for(Json child: j.asJsonMap().values()){
 				if(value.equals(j.getParentKey())){

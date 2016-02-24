@@ -116,7 +116,7 @@ public class SignalKModelImplTest {
 		
 		logger.debug(signalk);
 		try{
-		signalk.put(vessels_dot_self_dot+nav_position_altitude+dot+"value", 90);
+		signalk.put(vessels_dot_self_dot+nav_position_altitude, 90,"dummy",Util.getIsoTimeString());
 		}catch(IllegalArgumentException e){
 			return;
 		}
@@ -157,7 +157,7 @@ public class SignalKModelImplTest {
 		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
 		
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
-		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue+dot+value,256.3);
+		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3,"dummy",Util.getIsoTimeString());
 		logger.debug(signalk);
 		
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
@@ -244,7 +244,7 @@ public class SignalKModelImplTest {
 		
 		logger.debug(signalk);
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()>0);
-		signalk.put(vessels_dot_self_dot+nav_position,null);
+		signalk.put(vessels_dot_self_dot+nav_position,null,"dummy",Util.getIsoTimeString());
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()==0);
 		
 	}

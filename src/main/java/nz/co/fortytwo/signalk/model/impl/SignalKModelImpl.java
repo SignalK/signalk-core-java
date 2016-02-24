@@ -152,7 +152,7 @@ public class SignalKModelImpl implements SignalKModel {
     /* (non-Javadoc)
 	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#put(java.lang.String, boolean)
 	 */
-    @Override
+    //@Override
 	public boolean put(String key, Object val) throws IllegalArgumentException{
     	key = fixSelfKey(key);
     	if(val == null){
@@ -188,6 +188,10 @@ public class SignalKModelImpl implements SignalKModel {
 	@Override
 	public boolean put(String key, Object val, String src, String ts) throws IllegalArgumentException {
 		key = fixSelfKey(key);
+		if(val == null){
+    		//TODO: we delete the val, and the values equiv, then promote the next values object
+    		return doDelete(key, root);
+		}
 		if(StringUtils.isBlank(src)) src="default";
 		
 		boolean success = putValues(key, val, src, ts);

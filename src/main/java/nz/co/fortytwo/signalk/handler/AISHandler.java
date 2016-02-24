@@ -164,18 +164,18 @@ public class AISHandler {
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
 						String sourceRef = aisVessel+"sources.ais";
 						//create ais source entry
-						model.put(sourceRef+dot+value, packet.getStringMessage());
-						model.put(sourceRef+dot+timestamp, ts);
-						model.put(sourceRef+dot+source, device);
+						model.put(sourceRef, packet.getStringMessage(),device,ts);
 						
-						model.put(aisVessel+name, vInfo.getName());
+						if(vInfo.getName()!=null){
+							model.getFullData().put(aisVessel+name, vInfo.getName());
+						}
 						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()), sourceRef, ts);
 						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), sourceRef, ts);
 						if (vInfo.getPosition() != null) {
-							model.put(aisVessel+ nav_position+dot+timestamp, ts);
-							model.put(aisVessel+ nav_position + dot+ source, sourceRef);
-							model.put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
-							model.put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
+							model.getFullData().put(aisVessel+ nav_position+dot+timestamp, ts);
+							model.getFullData().put(aisVessel+ nav_position + dot+ source, sourceRef);
+							model.getFullData().put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
+							model.getFullData().put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
 						}
 						model.put(aisVessel+ nav_courseOverGroundTrue, Math.toRadians(((double) vInfo.getCog()) / 10), sourceRef, ts);
 						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), sourceRef, ts);

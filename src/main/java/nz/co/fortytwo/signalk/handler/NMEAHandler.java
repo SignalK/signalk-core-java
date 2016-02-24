@@ -205,10 +205,9 @@ public class NMEAHandler{
 			return;
 		}
 		String now = Util.getIsoTimeString();
-		model.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sentence.getSentenceId()+dot+value,sentence.toSentence());
-		model.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sentence.getSentenceId()+dot+timestamp,now);
 		if(StringUtils.isBlank(device))device = "unknown";
-		model.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sentence.getSentenceId()+dot+source,device);
+		model.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sentence.getSentenceId(),sentence.toSentence(),device,now);
+		
 		// TODO: Why am I creating all these lists?
 		String type = sentence.getSentenceId();
 		Set<SentenceListener> list = new HashSet<SentenceListener>();
@@ -279,16 +278,16 @@ public class NMEAHandler{
 						}
 						previousLat = Util.movingAverage(ALPHA, previousLat, sen.getPosition().getLatitude());
 						if(logger.isDebugEnabled())logger.debug("lat position:" + sen.getPosition().getLatitude() + ", hemi=" + sen.getPosition().getLatitudeHemisphere());
-						sk.put(vessels_dot_self_dot + nav_position_latitude , previousLat);
+						sk.getFullData().put(vessels_dot_self_dot + nav_position_latitude , previousLat);
 	
 						if (startLon) {
 							previousLon = sen.getPosition().getLongitude();
 							startLon = false;
 						}
 						previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
-						sk.put(vessels_dot_self_dot + nav_position_longitude , previousLon);
-						sk.put(vessels_dot_self_dot + nav_position +dot+ source , vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
-						sk.put(vessels_dot_self_dot + nav_position + dot+timestamp , now);
+						sk.getFullData().put(vessels_dot_self_dot + nav_position_longitude , previousLon);
+						sk.getFullData().put(vessels_dot_self_dot + nav_position +dot+ source , vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
+						sk.getFullData().put(vessels_dot_self_dot + nav_position + dot+timestamp , now);
 					}
 	
 					if (evt.getSentence() instanceof HeadingSentence) {
@@ -299,7 +298,7 @@ public class NMEAHandler{
 
 							if (sen.isTrue()) {
 								try {
-									sk.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+source+dot+"src",sen.toSentence());
+									sk.getFullData().put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+source+dot+"src",sen.toSentence());
 									sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
 								} catch (Exception e) {
 									logger.error(e.getMessage());

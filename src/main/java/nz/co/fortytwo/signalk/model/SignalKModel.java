@@ -80,7 +80,7 @@ public interface SignalKModel{
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public boolean put(String key, Object val) throws IllegalArgumentException;
+	//public boolean put(String key, Object val) throws IllegalArgumentException;
 	
 	public boolean put(String key, Object val, String source) throws IllegalArgumentException;
 	public boolean put(String key, Object val, String source, String timestamp) throws IllegalArgumentException;

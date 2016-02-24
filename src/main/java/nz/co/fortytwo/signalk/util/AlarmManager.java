@@ -89,9 +89,9 @@ public class AlarmManager {
 				return;
 			}
 		}
-		signalkModel.put(alarmKey+dot+alarmState, value);
+		signalkModel.getFullData().put(alarmKey+dot+alarmState, value);
 		if (msg==null)msg="";
-		signalkModel.put(alarmKey+dot+message, msg);
+		signalkModel.getFullData().put(alarmKey+dot+message, msg);
 		if(logger.isDebugEnabled())logger.debug("Alarm set for:"+key+"="+value);
 	}
 }

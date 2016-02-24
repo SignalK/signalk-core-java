@@ -51,8 +51,8 @@ public class NMEA0183ProducerTest {
 		NMEA0183Producer p = new NMEA0183Producer();
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		Util.setSelf("motu");
-		model.put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
-		model.put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
+		model.getFullData().put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
+		model.getFullData().put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
 		String nmea = p.createRMC(model);
 		logger.debug(nmea);
 		assertTrue(nmea.startsWith("$GPRMC,,A,4130.000,S,17230.000,E,,,"));

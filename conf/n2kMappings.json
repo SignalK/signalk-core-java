@@ -2,124 +2,126 @@
     "126992": [
         {
             "source": "Date",
-            "node": "environment.time.date.value"
+            "node": "environment.time.date"
         },
         {
             "source": "Time",
-            "node": "environment.time.time.value"
+            "node": "environment.time.time"
         }
     ],
     "128267": [
         {
             "source": "Depth",
-            "node": "environment.depth.belowTransducer.value"
+            "node": "environment.depth.belowTransducer"
         }
     ],
     "128275": [
         {
             "source": "Trip Log",
-            "node": "navigation.logTrip.value"
+            "node": "navigation.logTrip"
         },
         {
             "source": "Log",
-            "node": "navigation.log.value"
+            "node": "navigation.log"
         }
     ],
     "129026": [
         {
             "source": "SOG",
-            "node": "navigation.speedOverGround.value"
+            "node": "navigation.speedOverGround"
         },
         {
             "source": "COG",
-            "node": "navigation.courseOverGroundTrue.value",
+            "node": "navigation.courseOverGroundTrue",
             "filter": "$.fields[?(@.COG Reference == 'True')]"
         },
         {
             "source": "COG",
-            "node": "navigation.courseOverGroundMagnetic.value",
+            "node": "navigation.courseOverGroundMagnetic",
             "filter": "$.fields[?(@.COG Reference == 'Magnetic')]"
         }
     ],
     "129025": [
         {
             "source": "Longitude",
-             "node": "navigation.position.longitude"
+             "node": "navigation.position.longitude",
+             "value": true
          },
          {
             "source": "Latitude",
-            "node": "navigation.position.latitude"
+            "node": "navigation.position.latitude",
+            "value": true
         }
     ],
     "127250": [
         {
             "source": "Heading",
-            "node": "navigation.headingMagnetic.value",
+            "node": "navigation.headingMagnetic",
             "filter": "$.fields[?(@.Reference=='Magnetic' && @.Heading)]"
         },
         {
             "source": "Variation",
-            "node": "navigation.magneticVariation.value",
+            "node": "navigation.magneticVariation",
             "filter": "$.fields[?(@.Variation)]"
         }
     ],
     "127245": [
         {
             "source": "Position",
-            "node": "steering.rudderAngle.value",
+            "node": "steering.rudderAngle",
             "filter": "$.fields[?(@.Position)]"
         }
     ],
     "127257": [
         {
             "source": "Yaw",
-            "node": "navigation.attitude.yaw.value"
+            "node": "navigation.attitude.yaw"
         },
         {
             "source": "Pitch",
-            "node": "navigation.attitude.pitch.value"
+            "node": "navigation.attitude.pitch"
         },
         {
             "source": "Roll",
-            "node": "navigation.attitude.roll.value"
+            "node": "navigation.attitude.roll"
         }
     ],
     "130306": [
         {
             "source": "Wind Speed",
-            "node": "environment.wind.speedApparent.value",
+            "node": "environment.wind.speedApparent",
             "filter": "$.fields[?(@.Reference=='Apparent')]"
         },
         {
             "source": "Wind Speed",
-            "node": "environment.wind.speedTrue.value",
+            "node": "environment.wind.speedTrue",
             "filter":"$.fields[?(@.Reference=='True (boat referenced)')]"
         },
         {
             "source": "Wind Speed",
-            "node": "environment.wind.speedOverGround.value",
+            "node": "environment.wind.speedOverGround",
             "filter": "$.fields[?(@.Reference=='True (ground referenced to North)')]"
         },
         {
             "source": "Wind Angle",
-            "node": "environment.wind.angleApparent.value",
+            "node": "environment.wind.angleApparent",
             "filter": "$.fields[?(@.Reference=='Apparent')]"
         },
         {
             "source": "Wind Angle",
-            "node": "environment.wind.angleTrueWater.value",
+            "node": "environment.wind.angleTrueWater",
             "filter": "$.fields[?(@.Reference=='True (boat referenced)')]"
         },
         {
             "source": "Wind Angle",
-            "node": "environment.wind.angleTrueGround.value",
+            "node": "environment.wind.angleTrueGround",
             "filter": "$.fields[?(@.Reference=='True (ground referenced to North)')]"
         }
     ],
     "127251": [
         {
             "source": "Rate",
-            "node": "navigation.rateOfTurn.value"
+            "node": "navigation.rateOfTurn"
         }
     ],
     "127258": [
@@ -131,128 +133,140 @@
     "128259": [
         {
             "source": "Speed Water Referenced",
-            "node": "navigation.speedThroughWater.value"
+            "node": "navigation.speedThroughWater"
         }
     ],
     "129038": [
     	{
             "source": "User ID",
             "node": "mmsi",
-            "type": "string"            
+            "type": "string",
+            "value": true            
         },
         {
             "source": "COG",
-            "node": "navigation.courseOverGroundTrue.value"            
+            "node": "navigation.courseOverGroundTrue"            
         },
         {
             "source": "SOG",
-            "node": "navigation.speedOverGround.value"
+            "node": "navigation.speedOverGround"
         },
          {
             "source": "Longitude",
-             "node": "navigation.position.longitude"
+             "node": "navigation.position.longitude",
+             "value": true
          },
          {
             "source": "Latitude",
-            "node": "navigation.position.latitude"
+            "node": "navigation.position.latitude",
+            "value": true
         },
         {
             "source": "Nav Status",
-            "node": "navigation.state.value"
+            "node": "navigation.state"
         },
         {
             "source": "Heading",
-            "node": "navigation.headingTrue.value"
+            "node": "navigation.headingTrue"
         },
         {
             "source": "Rate of Turn",
-            "node": "navigation.rateOfTurn.value"
+            "node": "navigation.rateOfTurn"
         }
     ],
     "129039": [
     	{
             "source": "User ID",
             "node": "mmsi",
-            "type": "string"            
+            "type": "string",
+            "value": true            
         },
         {
             "source": "COG",
-            "node": "navigation.courseOverGroundTrue.value"            
+            "node": "navigation.courseOverGroundTrue"            
         },
         {
             "source": "SOG",
-            "node": "navigation.speedOverGround.value"
+            "node": "navigation.speedOverGround"
         },
          {
             "source": "Longitude",
-             "node": "navigation.position.longitude"
+             "node": "navigation.position.longitude",
+             "value": true
          },
          {
             "source": "Latitude",
-            "node": "navigation.position.latitude"
+            "node": "navigation.position.latitude",
+            "value": true
         }
     ],
     "129794": [
     	{
             "source": "User ID",
             "node": "mmsi",
-            "type": "string"            
+            "type": "string",
+            "value": true            
         },
         {
             "source": "Callsign",
-            "node": "communication.callsignVhf.value"            
+            "node": "communication.callsignVhf"
         },
         {
             "source": "Name",
-            "node": "name"
+            "node": "name",
+            "value": true           
         },
          {
             "source": "Length",
-             "node": "design.length.overall.value"
+             "node": "design.length.overall"
          },
          {
             "source": "Beam",
-            "node": "design.beam.value"
+            "node": "design.beam"
         },
          {
             "source": "Draft",
-            "node": "design.draft.value"
+            "node": "design.draft"
         },
          {
             "source": "Destination",
-            "node": "navigation.destination.value"
+            "node": "navigation.destination"
         }
     ],
         "129809": [
     	{
             "source": "User ID",
             "node": "mmsi",
-            "type": "string"            
+            "type": "string",
+            "value": true            
         },
         {
             "source": "Name",
-            "node": "name"
+            "node": "name",
+            "value": true
         }
     ],
     "130577": [
         {
             "source": "COG",
-            "node": "navigation.courseOverGroundTrue.value",
+            "node": "navigation.courseOverGroundTrue",
             "filter": "$.fields[?(@.COG Reference=='True')]"
             
         },
         {
             "source": "SOG",
-            "node": "navigation.speedOverGround.value"
+            "node": "navigation.speedOverGround"
         },
         {
             "source": "Set",
             "node": "environment.current.setTrue",
-            "filter": "$.fields[?(@.COG Reference=='True' && @.Set)]"
+            "filter": "$.fields[?(@.COG Reference=='True' && @.Set)]",
+            "value": true    
         },
         {
             "source": "Drift",
-            "node": "environment.current.drift"
+            "node": "environment.current.drift",
+            "value": true    
        
         }
     ],
@@ -260,11 +274,13 @@
         {
             "source": "Set",
             "node": "environment.current.setTrue",
-            "filter": "$.fields[?(@.Set Reference=='True')]"
+            "filter": "$.fields[?(@.Set Reference=='True')]",
+            "value": true    
         },
         {
             "source": "Drift",
-            "node": "environment.current.drift"
+            "node": "environment.current.drift",
+            "value": true    
             
         }
     ]

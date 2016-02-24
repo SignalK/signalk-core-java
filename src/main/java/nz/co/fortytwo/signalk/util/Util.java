@@ -25,9 +25,6 @@
 package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.self_str;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +45,7 @@ import mjson.Json;
 import net.sf.marineapi.nmea.sentence.RMCSentence;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -132,47 +130,47 @@ public class Util {
 	 */
 	public static void setDefaults(SignalKModel model) {
 		// populate sensible defaults here
-		model.put(ConfigConstants.UUID, "self");
-		model.put(ConfigConstants.WEBSOCKET_PORT, 3000);
-		model.put(ConfigConstants.REST_PORT, 8080);
-		model.put(ConfigConstants.STORAGE_ROOT, "./storage/");
-		model.put(ConfigConstants.STATIC_DIR, "./signalk-static");
-		model.put(ConfigConstants.MAP_DIR, "./mapcache");
-		model.put(ConfigConstants.DEMO, false);
-		model.put(ConfigConstants.STREAM_URL,
+		model.getFullData().put(ConfigConstants.UUID, "self");
+		model.getFullData().put(ConfigConstants.WEBSOCKET_PORT, 3000);
+		model.getFullData().put(ConfigConstants.REST_PORT, 8080);
+		model.getFullData().put(ConfigConstants.STORAGE_ROOT, "./storage/");
+		model.getFullData().put(ConfigConstants.STATIC_DIR, "./signalk-static");
+		model.getFullData().put(ConfigConstants.MAP_DIR, "./mapcache");
+		model.getFullData().put(ConfigConstants.DEMO, false);
+		model.getFullData().put(ConfigConstants.STREAM_URL,
 				"motu.log");
-		model.put(ConfigConstants.USBDRIVE, "/media/usb0");
-		model.put(
+		model.getFullData().put(ConfigConstants.USBDRIVE, "/media/usb0");
+		model.getFullData().put(
 				ConfigConstants.SERIAL_PORTS,
 				"[\"/dev/ttyUSB0\",\"/dev/ttyUSB1\",\"/dev/ttyUSB2\",\"/dev/ttyACM0\",\"/dev/ttyACM1\",\"/dev/ttyACM2\"]");
 		if (SystemUtils.IS_OS_WINDOWS) {
-			model.put(ConfigConstants.SERIAL_PORTS,
+			model.getFullData().put(ConfigConstants.SERIAL_PORTS,
 					"[\"COM1\",\"COM2\",\"COM3\",\"COM4\"]");
 		}
-		model.put(ConfigConstants.SERIAL_PORT_BAUD, 38400);
-		model.put(ConfigConstants.ENABLE_SERIAL, true);
-		model.put(ConfigConstants.TCP_PORT, 55555);
-		model.put(ConfigConstants.UDP_PORT, 55554);
-		model.put(ConfigConstants.TCP_NMEA_PORT, 55557);
-		model.put(ConfigConstants.UDP_NMEA_PORT, 55556);
-		model.put(ConfigConstants.STOMP_PORT, 61613);
-		model.put(ConfigConstants.MQTT_PORT, 1883);
-		model.put(ConfigConstants.CLOCK_source, "system");
-		model.put(ConfigConstants.HAWTIO_PORT, 8000);
-		model.put(ConfigConstants.HAWTIO_AUTHENTICATE, false);
-		model.put(ConfigConstants.HAWTIO_CONTEXT, "/hawtio");
-		model.put(ConfigConstants.HAWTIO_WAR,
+		model.getFullData().put(ConfigConstants.SERIAL_PORT_BAUD, 38400);
+		model.getFullData().put(ConfigConstants.ENABLE_SERIAL, true);
+		model.getFullData().put(ConfigConstants.TCP_PORT, 55555);
+		model.getFullData().put(ConfigConstants.UDP_PORT, 55554);
+		model.getFullData().put(ConfigConstants.TCP_NMEA_PORT, 55557);
+		model.getFullData().put(ConfigConstants.UDP_NMEA_PORT, 55556);
+		model.getFullData().put(ConfigConstants.STOMP_PORT, 61613);
+		model.getFullData().put(ConfigConstants.MQTT_PORT, 1883);
+		model.getFullData().put(ConfigConstants.CLOCK_source, "system");
+		model.getFullData().put(ConfigConstants.HAWTIO_PORT, 8000);
+		model.getFullData().put(ConfigConstants.HAWTIO_AUTHENTICATE, false);
+		model.getFullData().put(ConfigConstants.HAWTIO_CONTEXT, "/hawtio");
+		model.getFullData().put(ConfigConstants.HAWTIO_WAR,
 				"./hawtio/hawtio-default-offline-1.4.48.war");
-		model.put(ConfigConstants.HAWTIO_START, false);
-		model.put(ConfigConstants.VERSION, "v1.0.0");
-		model.put(ConfigConstants.ALLOW_INSTALL, true);
-		model.put(ConfigConstants.ALLOW_UPGRADE, true);
-		model.put(ConfigConstants.GENERATE_NMEA0183, true);
-		model.put(ConfigConstants.START_MQTT, true);
-		model.put(ConfigConstants.START_STOMP, true);
-		model.put(ConfigConstants.CLIENT_TCP, null);
-		model.put(ConfigConstants.CLIENT_MQTT, null);
-		model.put(ConfigConstants.CLIENT_STOMP, null);
+		model.getFullData().put(ConfigConstants.HAWTIO_START, false);
+		model.getFullData().put(ConfigConstants.VERSION, "v1.0.0");
+		model.getFullData().put(ConfigConstants.ALLOW_INSTALL, true);
+		model.getFullData().put(ConfigConstants.ALLOW_UPGRADE, true);
+		model.getFullData().put(ConfigConstants.GENERATE_NMEA0183, true);
+		model.getFullData().put(ConfigConstants.START_MQTT, true);
+		model.getFullData().put(ConfigConstants.START_STOMP, true);
+		//model.getFullData().put(ConfigConstants.CLIENT_TCP, null);
+		//model.getFullData().put(ConfigConstants.CLIENT_MQTT, null);
+		//model.getFullData().put(ConfigConstants.CLIENT_STOMP, null);
 
 	}
 
@@ -358,7 +356,7 @@ public class Util {
 		if (node != null && node.size() > 0) {
 			addNodeToTemp(signalkModel,temp, node);
 		} else {
-			temp.put(p, signalkModel.get(p));
+			temp.getFullData().put(p, signalkModel.get(p));
 		}
 
 	}
@@ -370,13 +368,13 @@ public class Util {
 				.replace(", ", "\n")));
 		for (Map.Entry<Object, Object> e : props.entrySet()) {
 			if (e.getValue().equals("true") || e.getValue().equals("false")) {
-				model.put((String) e.getKey(),
+				model.getFullData().put((String) e.getKey(),
 						Boolean.getBoolean((String) e.getValue()));
 			} else if (NumberUtils.isNumber((String) e.getValue())) {
-				model.put((String) e.getKey(),
+				model.getFullData().put((String) e.getKey(),
 						NumberUtils.createDouble((String) e.getValue()));
 			} else {
-				model.put((String) e.getKey(), e.getValue());
+				model.getFullData().put((String) e.getKey(), e.getValue());
 			}
 		}
 		return model;
@@ -415,7 +413,7 @@ public class Util {
 	public static void addNodeToTemp(SignalKModel model, SignalKModel temp,
 			NavigableSet<String> node) {
 		for (String key : node) {
-			temp.put(key, model.get(key));
+			temp.getFullData().put(key, model.get(key));
 		}
 	}
 

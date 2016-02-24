@@ -92,7 +92,7 @@ public class SignalKModelFactory {
 		signalKModel.getFullData().clear();
 		Util.setDefaults(signalKModel);
 		loadConfig(signalKModel, "motu");
-		signalKModel.put(ConfigConstants.DEMO, false);
+		signalKModel.getFullData().put(ConfigConstants.DEMO, false);
 		return signalKModel;
 	}
 
@@ -132,7 +132,7 @@ public class SignalKModelFactory {
 				String self = (String) model.get(ConfigConstants.UUID);
 				
 				Util.setSelf(SignalKConstants.self);
-				model.put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
+				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
 				
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
 			}catch(Exception ex){
@@ -143,10 +143,10 @@ public class SignalKModelFactory {
 			//write a new one for next time
 			//create a uuid
 			String self = SignalKConstants.URN_UUID+UUID.randomUUID().toString();
-			model.put(ConfigConstants.UUID, self);
+			model.getFullData().put(ConfigConstants.UUID, self);
 			saveConfig(model);
 			Util.setSelf(SignalKConstants.self);
-			model.put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
 		}
 	}
 	
@@ -158,7 +158,7 @@ public class SignalKModelFactory {
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				model.put(ConfigConstants.UUID,self);
+				model.getFullData().put(ConfigConstants.UUID,self);
 				Util.setSelf(self);
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
 				logger.info("   self set to: "+self);
