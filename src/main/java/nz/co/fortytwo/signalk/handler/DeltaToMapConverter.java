@@ -28,7 +28,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.PATH;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.PUT;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
@@ -99,9 +99,9 @@ public class DeltaToMapConverter {
 			//temp.put(ctx+"."+key, e.at(value).getValue());
 			addRecursively(temp, ctx+dot+key, e.at(value));
 			
-			if(update.has(source)){
+			if(update.has(sourceRef)){
 				//TODO:generate a proper src ref.
-				addRecursively(temp, ctx+dot+key, update.at(source));
+				addRecursively(temp, ctx+dot+key, update.at(sourceRef));
 			}
 			
 			if(update.has(timestamp)){

@@ -34,7 +34,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
@@ -279,16 +279,14 @@ public class NMEAHandler{
 						}
 						previousLat = Util.movingAverage(ALPHA, previousLat, sen.getPosition().getLatitude());
 						if(logger.isDebugEnabled())logger.debug("lat position:" + sen.getPosition().getLatitude() + ", hemi=" + sen.getPosition().getLatitudeHemisphere());
-						sk.getFullData().put(vessels_dot_self_dot + nav_position_latitude , previousLat);
 	
 						if (startLon) {
 							previousLon = sen.getPosition().getLongitude();
 							startLon = false;
 						}
 						previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
-						sk.getFullData().put(vessels_dot_self_dot + nav_position_longitude , previousLon);
-						sk.getFullData().put(vessels_dot_self_dot + nav_position +dot+ source , vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
-						sk.getFullData().put(vessels_dot_self_dot + nav_position + dot+timestamp , now);
+						sk.putPosition(vessels_dot_self_dot + nav_position, previousLat, previousLon, 0.0, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						
 					}
 	
 					if (evt.getSentence() instanceof HeadingSentence) {
@@ -299,7 +297,7 @@ public class NMEAHandler{
 
 							if (sen.isTrue()) {
 								try {
-									sk.getFullData().put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+source+dot+"src",sen.toSentence());
+									sk.getFullData().put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+sourceRef+dot+"src",sen.toSentence());
 									sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
 								} catch (Exception e) {
 									logger.error(e.getMessage());

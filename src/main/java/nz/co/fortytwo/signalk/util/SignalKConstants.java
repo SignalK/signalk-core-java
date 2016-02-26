@@ -45,10 +45,14 @@ public class SignalKConstants {
 	
 	public static final String version = "version";
 	public static final String timestamp = "timestamp";
+	public static final String sourceRef = "$source";
 	public static final String source = "source";
 	public static final String value = "value";
 	public static final String values = "values";
 	public static final String UNKNOWN = "unknown";
+	public static final String LATITUDE = "latitude";
+	public static final String LONGITUDE = "longitude";
+	public static final String ALTITUDE = "altitude";
 	
 	
 	

@@ -24,6 +24,7 @@
 package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_magneticVariation;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
@@ -31,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.Util;
 
 import org.junit.After;
 import org.junit.Test;
@@ -46,8 +48,7 @@ public class DeclinationHandlerTest {
 	public void shouldGetDeclination() {
 		DeclinationHandler p = new DeclinationHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
-		model.getFullData().put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
-		model.getFullData().put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
+		model.putPosition(vessels_dot_self_dot+ nav_position, -41.5, 172.5,0.0,"test",Util.getIsoTimeString());
 		p.handle(model);
 		double decl = (double) model.getValue(vessels_dot_self_dot+nav_magneticVariation);
 		assertEquals(Math.toRadians(22.1), decl, 001);

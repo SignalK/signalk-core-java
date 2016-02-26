@@ -34,9 +34,8 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.IOException;
@@ -163,9 +162,9 @@ public class AISHandler {
 						if(StringUtils.isBlank(device))device=UNKNOWN;
 						String ts = Util.getIsoTimeString(packet.getBestTimestamp());
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
-						String sourceRef = aisVessel+"sources.ais";
+						String srcRef = aisVessel+"sources.ais";
 						//create ais source entry
-						model.put(sourceRef, packet.getStringMessage(),device,ts);
+						model.put(srcRef, packet.getStringMessage(),device,ts);
 						
 						if(vInfo.getName()!=null){
 							model.getFullData().put(aisVessel+name, vInfo.getName());
@@ -173,15 +172,12 @@ public class AISHandler {
 						model.put(aisVessel+mmsi, String.valueOf(vInfo.getUserId()), sourceRef, ts);
 						model.put(aisVessel+ nav_state, navStatusMap.get(vInfo.getNavStatus()), sourceRef, ts);
 						if (vInfo.getPosition() != null) {
-							model.getFullData().put(aisVessel+ nav_position+dot+timestamp, ts);
-							model.getFullData().put(aisVessel+ nav_position + dot+ source, sourceRef);
-							model.getFullData().put(aisVessel+ nav_position_latitude, vInfo.getPosition().getLatitude());
-							model.getFullData().put(aisVessel+ nav_position_longitude, vInfo.getPosition().getLongitude());
+							model.putPosition(aisVessel+ nav_position, vInfo.getPosition().getLatitude(), vInfo.getPosition().getLongitude(), 0.0, srcRef, ts);
 						}
-						model.put(aisVessel+ nav_courseOverGroundTrue, Math.toRadians(((double) vInfo.getCog()) / 10), sourceRef, ts);
-						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), sourceRef, ts);
-						model.put(aisVessel+ nav_headingTrue, Math.toRadians(((double) vInfo.getTrueHeading()) / 10), sourceRef);
-						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), sourceRef, ts);
+						model.put(aisVessel+ nav_courseOverGroundTrue, Math.toRadians(((double) vInfo.getCog()) / 10), srcRef, ts);
+						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), srcRef, ts);
+						model.put(aisVessel+ nav_headingTrue, Math.toRadians(((double) vInfo.getTrueHeading()) / 10), srcRef);
+						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), srcRef, ts);
 					}
 				}
 			}

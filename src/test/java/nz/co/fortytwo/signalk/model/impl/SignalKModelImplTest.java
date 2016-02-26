@@ -35,7 +35,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_altitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
@@ -187,7 +187,7 @@ public class SignalKModelImplTest {
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
 		assertEquals(256.3,dirTrue,0.000001);
 		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
-		assertEquals(UNKNOWN, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+		assertEquals(UNKNOWN, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+sourceRef));
 		
 	}
 	
@@ -221,14 +221,14 @@ public class SignalKModelImplTest {
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
 		assertEquals(256.3,dirTrue,0.000001);
 		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
-		assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+		assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+sourceRef));
 		//second source
 		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,250.0, "bow",ts);
 		logger.debug(signalk);
 		dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
 		assertEquals(256.3,dirTrue,0.000001);
 		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
-		assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+		assertEquals("masthead", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+sourceRef));
 		
 		//values
 		NavigableMap<String, Object> values = signalk.getValues(vessels_dot_self_dot+ env_wind_directionTrue);

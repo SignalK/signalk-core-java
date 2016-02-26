@@ -25,6 +25,7 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
@@ -51,8 +52,7 @@ public class NMEA0183ProducerTest {
 		NMEA0183Producer p = new NMEA0183Producer();
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		Util.setSelf("motu");
-		model.getFullData().put(vessels_dot_self_dot+ nav_position_latitude, -41.5);
-		model.getFullData().put(vessels_dot_self_dot+ nav_position_longitude, 172.5);
+		model.putPosition(vessels_dot_self_dot+ nav_position, -41.5, 172.5, 0.0, "test",Util.getIsoTimeString());
 		String nmea = p.createRMC(model);
 		logger.debug(nmea);
 		assertTrue(nmea.startsWith("$GPRMC,,A,4130.000,S,17230.000,E,,,"));

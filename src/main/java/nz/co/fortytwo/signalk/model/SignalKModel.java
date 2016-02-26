@@ -121,4 +121,16 @@ public interface SignalKModel{
 	 */
 	public abstract NavigableMap<String, Object> getValues(String string);
 
+	/**
+	 * Convenience method to set a position object
+	 * @param string
+	 * @param latitude
+	 * @param longitude
+	 * @param altitude
+	 * @param srcRef
+	 * @param ts
+	 */
+	public abstract void putPosition(String string, double latitude,
+			double longitude, double d, String srcRef, String ts);
+
 }

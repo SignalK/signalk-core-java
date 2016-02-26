@@ -22,9 +22,15 @@
  *
  */
 package nz.co.fortytwo.signalk.model.impl;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.ALTITUDE;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.LATITUDE;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.LONGITUDE;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
@@ -124,7 +130,11 @@ public class SignalKModelImpl implements SignalKModel {
         //meta.zones array
         if (!val.equals(root.put(key, val))) {
         	if(logger.isDebugEnabled())logger.debug("doPut "+key+"="+val);
-        	if(!key.endsWith(dot+source)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+source+dot)){
+        	//for .source
+        	if(!key.endsWith(dot+sourceRef)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+sourceRef+dot)){
+        		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
+        	}//for .$source
+        	if(!key.endsWith(dot+sourceRef)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+sourceRef+dot)){
         		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
         	}
             return true;
@@ -193,13 +203,14 @@ public class SignalKModelImpl implements SignalKModel {
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
+		
 		if(StringUtils.isBlank(src)) src=UNKNOWN;
 		
 		boolean success = putValues(key, val, src, ts);
-		String curSource = (String) root.get(key+dot+SignalKConstants.source);
+		String curSource = (String) root.get(key+dot+SignalKConstants.sourceRef);
 		if(success && (StringUtils.isBlank(curSource)||StringUtils.equals(curSource, src))){
-			if(ts!=null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.source, src)&& doPut(key+dot+timestamp, ts));
-			if(ts==null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.source, src));
+			if(ts!=null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.sourceRef, src)&& doPut(key+dot+timestamp, ts));
+			if(ts==null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.sourceRef, src));
 		}
 		return success;
 	}
@@ -218,9 +229,9 @@ public class SignalKModelImpl implements SignalKModel {
 		
 		String vKey = key+".values."+src;
 		if(ts!=null){
-			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, src)&& doPut(vKey+dot+timestamp, ts));
+			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+sourceRef, src)&& doPut(vKey+dot+timestamp, ts));
 		}else{
-			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+source, src));
+			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+sourceRef, src));
 		}
 		
 
@@ -331,6 +342,17 @@ public class SignalKModelImpl implements SignalKModel {
 	public NavigableMap<String, Object> getValues(String key) {
 		key = fixSelfKey(key);
         return getSubMap(key+dot+values);
+	}
+
+	@Override
+	public void putPosition(String key, double lat, double lon,
+			double altitude, String srcRef, String ts) {
+		doPut(key + dot+ sourceRef, srcRef);
+		doPut(key+ dot+LATITUDE, lat);
+		doPut(key+ dot + LONGITUDE, lon);
+		doPut(key+ dot+ ALTITUDE, altitude);
+		doPut(key+dot+timestamp,ts);
+		
 	}
 
 	

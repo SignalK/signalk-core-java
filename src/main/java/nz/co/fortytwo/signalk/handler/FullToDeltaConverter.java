@@ -27,7 +27,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.PATH;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.attr;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.meta;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
@@ -160,9 +160,9 @@ public class FullToDeltaConverter {
 			if (js == null)
 				continue;
 			
-			if (js.isObject() && js.has(source)) {
+			if (js.isObject() && js.has(sourceRef)) {
 				logger.debug("Process source : "+js);
-				Json jsSrc = js.at(source);
+				Json jsSrc = js.at(sourceRef);
 				//has it changed
 				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())){
 						
@@ -175,7 +175,7 @@ public class FullToDeltaConverter {
 					entry=Json.object();
 					values = Json.array();
 					entry.set(SignalKConstants.values, values);
-					entry.set(source, jsSrc.getValue());
+					entry.set(sourceRef, jsSrc.getValue());
 					if(js.has(timestamp)){
 						entry.set(timestamp, js.at(timestamp));
 					}
@@ -208,12 +208,12 @@ public class FullToDeltaConverter {
 				continue;
 			}
 			
-			if (js.isObject() && js.has(source) && !js.has(SignalKConstants.value)) {
+			if (js.isObject() && js.has(sourceRef) && !js.has(SignalKConstants.value)) {
 				logger.debug("Process value object : "+js);
 				String path = js.getPath().substring(prefix);
 				Json value = Json.object();
 				value.set(PATH, path);
-				js.delAt(source);
+				js.delAt(sourceRef);
 				js.delAt(timestamp);
 				js.delAt(attr);
 				//js.delAt(meta);
@@ -237,7 +237,7 @@ public class FullToDeltaConverter {
 			}
 			if (js.isObject()) {
 				if(js.getParentKey().equals(timestamp))continue;
-				if(js.getParentKey().equals(source))continue;
+				if(js.getParentKey().equals(sourceRef))continue;
 				if(js.getParentKey().equals(SignalKConstants.value))continue;
 				logger.debug("Recurse : "+js);
 				getEntries(updates, values, jsSrcRef, js, prefix);

@@ -25,6 +25,7 @@ package nz.co.fortytwo.signalk.handler;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
@@ -192,7 +193,7 @@ public class N2KHandler {
 							if(entry.value){
 								temp.getFullData().put(target + entry.node, resolve(((JSONArray)val).get(0),entry.type));
 								if(entry.parent!=null){
-									temp.getFullData().put(target + entry.parent+dot+source, sourceRef);
+									temp.getFullData().put(target + entry.parent+dot+sourceRef, sourceRef);
 									temp.getFullData().put(target + entry.parent+dot+timestamp, ts);
 								}
 							}else{
@@ -204,7 +205,7 @@ public class N2KHandler {
 					if(entry.value){
 						temp.getFullData().put(target + entry.node, val);
 						if(entry.parent!=null){
-							temp.getFullData().put(target + entry.parent+dot+source, sourceRef);
+							temp.getFullData().put(target + entry.parent+dot+sourceRef, sourceRef);
 							temp.getFullData().put(target + entry.parent+dot+timestamp, ts);
 						}
 					}else{

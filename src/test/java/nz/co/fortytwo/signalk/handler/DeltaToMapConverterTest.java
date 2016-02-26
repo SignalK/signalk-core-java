@@ -27,7 +27,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundT
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedThroughWater;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
@@ -110,12 +110,12 @@ public class DeltaToMapConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(3.0176, (double) output.getValue(vessels_dot_self_dot + nav_courseOverGroundTrue), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".device"));
 
 		assertEquals(3.85, (double) output.get(vessels_dot_self_dot + nav_speedOverGround + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".device"));
 	}
 
 	@Test
@@ -125,12 +125,12 @@ public class DeltaToMapConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(3.0176, (double) output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".device"));
 
 		assertEquals(3.85, (double) output.get(vessels_dot_self_dot + nav_speedOverGround + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".device"));
 	}
 
 	@Test
@@ -161,12 +161,12 @@ public class DeltaToMapConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(3.0176, (double) output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".device"));
 
 		assertEquals(3.85, (double) output.get(vessels_dot_self_dot + nav_speedOverGround + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".device"));
 	}
 
 	@Test
@@ -176,19 +176,19 @@ public class DeltaToMapConverterTest {
 		SignalKModel output = processor.handle(diff);
 		logger.debug(output);
 		assertEquals(3.0176, (double) output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_courseOverGroundTrue + "." + sourceRef + ".device"));
 
 		assertEquals(3.85, (double) output.get(vessels_dot_self_dot + nav_speedOverGround + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".timestamp"));
-		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/actisense", output.get(vessels_dot_self_dot + nav_speedOverGround + "." + sourceRef + ".device"));
 
 		assertEquals(152.9, (double) output.get(vessels_dot_self_dot + nav_courseOverGroundMagnetic + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundMagnetic + "." + source + ".timestamp"));
-		assertEquals("/dev/ttyUSB0", output.get(vessels_dot_self_dot + nav_courseOverGroundMagnetic + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_courseOverGroundMagnetic + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/ttyUSB0", output.get(vessels_dot_self_dot + nav_courseOverGroundMagnetic + "." + sourceRef + ".device"));
 
 		assertEquals(2.85, (double) output.get(vessels_dot_self_dot + nav_speedThroughWater + "." + value), 001);
-		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedThroughWater + "." + source + ".timestamp"));
-		assertEquals("/dev/ttyUSB0", output.get(vessels_dot_self_dot + nav_speedThroughWater + "." + source + ".device"));
+		assertEquals("2014-08-15T16:00:00.081+00:00", output.get(vessels_dot_self_dot + nav_speedThroughWater + "." + sourceRef + ".timestamp"));
+		assertEquals("/dev/ttyUSB0", output.get(vessels_dot_self_dot + nav_speedThroughWater + "." + sourceRef + ".device"));
 	}
 }
