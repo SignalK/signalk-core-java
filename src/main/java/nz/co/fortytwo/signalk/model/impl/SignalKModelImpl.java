@@ -22,6 +22,7 @@
  *
  */
 package nz.co.fortytwo.signalk.model.impl;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
@@ -192,7 +193,7 @@ public class SignalKModelImpl implements SignalKModel {
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
-		if(StringUtils.isBlank(src)) src="default";
+		if(StringUtils.isBlank(src)) src=UNKNOWN;
 		
 		boolean success = putValues(key, val, src, ts);
 		String curSource = (String) root.get(key+dot+SignalKConstants.source);

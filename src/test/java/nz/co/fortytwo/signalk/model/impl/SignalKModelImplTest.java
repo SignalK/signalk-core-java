@@ -23,6 +23,7 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
@@ -180,13 +181,13 @@ public class SignalKModelImplTest {
 		
 		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
 		String ts = Util.getIsoTimeString();
-		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3, "unknown",ts);
+		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3, UNKNOWN,ts);
 		logger.debug(signalk);
 		
 		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
 		assertEquals(256.3,dirTrue,0.000001);
 		assertEquals(ts, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+timestamp));
-		assertEquals("unknown", signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
+		assertEquals(UNKNOWN, signalk.get(vessels_dot_self_dot+ env_wind_directionTrue+dot+source));
 		
 	}
 	

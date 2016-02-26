@@ -48,6 +48,7 @@ public class SignalKConstants {
 	public static final String source = "source";
 	public static final String value = "value";
 	public static final String values = "values";
+	public static final String UNKNOWN = "unknown";
 	
 	
 	

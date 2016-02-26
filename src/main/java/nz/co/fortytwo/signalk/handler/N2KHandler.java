@@ -22,6 +22,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
@@ -174,7 +175,7 @@ public class N2KHandler {
 			String sourceRef = target+"sources.n2k."+pgn+dot+n2k.read(srcPath);
 			
 			String ts = Util.getIsoTimeString();
-			if(StringUtils.isBlank(device))device = "unknown";
+			if(StringUtils.isBlank(device))device = UNKNOWN;
 			//add the actual source
 			temp.put(sourceRef, n2kmsg,device, ts);
 			

@@ -23,6 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
@@ -205,7 +206,7 @@ public class NMEAHandler{
 			return;
 		}
 		String now = Util.getIsoTimeString();
-		if(StringUtils.isBlank(device))device = "unknown";
+		if(StringUtils.isBlank(device))device = UNKNOWN;
 		model.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sentence.getSentenceId(),sentence.toSentence(),device,now);
 		
 		// TODO: Why am I creating all these lists?

@@ -22,6 +22,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.communication_callsignVhf;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
@@ -159,7 +160,7 @@ public class AISHandler {
 						vInfo = new AisVesselInfo((AisMessage18) message);
 					}
 					if (vInfo != null) {
-						if(StringUtils.isBlank(device))device="unknown";
+						if(StringUtils.isBlank(device))device=UNKNOWN;
 						String ts = Util.getIsoTimeString(packet.getBestTimestamp());
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
 						String sourceRef = aisVessel+"sources.ais";
