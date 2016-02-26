@@ -30,6 +30,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sources;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
@@ -171,6 +172,10 @@ public class SignalKModelImpl implements SignalKModel {
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
+    	if(key.endsWith(dot+source)&& val instanceof Json){
+    		val=putSource((Json)val);
+    		key=key.replace(dot+source, dot+sourceRef);
+    	}
     	if(val instanceof Boolean 
     			|| val instanceof Number 
     			|| val instanceof String){

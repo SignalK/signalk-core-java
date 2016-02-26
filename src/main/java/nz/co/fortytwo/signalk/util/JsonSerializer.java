@@ -1,5 +1,6 @@
 package nz.co.fortytwo.signalk.util;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -361,7 +362,12 @@ public class JsonSerializer {
 			//we handle "source" specially, as it should contain a JSON object
 			//$source will contain a string
 			if(source.equals(entry.getKey())){
-				map.put(prefix+entry.getKey(), entry.getValue());
+				//check if its a complex object or a string
+				if(entry.getValue().isString()){
+					map.put(prefix+sourceRef, entry.getValue().asString());
+				}else{
+					map.put(prefix+entry.getKey(), entry.getValue());
+				}
 			}else if(entry.getValue().isPrimitive()){
 				map.put(prefix+entry.getKey(), entry.getValue().getValue());
 			}else if(entry.getValue().isNull()){
