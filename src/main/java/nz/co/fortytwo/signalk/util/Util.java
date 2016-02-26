@@ -80,6 +80,25 @@ public class Util {
 	private static Pattern selfEndMatch = Pattern.compile("\\.self$");
 	private static String dot_self = dot + self;
 
+	private static String rootPath="";
+
+
+	/**
+         * Set the root path
+         *
+         * @param rootPath
+         */
+        public static void setRootPath(String rootPath) {
+                Util.rootPath=rootPath;
+        }
+
+	/**
+         * Get the root path
+         *
+         * @return
+         */
+        public static String getRootPath() { return rootPath; }
+
 	/**
 	 * Smooth the data a bit
 	 * 
@@ -180,7 +199,7 @@ public class Util {
 		Json msg = Json.object();
 		msg.set(SignalKConstants.version, getVersion());
 		msg.set(SignalKConstants.timestamp, getIsoTimeString());
-		msg.set(self_str, ConfigConstants.UUID);
+		msg.set(self_str, getConfigProperty(ConfigConstants.UUID));
 		return msg;
 	}
 
