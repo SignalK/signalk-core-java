@@ -178,7 +178,7 @@ public class Util {
 		Json msg = Json.object();
 		msg.set(SignalKConstants.version, getVersion());
 		msg.set(SignalKConstants.timestamp, getIsoTimeString());
-		msg.set(self_str, ConfigConstants.UUID);
+		msg.set(self_str, getConfigProperty(ConfigConstants.UUID));
 		return msg;
 	}
 
