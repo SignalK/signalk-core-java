@@ -53,7 +53,7 @@ public class ConfigConstants {
 	public static final String HOSTNAME ="config.server.hostname";
 
 	public static final String USBDRIVE = "config.server.files.usb.usbdrive";
-	public static final String CLOCK_source = "config.server.clock.source";
+	public static final String CLOCK_source = "config.server.clock.src";
 	
 	//serial ports
 	public static final String SERIAL_PORTS = "config.server.serial.ports";

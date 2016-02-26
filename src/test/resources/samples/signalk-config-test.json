@@ -28,7 +28,7 @@
             }
          },
          "clock": {
-            "source": "system"
+            "src": "system"
          },
          "demo": {
             "file": "./src/test/resources/motu.log&scanStream=true&scanStreamDelay=500",

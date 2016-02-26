@@ -1,4 +1,6 @@
 package nz.co.fortytwo.signalk.util;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -59,6 +61,12 @@ public class JsonSerializer {
         return 8;
     }
     
+    /**
+     * Export the signalk model as a json string
+     * @param signalk
+     * @return
+     * @throws IOException
+     */
     public String write(SignalKModel signalk) throws IOException {
     	StringBuffer buffer = new StringBuffer();
     	if(signalk!=null && signalk.getFullData()!=null){
@@ -350,8 +358,11 @@ public class JsonSerializer {
 
 	private void recurseJsonFull(Json json, ConcurrentSkipListMap<String, Object> map, String prefix) {
 		for(Entry<String, Json> entry: json.asJsonMap().entrySet()){
-			
-			if(entry.getValue().isPrimitive()){
+			//we handle "source" specially, as it should contain a JSON object
+			//$source will contain a string
+			if(source.equals(entry.getKey())){
+				map.put(prefix+entry.getKey(), entry.getValue());
+			}else if(entry.getValue().isPrimitive()){
 				map.put(prefix+entry.getKey(), entry.getValue().getValue());
 			}else if(entry.getValue().isNull()){
 				//we need to add null as string since null cant be used in a ConcurrentSkipList

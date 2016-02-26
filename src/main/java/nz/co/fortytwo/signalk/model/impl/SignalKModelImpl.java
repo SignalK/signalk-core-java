@@ -31,6 +31,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sources;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
@@ -196,6 +197,19 @@ public class SignalKModelImpl implements SignalKModel {
 		//return (doPut(key+dot+value, val)&& doPut(key+dot+source, source));
 	}
 
+	public boolean put(String key, Object val, Json jsonSrc, String ts) throws IllegalArgumentException {
+		
+		String path= putSource(jsonSrc);
+		//we save the json in sources, and put the sourceRef into $source
+		return put(key, val, path, ts);
+	}
+	private String putSource(Json jsonSrc) {
+		String path = sources + dot + jsonSrc.at("type").asString();
+		//convert to hash keys
+		root.put(path, jsonSrc);
+		return path;
+	}
+
 	@Override
 	public boolean put(String key, Object val, String src, String ts) throws IllegalArgumentException {
 		key = fixSelfKey(key);
@@ -203,7 +217,6 @@ public class SignalKModelImpl implements SignalKModel {
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
-		
 		if(StringUtils.isBlank(src)) src=UNKNOWN;
 		
 		boolean success = putValues(key, val, src, ts);
