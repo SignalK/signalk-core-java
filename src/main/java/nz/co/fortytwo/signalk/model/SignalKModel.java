@@ -68,11 +68,15 @@ public interface SignalKModel{
 	public abstract SortedMap<String, Object> getData();
 
 	/**
-	 * Add all values to the model
+	 * Add all values into the signalk model
+	 * This method converts source to sourceRef, saving the actual source in sources.*
+	 * 
 	 * @param map
 	 * @return
 	 */
 	public boolean putAll(SortedMap<String, Object> map);
+	
+	
 	/**
 	 * Generic put that accepts only null, boolean, Number, String and jsonArray
 	 * @param key

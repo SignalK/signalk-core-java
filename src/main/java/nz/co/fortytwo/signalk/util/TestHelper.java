@@ -29,6 +29,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_rateOfTurn;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedThroughWater;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_autopilot_backlash;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_autopilot_deadZone;
@@ -45,6 +46,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_autopilot_ta
 import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_rudderAngle;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.steering_rudderAngleTarget;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.type;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
@@ -288,6 +290,38 @@ public class TestHelper {
 		basic.getFullData().put(vessels_dot_self_dot+steering_rudderAngleTarget+dot+sourceRef,UNKNOWN);
 		basic.getFullData().put(vessels_dot_self_dot+steering_rudderAngleTarget+dot+timestamp,"2015-03-16T03:31:22.376Z");
 		basic.getFullData().put(vessels_dot_self_dot+steering_rudderAngleTarget+dot+value, Math.toRadians(0d));
+		return basic;
+	}
+	
+	/**
+	 * Returns a model with .source.* entries
+	 * @return
+	 */
+	public static SignalKModel getSourcesModel() {
+		SignalKModel basic = SignalKModelFactory.getCleanInstance();
+		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+source+dot+type,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+source+dot+"label","testAirP");
+		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+timestamp,"2015-03-16T03:31:22.110Z");
+		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+value,1024);
+		
+		
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+source+dot+type,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+source+dot+"label","testCogM");
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+timestamp,"2015-03-16T03:31:22.331Z");
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+value,Math.toRadians(93d));
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundTrue+dot+source+dot+type,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundTrue+dot+source+dot+"label","testCogT");
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundTrue+dot+timestamp,"2015-03-16T03:31:22.332Z");
+		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundTrue+dot+value,Math.toRadians(11.9600000381d));
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingMagnetic+dot+source+dot+type,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingMagnetic+dot+source+dot+"label","testHdtM");
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingMagnetic+dot+timestamp,"2015-03-16T03:31:22.333Z");
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingMagnetic+dot+value, Math.toRadians(0d));
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingTrue+dot+source+dot+type,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingTrue+dot+source+dot+"label","testHdgT");
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingTrue+dot+timestamp,"2015-03-16T03:31:22.334Z");
+		basic.getFullData().put(vessels_dot_self_dot+nav_headingTrue+dot+value, Math.toRadians(0d));
+		
 		return basic;
 	}
 	

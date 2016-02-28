@@ -91,15 +91,15 @@ public class N2KHandler {
 			mappings = Json.read(FileUtils.readFileToString(mappingFile));
 			for (String pgn : mappings.asJsonMap().keySet()) {
 				Json mappingArray = mappings.at(pgn);
-				logger.debug("Array="+mappingArray);
+				if(logger.isDebugEnabled())logger.debug("Array="+mappingArray);
 				for (Json j : mappingArray.asJsonList()) {
-					logger.debug("Json="+j);
+					if(logger.isDebugEnabled())logger.debug("Json="+j);
 					String filter = "$.fields";
 					if(j.at(FILTER)!=null && !j.at(FILTER).isNull()){
 						filter=j.at(FILTER).asString();
 						//replace spaces in words only
 						filter=filter.replaceAll("([A-Za-z)]) ([(A-Za-z])", "$1_$2");
-						logger.debug("Converted filter:"+filter);
+						if(logger.isDebugEnabled())logger.debug("Converted filter:"+filter);
 					}
 					JsonPath compiledPath = JsonPath.compile(filter + "." + j.at(source).getValue().toString().replaceAll(" ", "_"));
 					String node = j.at(NODE).asString();
@@ -160,7 +160,7 @@ public class N2KHandler {
 		DocumentContext n2k = JsonPath.parse(n2kmsg.replaceAll(" ", "_"));
 		String pgn = n2k.read(pgnPath);
 		if (logger.isDebugEnabled())
-			logger.debug("processing n2k pgn " + pgn);
+			if(logger.isDebugEnabled())logger.debug("processing n2k pgn " + pgn);
 		if (nodeMap.containsKey(pgn)) {
 			// process it, mappings is n2kMapping.json as a json object
 			Collection<N2KHolder> entries = nodeMap.get(pgn);
@@ -186,7 +186,7 @@ public class N2KHandler {
 				try{
 					Object var = n2k.read(entry.path);
 					Object val = resolve(var,entry.type);
-					logger.debug(" evaluating " + entry + " = "+val.getClass()+ " : "+val);
+					if(logger.isDebugEnabled())logger.debug(" evaluating " + entry + " = "+val.getClass()+ " : "+val);
 					
 					if(val instanceof JSONArray){
 						if(!((JSONArray)val).isEmpty()){
@@ -218,7 +218,7 @@ public class N2KHandler {
 					
 			}
 			if (logger.isDebugEnabled())
-				logger.debug("N2KHandler output  " + temp);
+				if(logger.isDebugEnabled())logger.debug("N2KHandler output  " + temp);
 			return temp;
 		}
 		return null;

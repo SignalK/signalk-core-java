@@ -359,16 +359,7 @@ public class JsonSerializer {
 
 	private void recurseJsonFull(Json json, ConcurrentSkipListMap<String, Object> map, String prefix) {
 		for(Entry<String, Json> entry: json.asJsonMap().entrySet()){
-			//we handle "source" specially, as it should contain a JSON object
-			//$source will contain a string
-			if(source.equals(entry.getKey())){
-				//check if its a complex object or a string
-				if(entry.getValue().isString()){
-					map.put(prefix+sourceRef, entry.getValue().asString());
-				}else{
-					map.put(prefix+entry.getKey(), entry.getValue());
-				}
-			}else if(entry.getValue().isPrimitive()){
+			if(entry.getValue().isPrimitive()){
 				map.put(prefix+entry.getKey(), entry.getValue().getValue());
 			}else if(entry.getValue().isNull()){
 				//we need to add null as string since null cant be used in a ConcurrentSkipList

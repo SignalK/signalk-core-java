@@ -61,7 +61,7 @@ public class FullToDeltaConverterTest {
 	@Test
 	public void shouldCreateDelta1() {
 		Json data = Json
-				.read("{\"vessels\":{\"motu\":{\"navigation\":{\"position\":{\"timestamp\":\"2015-04-02T00:13:05.329Z\",\"longitude\":23.52916584,\"latitude\":60.07603504,\"source\":\"vessels.motu.sources.nmea.0183.GLL\"}}}}}");
+				.read("{\"vessels\":{\"motu\":{\"navigation\":{\"position\":{\"timestamp\":\"2015-04-02T00:13:05.329Z\",\"longitude\":23.52916584,\"latitude\":60.07603504,\"source\":\"sources.nmea.0183.GLL\"}}}}}");
 		
 		FullToDeltaConverter processor = new FullToDeltaConverter();
 		logger.debug("Input:"+data);

@@ -34,6 +34,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -130,10 +131,10 @@ public class SignalKModelImpl implements SignalKModel {
         if (!val.equals(root.put(key, val))) {
         	if(logger.isDebugEnabled())logger.debug("doPut "+key+"="+val);
         	//for .source
-        	if(!key.endsWith(dot+sourceRef)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+sourceRef+dot)){
-        		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
-        	}//for .$source
-        	if(!key.endsWith(dot+sourceRef)&& !key.endsWith(dot+timestamp)&&!key.contains(dot+sourceRef+dot)){
+        	if(!key.endsWith(dot+source)
+        			&& !key.endsWith(dot+timestamp)
+        			&&!key.contains(dot+source+dot)
+        			&& !key.endsWith(dot+sourceRef)){
         		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
         	}
             return true;
@@ -163,16 +164,13 @@ public class SignalKModelImpl implements SignalKModel {
 	 * @see nz.co.fortytwo.signalk.model.impl.SignalKModel#put(java.lang.String, boolean)
 	 */
     //@Override
-	public boolean put(String key, Object val) throws IllegalArgumentException{
+	private boolean put(String key, Object val) throws IllegalArgumentException{
     	key = fixSelfKey(key);
     	if(val == null){
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
-    	if(key.endsWith(dot+source)&& val instanceof Json){
-    		val=putSource((Json)val);
-    		key=key.replace(dot+source, dot+sourceRef);
-    	}
+    	
     	if(val instanceof Boolean 
     			|| val instanceof Number 
     			|| val instanceof String){
@@ -187,8 +185,7 @@ public class SignalKModelImpl implements SignalKModel {
     }
 
     private String fixSelfKey(String key) {
-    
-		return Util.fixSelfKey(key);
+    		return Util.fixSelfKey(key);
 	}
 
 	@Override
@@ -198,19 +195,7 @@ public class SignalKModelImpl implements SignalKModel {
     	//if(source==null)return (doPut(key, val));
 		//return (doPut(key+dot+value, val)&& doPut(key+dot+source, source));
 	}
-
-	public boolean put(String key, Object val, Json jsonSrc, String ts) throws IllegalArgumentException {
-		
-		String path= putSource(jsonSrc);
-		//we save the json in sources, and put the sourceRef into $source
-		return put(key, val, path, ts);
-	}
-	private String putSource(Json jsonSrc) {
-		String path = sources + dot + jsonSrc.at("type").asString();
-		//convert to hash keys
-		root.put(path, jsonSrc);
-		return path;
-	}
+	
 
 	@Override
 	public boolean put(String key, Object val, String src, String ts) throws IllegalArgumentException {
@@ -277,7 +262,7 @@ public class SignalKModelImpl implements SignalKModel {
        @Override
    	public Object getValue(String key) {
     	   key = fixSelfKey(key);
-               return nullFix(root.get(key+dot+value));
+           return nullFix(root.get(key+dot+value));
        }
 
     /* (non-Javadoc)
@@ -295,7 +280,7 @@ public class SignalKModelImpl implements SignalKModel {
     @Override
 	public NavigableMap<String, Object> getSubMap(String key) {
     	key = fixSelfKey(key);
-            return root.subMap(key, true, key+".\uFFFD", true);
+        return root.subMap(key, true, key+".\uFFFD", true);
     }
 
 
@@ -349,19 +334,18 @@ public class SignalKModelImpl implements SignalKModel {
 
 	@Override
 	public boolean putValue(String key, Object val) {
-		key = fixSelfKey(key);
 		return put(key+dot+value, val);
 	}
 
 	@Override
 	public NavigableMap<String, Object> getValues(String key) {
-		key = fixSelfKey(key);
         return getSubMap(key+dot+values);
 	}
 
 	@Override
 	public void putPosition(String key, double lat, double lon,
 			double altitude, String srcRef, String ts) {
+		fixSelfKey(key);
 		doPut(key + dot+ sourceRef, srcRef);
 		doPut(key+ dot+LATITUDE, lat);
 		doPut(key+ dot + LONGITUDE, lon);
