@@ -40,8 +40,9 @@ public class RestApiHandlerTest {
 
 	@Test
 	public void shouldGetSelfPosition() throws Exception {
-		RestApiHandler api = new RestApiHandler();
 		SignalKModel model = SignalKModelFactory.getMotuTestInstance();
+		RestApiHandler api = new RestApiHandler();
+		
 		model.putAll(TestHelper.getBasicModel().getFullData());
 		model.putAll(TestHelper.getOtherModel().getFullData());
 		

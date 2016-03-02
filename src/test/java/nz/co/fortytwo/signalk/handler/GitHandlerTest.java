@@ -5,6 +5,7 @@ import nz.co.fortytwo.signalk.util.Util;
 
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class GitHandlerTest {
@@ -19,12 +20,14 @@ public class GitHandlerTest {
 	}
 
 	@Test
+	@Ignore
 	public void shouldCloneFreeboardSk() throws Exception {
 		SignalKModelFactory.getMotuTestInstance();
 		GitHandler handler = new GitHandler();
 		handler.install("freeboard-sk");
 	}
 	@Test
+	@Ignore
 	public void shouldUpgradeFreeboardSk() throws Exception {
 		GitHandler handler = new GitHandler();
 		handler.upgrade("freeboard-sk");
