@@ -28,6 +28,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.UPDATES;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.attr;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.meta;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
@@ -160,9 +161,10 @@ public class FullToDeltaConverter {
 			if (js == null)
 				continue;
 			
-			if (js.isObject() && js.has(source)) {
+			if (js.isObject() && (js.has(sourceRef) || js.has(source))) {
 				if(logger.isDebugEnabled())logger.debug("Process source : "+js);
-				Json jsSrc = js.at(source);
+				Json jsSrc = js.at(sourceRef);
+				if(jsSrc==null)jsSrc = js.at(source);
 				//has it changed
 				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())){
 						
@@ -240,6 +242,7 @@ public class FullToDeltaConverter {
 			if (js.isObject()) {
 				if(js.getParentKey().equals(timestamp))continue;
 				if(js.getParentKey().equals(source))continue;
+				
 				if(js.getParentKey().equals(SignalKConstants.value))continue;
 				if(logger.isDebugEnabled())logger.debug("Recurse : "+js);
 				getEntries(updates, values, jsSrcRef, js, prefix);
