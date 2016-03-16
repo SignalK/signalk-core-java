@@ -109,7 +109,7 @@ public class FullToDeltaConverter {
 
 				// add values
 				Json updates = Json.array();
-				getEntries(updates, Json.array(), null, vessel, context.length() + 1);
+				getEntries(updates, Json.array(), null, null, vessel, context.length() + 1);
 
 				if (updates.asList().size() > 0){
 	
@@ -150,7 +150,7 @@ public class FullToDeltaConverter {
 		return node;
 	}
 
-	private void getEntries(Json updates, Json values, String jsSrcRef, Json j, int prefix) {
+	private void getEntries(Json updates, Json values, String jsSrcRef, String tsRef, Json j, int prefix) {
 		if (!j.isObject())
 			return;
 		
@@ -165,14 +165,17 @@ public class FullToDeltaConverter {
 				if(logger.isDebugEnabled())logger.debug("Process source : "+js);
 				Json jsSrc = js.at(sourceRef);
 				if(jsSrc==null)jsSrc = js.at(source);
+				Json ts = js.at(timestamp);
 				//has it changed
-				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())){
+				if(jsSrcRef==null || !jsSrcRef.equals(jsSrc.toString())
+						||tsRef==null || !tsRef.equals(ts.toString())){
 						
 					//existing entry
 					if(entry.asJsonMap().size()>0){
 						updates.add(entry);
 					}
 					jsSrcRef=jsSrc.toString();
+					tsRef=ts.toString();
 					//new entry
 					entry=Json.object();
 					values = Json.array();
@@ -245,7 +248,7 @@ public class FullToDeltaConverter {
 				
 				if(js.getParentKey().equals(SignalKConstants.value))continue;
 				if(logger.isDebugEnabled())logger.debug("Recurse : "+js);
-				getEntries(updates, values, jsSrcRef, js, prefix);
+				getEntries(updates, values, jsSrcRef, tsRef, js, prefix);
 			}
 		}
 		if(entry.asJsonMap().size()>0){

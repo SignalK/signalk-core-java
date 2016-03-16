@@ -39,6 +39,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -143,6 +144,133 @@ public class FullToDeltaConverterTest {
 		assertTrue(context.toString().indexOf("sources.gps_0183_RMC")>0);
 		assertTrue(context.toString().indexOf("sources.gps_0183_RMC_1")>0);
 		
+	}
+	
+	@Test
+	public void shouldConvertPosition() throws IOException{
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.altitude",0.0);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.latitude",56.08612787724117);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.longitude",21.891184134073562);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.pgn",123456);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.timestamp","2016-03-14T08:15:40.418Z");
+		//get full json
+		JsonSerializer ser = new JsonSerializer();
+		Json json = ser.writeJson(model);
+		//to Delta
+		FullToDeltaConverter processor = new FullToDeltaConverter();
+		Json delta = processor.handle(json).get(0);
+		logger.debug(delta);
+		//now check
+		assertEquals("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b",delta.at("context").asString());
+		Json updates = delta.at("updates");
+		assertEquals("2016-03-14T08:15:40.418Z",updates.asJsonList().get(0).at("timestamp").asString());
+		assertEquals("testLabel",updates.asJsonList().get(0).at("source").at("label").asString());
+		List<Json> valuesList = updates.asJsonList().get(0).at("values").asJsonList();
+		assertEquals("navigation.position", valuesList.get(0).at("path").asString());
+		Json val = valuesList.get(0).at("value");
+		assertEquals(21.89118413d , val.at("longitude").asDouble(), 0.00001);
+		assertEquals(56.08612788d , val.at("latitude").asDouble(), 0.00001);
+		assertEquals(0.0d , val.at("altitude").asDouble(), 0.00001);
+	}
+	
+	@Test
+	public void shouldConvertNavigation() throws IOException{
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.pgn",21.406661494994307);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.value",24.99888661232309);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.values.b5d1104.pgn",10.98299199970798);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.values.b5d1104.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.values.b5d1104.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundMagnetic.values.b5d1104.value",20.523181765927777);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.pgn",47.961135869778914);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.value",21.577254828573665);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.values.c116f44.pgn",49.98039875805297);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.values.c116f44.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.values.c116f44.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.courseOverGroundTrue.values.c116f44.value",29.234137464073527);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.pgn",65.95645592408168);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.value",13.918538822712634);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.values.ec87399.pgn",0.22110212431679654);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.values.ec87399.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.values.ec87399.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingMagnetic.values.ec87399.value",78.7534528174313);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.pgn",50.846242235996556);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.value",99.96161913730467);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.values.b8defda.pgn",38.61428260398605);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.values.b8defda.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.values.b8defda.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.headingTrue.values.b8defda.value",64.08349014224515);
+		
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.altitude",0.0);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.latitude",77.65327885982339);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.longitude",96.98441049156695);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.pgn",81.58427978544627);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.position.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.pgn",86.45359814901583);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.value",57.448476349323705);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.values.c327297.pgn",90.60234199140433);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.values.c327297.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.values.c327297.timestamp","2016-03-14T08:51:56.744Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedOverGround.values.c327297.value",46.77694243864312);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.pgn",56.62465022638501);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.timestamp","2016-03-14T08:51:57.727Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.value",74.59723282465691);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.values.d0267df.pgn",49.711687770743886);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.values.d0267df.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.values.d0267df.timestamp","2016-03-14T08:51:57.727Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2.navigation.speedThroughWater.values.d0267df.value",41.95402030596676);
+		
+		//get full json
+		JsonSerializer ser = new JsonSerializer();
+		Json json = ser.writeJson(model);
+		//to Delta
+		FullToDeltaConverter processor = new FullToDeltaConverter();
+		Json delta = processor.handle(json).get(0);
+		logger.debug(delta);
+		//now check
+		assertEquals("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2",delta.at("context").asString());
+		Json updates = delta.at("updates");
+		assertEquals("2016-03-14T08:51:56.744Z",updates.asJsonList().get(0).at("timestamp").asString());
+		assertEquals("testLabel",updates.asJsonList().get(0).at("source").at("label").asString());
+		List<Json> valuesList = updates.asJsonList().get(0).at("values").asJsonList();
+		assertEquals("navigation.position", valuesList.get(0).at("path").asString());
+		Json val = valuesList.get(0).at("value");
+		assertEquals(96.98441049156695d , val.at("longitude").asDouble(), 0.00001);
+		assertEquals(77.65327885982339d , val.at("latitude").asDouble(), 0.00001);
+		assertEquals(0.0d , val.at("altitude").asDouble(), 0.00001);
+		//should be 2 updates
+		assertEquals("2016-03-14T08:51:57.727Z",updates.asJsonList().get(1).at("timestamp").asString());
 	}
 	
 	@Test

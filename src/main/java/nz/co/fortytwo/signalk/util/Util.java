@@ -485,6 +485,8 @@ public class Util {
 		SignalKConstants.self = self;
 		SignalKConstants.vessels_dot_self_dot = vessels + dot + self + dot;
 		SignalKConstants.vessels_dot_self = vessels + dot + self;
+		logger.info("Setting self:"+SignalKConstants.self);
+		logger.info("Setting vessels.self:"+SignalKConstants.vessels_dot_self);
 	}
 
 	public static boolean sameNetwork(String localAddress, String remoteAddress)

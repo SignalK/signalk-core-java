@@ -334,11 +334,13 @@ public class SignalKModelImpl implements SignalKModel {
 
 	@Override
 	public boolean putValue(String key, Object val) {
+		fixSelfKey(key);
 		return put(key+dot+value, val);
 	}
 
 	@Override
 	public NavigableMap<String, Object> getValues(String key) {
+		fixSelfKey(key);
         return getSubMap(key+dot+values);
 	}
 

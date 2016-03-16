@@ -26,6 +26,7 @@ package nz.co.fortytwo.signalk.util;
 
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
@@ -54,6 +55,7 @@ public class GenerateSignalkData {
 	private Map<String, Json> defMap;
 	private boolean skipMeta=true;
 	private boolean skipAttr=true;
+	private String filter=nav;
 
 	@Before
 	public void setUp() throws Exception {
@@ -87,7 +89,7 @@ public class GenerateSignalkData {
 		recurse(schemaJson, "", schemaFile, keyList);
 		
 		for(Entry<String, Object> entry: keyList.entrySet()){
-			if(entry.getKey().contains(".navigation")){
+			if(entry.getKey().contains(filter)){
 				String mark = (entry.getValue() instanceof String)?"\"":"";
 				System.out.println("model.getFullData().put(\""+entry.getKey()+"\","+mark+entry.getValue()+mark+");");
 			}

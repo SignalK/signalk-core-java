@@ -131,7 +131,7 @@ public class SignalKModelFactory {
 				model.putAll(ser.read(temp));
 				String self = (String) model.get(ConfigConstants.UUID);
 				
-				Util.setSelf(SignalKConstants.self);
+				Util.setSelf(self);
 				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
 				
 				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
