@@ -18,7 +18,7 @@ Then add the following to the pom of your project.
 <!-- <dependencies>-->
     <dependency>
 			<groupId>nz.co.fortytwo.signalk.core</groupId>
-			<artifactId>signalk-core</artifactId>
+			<artifactId>signalk-core-java</artifactId>
 			<version>${signalk.core.version}</version>
 		</dependency>
 
