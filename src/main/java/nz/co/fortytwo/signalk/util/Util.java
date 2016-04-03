@@ -78,6 +78,25 @@ public class Util {
 	private static Pattern selfEndMatch = Pattern.compile("\\.self$");
 	private static String dot_self = dot + self;
 
+	private static String rootPath="";
+
+
+	/**
+         * Set the root path
+         *
+         * @param rootPath
+         */
+        public static void setRootPath(String rootPath) {
+                Util.rootPath=rootPath;
+        }
+
+	/**
+         * Get the root path
+         *
+         * @return
+         */
+        public static String getRootPath() { return rootPath; }
+
 	/**
 	 * Smooth the data a bit
 	 * 

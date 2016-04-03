@@ -48,7 +48,10 @@ public class SignalKModelFactory {
 	private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
 	private static Logger logger = Logger.getLogger(SignalKModelFactory.class);
 	private static SignalKModel signalKModel;
+	private static String rootPath="";
+
 	static {
+		rootPath=Util.getRootPath();
 		if (signalKModel == null)
 			signalKModel = new SignalKModelImpl();
 		Util.setDefaults(signalKModel);
@@ -106,14 +109,14 @@ public class SignalKModelFactory {
 	}
 
 	public static void load(SignalKModel model){
-		File jsonFile = new File(SIGNALK_MODEL_SAVE_FILE);
+		File jsonFile = new File(rootPath+SIGNALK_MODEL_SAVE_FILE);
 		logger.info("Checking for previous state: "+jsonFile.getAbsolutePath());
 		if(jsonFile.exists()){
 			try{
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				logger.info("   Saved state loaded from "+SIGNALK_MODEL_SAVE_FILE);
+				logger.info("   Saved state loaded from "+rootPath+SIGNALK_MODEL_SAVE_FILE);
 			}catch(Exception ex){
 				logger.error(ex.getMessage());
 			}
@@ -122,7 +125,7 @@ public class SignalKModelFactory {
 		}
 	}
 	public static void loadConfig(SignalKModel model) throws IOException{
-		File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
+		File jsonFile = new File(rootPath+SIGNALK_CFG_SAVE_FILE);
 		logger.info("Checking for previous config: "+jsonFile.getAbsolutePath());
 		if(jsonFile.exists()){
 			try{
@@ -134,7 +137,7 @@ public class SignalKModelFactory {
 				Util.setSelf(self);
 				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
 				
-				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
+				logger.info("   Saved config loaded from "+rootPath+SIGNALK_CFG_SAVE_FILE);
 			}catch(Exception ex){
 				logger.error(ex.getMessage(),ex);
 			}
@@ -151,7 +154,7 @@ public class SignalKModelFactory {
 	}
 	
 	private static void loadConfig(SignalKModel model, String self){
-		File jsonFile = new File(SIGNALK_CFG_SAVE_FILE);
+		File jsonFile = new File(rootPath+SIGNALK_CFG_SAVE_FILE);
 		logger.info("Checking for previous config: "+jsonFile.getAbsolutePath());
 		if(jsonFile.exists()){
 			try{
@@ -160,7 +163,7 @@ public class SignalKModelFactory {
 				model.putAll(ser.read(temp));
 				model.getFullData().put(ConfigConstants.UUID,self);
 				Util.setSelf(self);
-				logger.info("   Saved config loaded from "+SIGNALK_CFG_SAVE_FILE);
+				logger.info("   Saved config loaded from "+rootPath+SIGNALK_CFG_SAVE_FILE);
 				logger.info("   self set to: "+self);
 			}catch(Exception ex){
 				logger.error(ex.getMessage(),ex);
@@ -176,7 +179,7 @@ public class SignalKModelFactory {
 	 */
 	public static void save(SignalKModel model) throws IOException {
 		if (model != null) {
-			File jsonFile = new File(SIGNALK_MODEL_SAVE_FILE);
+			File jsonFile = new File(rootPath+SIGNALK_MODEL_SAVE_FILE);
 			JsonSerializer ser = new JsonSerializer();
 			Json modelJson = ser.writeJson(model);
 			//remove config
@@ -184,7 +187,7 @@ public class SignalKModelFactory {
 				modelJson = modelJson.delAt(SignalKConstants.CONFIG);
 			}
 			FileUtils.writeStringToFile(jsonFile, modelJson.toString());
-			logger.debug("   Saved model state to "+SIGNALK_MODEL_SAVE_FILE);
+			logger.debug("   Saved model state to "+rootPath+SIGNALK_MODEL_SAVE_FILE);
 		}
 	}
 	
@@ -194,7 +197,7 @@ public class SignalKModelFactory {
 	 * @throws IOException
 	 */
 	public static void saveConfig(SignalKModel model) throws IOException {
-		saveConfig(model,new File(SIGNALK_CFG_SAVE_FILE));
+		saveConfig(model,new File(rootPath+SIGNALK_CFG_SAVE_FILE));
 	}
 	public static void saveConfig(SignalKModel model, File jsonFile ) throws IOException {
 		if (model != null) {
@@ -208,7 +211,7 @@ public class SignalKModelFactory {
 	    		buffer.append("{}");
 	    	}
 			FileUtils.writeStringToFile(jsonFile, buffer.toString());
-			logger.debug("   Saved model state to "+SIGNALK_CFG_SAVE_FILE);
+			logger.debug("   Saved model state to "+rootPath+SIGNALK_CFG_SAVE_FILE);
 		}
 
 	}
