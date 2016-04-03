@@ -214,6 +214,22 @@ public class SignalKModelImpl implements SignalKModel {
 		}
 		return success;
 	}
+	
+	@Override
+	public boolean putSource(String key, Object val, String ts) throws IllegalArgumentException {
+		key = vessels_dot_self_dot+"sources."+key;
+		key = fixSelfKey(key);
+		if(val == null){
+    		//TODO: we delete the val, and the values equiv, then promote the next values object
+    		return doDelete(key, root);
+		}
+		if(ts!=null){
+			return(doPut(key+dot+value, val)&& doPut(key+dot+timestamp, ts));
+		}else{
+			return(doPut(key+dot+value, val));
+		}
+	
+	}
     
 
 	/**

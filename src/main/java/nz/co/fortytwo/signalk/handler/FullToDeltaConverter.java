@@ -213,12 +213,13 @@ public class FullToDeltaConverter {
 				continue;
 			}
 			
-			if (js.isObject() && js.has(source) && !js.has(SignalKConstants.value)) {
+			if (js.isObject() && (js.has(sourceRef)|| js.has(source)) && !js.has(SignalKConstants.value)) {
 				if(logger.isDebugEnabled())logger.debug("Process value object : "+js);
 				String path = js.getPath().substring(prefix);
 				Json value = Json.object();
 				value.set(PATH, path);
 				js.delAt(source);
+				js.delAt(sourceRef);
 				js.delAt(timestamp);
 				js.delAt(attr);
 				//js.delAt(meta);

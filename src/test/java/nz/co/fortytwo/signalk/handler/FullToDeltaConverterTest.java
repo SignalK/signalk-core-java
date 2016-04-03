@@ -178,6 +178,52 @@ public class FullToDeltaConverterTest {
 	}
 	
 	@Test
+	public void shouldConvertPosition2() throws IOException{
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.$source","nmea.0183.VHW");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.timestamp","2016-03-30T08:05:46.983Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.value",5.28834763);
+		//model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.values.nmea.0183.HDM.$source","nmea.0183.HDM");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.values.nmea.0183.HDM.timestamp","2016-03-30T08:05:38.546Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.values.nmea.0183.HDM.value",5.28834763);
+		//model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.values.nmea.0183.VHW.$source","nmea.0183.VHW");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.values.nmea.0183.VHW.timestamp","2016-03-30T08:05:46.983Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.courseOverGroundMagnetic.values.nmea.0183.VHW.value",5.28834763);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.position.$source","nmea.0183.RMC");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.position.altitude",0.0);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.position.latitude",37.81306667);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.position.longitude",-122.44718333);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.position.timestamp","2016-03-30T08:06:18.556Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.$source","nmea.0183.RMC");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.timestamp","2016-03-30T08:06:18.546Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.value",1.61298375);
+		//model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.values.nmea.0183.RMC.$source","nmea.0183.RMC");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.values.nmea.0183.RMC.timestamp","2016-03-30T08:06:18.546Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.values.nmea.0183.RMC.value",1.61298375);
+		//model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.values.nmea.0183.VHW.$source","nmea.0183.VHW");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.values.nmea.0183.VHW.timestamp","2016-03-30T08:05:46.983Z");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5.navigation.speedOverGround.values.nmea.0183.VHW.value",1.1124765);
+		//get full json
+		JsonSerializer ser = new JsonSerializer();
+		Json json = ser.writeJson(model);
+		logger.debug(json);
+		//to Delta
+		FullToDeltaConverter processor = new FullToDeltaConverter();
+		Json delta = processor.handle(json).get(0);
+		logger.debug(delta);
+		//now check
+		assertEquals("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5",delta.at("context").asString());
+		Json updates = delta.at("updates");
+		assertEquals("2016-03-30T08:06:18.556Z",updates.asJsonList().get(0).at("timestamp").asString());
+		//assertEquals("testLabel",updates.asJsonList().get(0).at("source").at("label").asString());
+		List<Json> valuesList = updates.asJsonList().get(0).at("values").asJsonList();
+		assertEquals("navigation.position", valuesList.get(0).at("path").asString());
+		Json val = valuesList.get(0).at("value");
+		assertEquals(-122.44718333d , val.at("longitude").asDouble(), 0.00001);
+		assertEquals(37.81306667d , val.at("latitude").asDouble(), 0.00001);
+		assertEquals(0.0d , val.at("altitude").asDouble(), 0.00001);
+	}
+	@Test
 	public void shouldConvertNavigation() throws IOException{
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 

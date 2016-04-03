@@ -27,6 +27,7 @@ package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_activeRoute;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
@@ -55,7 +56,7 @@ public class GenerateSignalkData {
 	private Map<String, Json> defMap;
 	private boolean skipMeta=true;
 	private boolean skipAttr=true;
-	private String filter=nav;
+	private String filter=nav+".course.";
 
 	@Before
 	public void setUp() throws Exception {

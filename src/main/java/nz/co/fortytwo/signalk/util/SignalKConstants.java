@@ -92,6 +92,7 @@ public class SignalKConstants {
 	public static final String EXTERNAL_IP = "EXTERNAL_IP";
 	public static final String INTERNAL_IP = "INTERNAL_IP";
 	public static final String MSG_SERIAL_PORT = "MSG_SERIAL_PORT";
+	public static final String MSG_SRC_BUS = "MSG_SRC_BUS";
 	public static final String MSG_SRC_IP = "MSG_SRC_IP";
 	public static final String MSG_SRC_IP_PORT = "MSG_SRC_IP_PORT";
 	public static final String MSG_APPROVAL = "MSG_APPROVAL";

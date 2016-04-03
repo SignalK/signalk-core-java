@@ -115,14 +115,14 @@ public class NMEAHandler{
 	 * @param bodyStr
 	 * @return
 	 */
-	public SignalKModel handle(String bodyStr, String source) {
+	public SignalKModel handle(String bodyStr, String src) {
 		SignalKModel model = null;
 		if (StringUtils.isNotBlank(bodyStr)&& bodyStr.startsWith("$")) {
 			try {
 				if(logger.isDebugEnabled())logger.debug("Processing NMEA:[" + bodyStr+"]");
 				Sentence sentence = SentenceFactory.getInstance().createParser(bodyStr);
 				model = SignalKModelFactory.getCleanInstance();
-				fireSentenceEvent(model, sentence, source);
+				fireSentenceEvent(model, sentence, src);
 				return model;
 			}catch (IllegalArgumentException e) {
 				logger.debug(e.getMessage(), e);
@@ -207,22 +207,12 @@ public class NMEAHandler{
 		}
 		String now = Util.getIsoTimeString();
 		if(StringUtils.isBlank(device))device = UNKNOWN;
-		model.put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sentence.getSentenceId(),sentence.toSentence(),device,now);
-		
-		// TODO: Why am I creating all these lists?
-		String type = sentence.getSentenceId();
-		Set<SentenceListener> list = new HashSet<SentenceListener>();
+		model.putSource(device+".NMEA0183."+sentence.getSentenceId(),sentence.toSentence(),now);
 
-		if (listeners.containsKey(type)) {
-			list.addAll(listeners.get(type));
-		}
-		if (listeners.containsKey(DISPATCH_ALL)) {
-			list.addAll(listeners.get(DISPATCH_ALL));
-		}
-
-		for (SentenceListener sl : list) {
+		for (SentenceListener sl : listeners.get(DISPATCH_ALL)) {
 			try {
-				SentenceEvent se = new SentenceEvent(model, sentence);
+				SentenceEventSource src = new SentenceEventSource(device, now,model);
+				SentenceEvent se = new SentenceEvent(src, sentence);
 				sl.sentenceRead(se);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -266,8 +256,8 @@ public class NMEAHandler{
 			static final double ALPHA = 1 - 1.0 / 6;
 
 			public void sentenceRead(SentenceEvent evt) {
-				SignalKModel sk = (SignalKModel) evt.getSource();
-				String now = (String) sk.get(vessels_dot_self_dot+"sources.nmea.0183"+dot+evt.getSentence().getSentenceId()+dot+timestamp);
+				SentenceEventSource src = (SentenceEventSource) evt.getSource();
+			
 				try{
 				
 					if (evt.getSentence() instanceof PositionSentence) {
@@ -285,7 +275,7 @@ public class NMEAHandler{
 							startLon = false;
 						}
 						previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
-						sk.putPosition(vessels_dot_self_dot + nav_position, previousLat, previousLon, 0.0, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						src.getModel().putPosition(vessels_dot_self_dot + nav_position, previousLat, previousLon, 0.0, src.getSourceRef(), src.getNow());
 						
 					}
 	
@@ -297,13 +287,12 @@ public class NMEAHandler{
 
 							if (sen.isTrue()) {
 								try {
-									sk.getFullData().put(vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId()+dot+sourceRef+dot+"src",sen.toSentence());
-									sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
+									src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()),src.getSourceRef(),src.getNow());
 								} catch (Exception e) {
 									logger.error(e.getMessage());
 								}
 							} else {
-								sk.put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getHeading()),vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(),now);
+								src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getHeading()),src.getSourceRef(),src.getNow());
 							}
 						}
 					}
@@ -312,20 +301,20 @@ public class NMEAHandler{
 						RMCSentence sen = (RMCSentence) evt.getSentence();
 						if(rmcClock)Util.checkTime(sen);
 						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeed()));
-						sk.put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						src.getModel().put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, src.getSourceRef(), src.getNow());
 					}
 					if (evt.getSentence() instanceof VHWSentence) {
 						VHWSentence sen = (VHWSentence) evt.getSentence();
 						//VHW sentence types have both, but true can be empty
 						try {
-							sk.put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getMagneticHeading()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
-							sk.put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+							src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getMagneticHeading()), src.getSourceRef(), src.getNow());
+							src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()), src.getSourceRef(), src.getNow());
 							
 						} catch (DataNotAvailableException e) {
 							logger.error(e.getMessage());
 						}
 						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeedKnots()));
-						sk.put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						src.getModel().put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, src.getSourceRef(), src.getNow());
 					}
 	
 					// MWV wind
@@ -336,10 +325,10 @@ public class NMEAHandler{
 						//TODO: check relative to bow or compass + sen.getSpeedUnit()
 						// relative to bow
 						double angle = sen.getAngle();
-						sk.put(vessels_dot_self_dot + env_wind_angleApparent , Math.toRadians(angle), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
-						sk.put(vessels_dot_self_dot + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
-						//sk.put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
-						//sk.put(vessels_dot_self_dot + env_wind + dot+timestamp , now);
+						src.getModel().put(vessels_dot_self_dot + env_wind_angleApparent , Math.toRadians(angle), src.getSourceRef(), src.getNow());
+						src.getModel().put(vessels_dot_self_dot + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), src.getSourceRef(), src.getNow());
+						//src.getModel().put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
+						//src.getModel().put(vessels_dot_self_dot + env_wind + dot+timestamp , src.getNow());
 					}
 					
 					// Cruzpro BVE sentence
@@ -347,30 +336,30 @@ public class NMEAHandler{
 					/*if (evt.getSentence() instanceof BVESentence) {
 						BVESentence sen = (BVESentence) evt.getSentence();
 						if (sen.isFuelGuage()) {
-							sk.put(json, tanks_id_level , sen.getFuelRemaining(), "output");
-							sk.put(json, propulsion_id_fuelUsageRate , sen.getFuelUseRateUnitsPerHour(), "output");
+							src.getModel().put(json, tanks_id_level , sen.getFuelRemaining(), "output");
+							src.getModel().put(json, propulsion_id_fuelUsageRate , sen.getFuelUseRateUnitsPerHour(), "output");
 							
 							// map.put(Constants.FUEL_USED, sen.getFuelUsedOnTrip());
-							// sk.put(tempSignalKConstants.selfNode, SignalKConstants.tank_level, sen.getFuelRemaining(), "output");
+							// src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.tank_level, sen.getFuelRemaining(), "output");
 						}
 						if (sen.isEngineRpm()) {
-							sk.put(json, propulsion_id_rpm , sen.getEngineRpm(), "output");
+							src.getModel().put(json, propulsion_id_rpm , sen.getEngineRpm(), "output");
 							// map.put(Constants.ENGINE_HOURS, sen.getEngineHours());
-							//sk.put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_hours, sen.getEngineHours(), "output");
+							//src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_hours, sen.getEngineHours(), "output");
 							// map.put(Constants.ENGINE_MINUTES, sen.getEngineMinutes());
-							//sk.put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
+							//src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
 	
 						}
 						if (sen.isTempGuage()) {
-							sk.put(json, propulsion_id_engineTemperature , sen.getEngineTemp(), "output");
+							src.getModel().put(json, propulsion_id_engineTemperature , sen.getEngineTemp(), "output");
 							// map.put(Constants.ENGINE_VOLTS, sen.getVoltage());
-							//sk.put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_engineVolts, sen.getVoltage(), "output");
+							//src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_engineVolts, sen.getVoltage(), "output");
 							// map.put(Constants.ENGINE_TEMP_HIGH_ALARM, sen.getHighTempAlarmValue());
 							// map.put(Constants.ENGINE_TEMP_LOW_ALARM, sen.getLowTempAlarmValue());
 	
 						}
 						if (sen.isPressureGuage()) {
-							sk.put(json, propulsion_id_oilPressure , sen.getPressure(), "output");
+							src.getModel().put(json, propulsion_id_oilPressure , sen.getPressure(), "output");
 							// map.put(Constants.ENGINE_PRESSURE_HIGH_ALARM, sen.getHighPressureAlarmValue());
 							// map.put(Constants.ENGINE_PRESSURE_LOW_ALARM, sen.getLowPressureAlarmValue());
 	
@@ -380,7 +369,7 @@ public class NMEAHandler{
 					if (evt.getSentence() instanceof DepthSentence) {
 						DepthSentence sen = (DepthSentence) evt.getSentence();
 						// in meters
-						sk.put(vessels_dot_self_dot + env_depth_belowTransducer , sen.getDepth(), vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId(), now);
+						src.getModel().put(vessels_dot_self_dot + env_depth_belowTransducer , sen.getDepth(), src.getSourceRef(), src.getNow());
 					}
 				}catch (DataNotAvailableException e){
 					logger.error(e.getMessage()+":"+evt.getSentence().toSentence());

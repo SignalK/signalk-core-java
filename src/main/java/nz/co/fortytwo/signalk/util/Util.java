@@ -502,7 +502,7 @@ public class Util {
 		byte[] a1 = InetAddress.getByName(localAddress).getAddress();
 		byte[] a2 = InetAddress.getByName(remoteAddress).getAddress();
 		byte[] m = InetAddress.getByName(normalizeFromCIDR(netmask)).getAddress();
-
+		if(logger.isDebugEnabled())logger.debug("sameNetwork?:"+a1+","+a2+","+m);
 		for (int i = 0; i < a1.length; i++)
 			if ((a1[i] & m[i]) != (a2[i] & m[i]))
 				return false;

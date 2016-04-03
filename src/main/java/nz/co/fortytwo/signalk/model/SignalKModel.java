@@ -137,4 +137,14 @@ public interface SignalKModel{
 	public abstract void putPosition(String string, double latitude,
 			double longitude, double d, String srcRef, String ts);
 
+	/**
+	 * Puts an entry in the sources structure.
+	 * @param key
+	 * @param val
+	 * @param ts
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	boolean putSource(String key, Object val, String ts) throws IllegalArgumentException;
+
 }
