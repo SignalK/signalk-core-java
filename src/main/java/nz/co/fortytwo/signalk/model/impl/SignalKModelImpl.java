@@ -217,7 +217,7 @@ public class SignalKModelImpl implements SignalKModel {
 	
 	@Override
 	public boolean putSource(String key, Object val, String ts) throws IllegalArgumentException {
-		key = vessels_dot_self_dot+"sources."+key;
+		key = sources+dot+key;
 		key = fixSelfKey(key);
 		if(val == null){
     		//TODO: we delete the val, and the values equiv, then promote the next values object
