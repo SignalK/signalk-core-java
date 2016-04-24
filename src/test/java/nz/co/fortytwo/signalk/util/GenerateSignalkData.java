@@ -41,10 +41,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.regex.Pattern;
 
 import mjson.Json;
+import nz.co.fortytwo.signalk.handler.FullToDeltaConverter;
+import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,10 +58,8 @@ import dk.dma.ais.message.NavigationalStatus;
 
 public class GenerateSignalkData {
 
-	private Map<String, Json> defMap;
-	private boolean skipMeta=true;
-	private boolean skipAttr=true;
-	private String filter=nav+".course.";
+	//private  defMap;
+
 
 	@Before
 	public void setUp() throws Exception {
@@ -69,37 +72,74 @@ public class GenerateSignalkData {
 	@Test
 	//@Ignore
 	public void test() throws Exception {
-
-		File definitionsFile = new File("./../specification/schemas/definitions.json");
-		String definitionsString = FileUtils.readFileToString(definitionsFile);
-		Json definitionsJson = Json.read(definitionsString);
-		defMap = definitionsJson.at("definitions").asJsonMap();
 		
-		File elecFile = new File("./../specification/schemas/groups/electrical_dc.json");
-		String elecString = FileUtils.readFileToString(elecFile);
-		Json elecJson = Json.read(elecString);
-		defMap.putAll(elecJson.at("definitions").asJsonMap());
+		createSignalkData("./../", "motu", nav, true,true);
+	}
+	
+	public static void createSignalkData(String schemaDir, String uuid, String filter, boolean skipAttr, boolean skipMeta ) throws IOException{
+		File schemaRoot = new File(schemaDir);
+		createSignalkData(schemaRoot, uuid, filter, skipAttr, skipMeta);
+	}
+	public static void createSignalkData(File schemaRoot, String uuid, String filter, boolean skipAttr, boolean skipMeta ) throws IOException{
 		
+		//add definitions
+		File[] definitions = new File[]{new File(schemaRoot,"specification/schemas/definitions.json"),new File(schemaRoot, "specification/schemas/groups/electrical_dc.json")};
+		Map<String, Json> defMap=addDefinitions(definitions);
 		
+		//load schema
 		File schemaFile = new File("./../specification/schemas/signalk.json");
 		String schemaString = FileUtils.readFileToString(schemaFile);
-		//System.out.println(schemaString);
 		Json schemaJson = Json.read(schemaString);
-		//System.out.println("OK");
-		ConcurrentSkipListMap<String, Object> keyList = new ConcurrentSkipListMap<String,Object>();
-		recurse(schemaJson, "", schemaFile, keyList);
 		
-		for(Entry<String, Object> entry: keyList.entrySet()){
+		ConcurrentSkipListMap<String, Object> keyList = new ConcurrentSkipListMap<String,Object>();
+		recurse(schemaJson, defMap,"", schemaFile, keyList, skipAttr, skipMeta);
+		
+		ConcurrentSkipListMap<String, Object> outList = new ConcurrentSkipListMap<String,Object>();
+		if(StringUtils.isNotBlank(uuid)){
+			for(Entry<String, Object> entry: keyList.entrySet()){
+				if(entry.getKey().contains(filter)){
+					String key = entry.getKey();
+					//then replace it;
+					key = key.replaceFirst("vessels\\..*?\\.", "vessels\\."+uuid+"\\.");
+					outList.put(key, entry.getValue());
+				}
+			}
+		}
+		// output json
+		SignalKModel model = SignalKModelFactory.getWrappedInstance(outList);
+		JsonSerializer ser = new JsonSerializer();
+		Json modelJson = ser.writeJson(model);
+		System.out.println("\nFull Json:");
+		System.out.println(modelJson);
+		
+		FullToDeltaConverter fullToDelta = new FullToDeltaConverter();
+		List<Json> delta = fullToDelta.handle(modelJson);
+		System.out.println("\nDelta Json:");
+		System.out.println(delta);
+		
+		System.out.println("\nJava:");
+		for(Entry<String, Object> entry: outList.entrySet()){
 			if(entry.getKey().contains(filter)){
 				String mark = (entry.getValue() instanceof String)?"\"":"";
 				System.out.println("model.getFullData().put(\""+entry.getKey()+"\","+mark+entry.getValue()+mark+");");
 			}
 		}
-		System.out.println("total:"+keyList.size());
+		
+		
 	}
 
 
-	private void recurse(Json schemaJson, String pad, File schemaFile, Map<String, Object>  keyList) throws IOException {
+	private static Map<String, Json> addDefinitions(File[] definitions) throws IOException {
+		Map<String,Json> definitionsMap = new HashMap<>();
+		for(File def: definitions){
+			String definitionsString = FileUtils.readFileToString(def);
+			Json definitionsJson = Json.read(definitionsString);
+			definitionsMap.putAll(definitionsJson.at("definitions").asJsonMap());
+		}
+		return definitionsMap;
+	}
+
+	private static void recurse(Json schemaJson, Map<String, Json> defMap, String pad, File schemaFile, Map<String, Object>  keyList, boolean skipAttr, boolean skipMeta) throws IOException {
 		
 	
 		if(schemaJson.at("$ref")!=null){
@@ -108,7 +148,7 @@ public class GenerateSignalkData {
 			if(src.contains("definitions.json#")||src.contains("#/definitions/")){
 				//System.out.println("   Getting "+src);
 				//../definitions.json#/definitions/timestamp
-				recurseDefs(src,pad,schemaFile,keyList);
+				recurseDefs(defMap, src,pad,schemaFile,keyList,skipAttr,skipMeta);
 				return;
 			}
 			src=src.replace('#',' ').trim();
@@ -116,7 +156,7 @@ public class GenerateSignalkData {
 			
 			if(next.exists()){
 				Json srcJson = Json.read(FileUtils.readFileToString(next));
-				recurse(srcJson, pad, schemaFile, keyList);
+				recurse(srcJson, defMap,pad, schemaFile, keyList,skipAttr,skipMeta);
 			}else{
 				System.out.println("   err:Cant find "+next.getAbsolutePath());
 			}
@@ -127,7 +167,7 @@ public class GenerateSignalkData {
 			//System.out.println("   Recursing allOf:"+list);
 			for(Json j:list){
 				//System.out.println("     Recurse j:"+j);
-				recurse(j,pad,schemaFile,keyList);
+				recurse(j,defMap,pad,schemaFile,keyList,skipAttr,skipMeta);
 			}
 			
 			
@@ -137,7 +177,7 @@ public class GenerateSignalkData {
 			List<Json> list = schemaJson.at("anyOf").asJsonList();
 			for(Json j:list){
 				//System.out.println("     Recurse j:"+j);
-				recurse(j,pad,schemaFile,keyList);
+				recurse(j,defMap,pad,schemaFile,keyList,skipAttr,skipMeta);
 			}
 			
 			
@@ -176,7 +216,7 @@ public class GenerateSignalkData {
 				}
 				if (props.at(e).isObject()) {
 					//System.out.println("   Recurse:"+e);
-					recurse(props.at(e), pad +sanitiseKey(e)+"." , schemaFile, keyList);
+					recurse(props.at(e), defMap,pad +sanitiseKey(e)+"." , schemaFile, keyList,skipAttr,skipMeta);
 				}
 
 			}
@@ -219,7 +259,7 @@ public class GenerateSignalkData {
 					//System.out.println("    key="+pad +  sanitiseKey(e)+"="+value);
 				}
 				if (patternProps.at(e).isObject()) {
-					recurse(patternProps.at(e), pad +sanitiseKey(e)+".", schemaFile, keyList);
+					recurse(patternProps.at(e),defMap, pad +sanitiseKey(e)+".", schemaFile, keyList,skipAttr,skipMeta);
 				}
 
 			}
@@ -227,7 +267,7 @@ public class GenerateSignalkData {
 		
 	}
 
-	private String sanitiseKey(String e) {
+	private static String sanitiseKey(String e) {
 		String uuid = UUID.randomUUID().toString();
 		if(e.equals("(^urn:mrn:(imo|signalk):(mmsi:[2-7][0-9]{8,8}|uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}))|^(http(s?):.*|mailto:.*|tel:(\\+?)[0-9]{4,})$"))return "urn:mrn:signalk:uuid:"+uuid;
 		if(e.equals("^urn:mrn:signalk:uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"))return "urn:mrn:signalk:uuid:"+uuid;
@@ -244,14 +284,14 @@ public class GenerateSignalkData {
 		return e;
 	}
 
-	private void recurseDefs(String src, String pad, File schemaFile,
-			Map<String, Object> keyList) throws IOException {
+	private static void recurseDefs(Map<String, Json> defMap, String src, String pad, File schemaFile,
+			Map<String, Object> keyList, boolean skipAttr, boolean skipMeta) throws IOException {
 		int pos = src.lastIndexOf("/")+1;
 		//System.out.println("   Lookup "+src.substring(pos)+" from "+defMap);
 		Json def = defMap.get(src.substring(pos));
 		//System.out.println("   Found "+def);
 		try{
-			recurse(def, pad, schemaFile, keyList);
+			recurse(def, defMap, pad, schemaFile, keyList,skipAttr,skipMeta);
 		}catch(NullPointerException ne){
 			System.out.println("   Null Error on  "+pad+"/"+src);
 		}
@@ -259,7 +299,7 @@ public class GenerateSignalkData {
 		
 	}
 
-	private Object getValueForType(Map<String, Json> map) {
+	private static Object getValueForType(Map<String, Json> map) {
 		
 		//if(map.containsKey("example"))return map.get("example").getValue();
 		//System.out.println("   map="+map);
