@@ -39,7 +39,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
  */
 public class DeltaToMapConverter {
 
-	private static Logger logger = Logger.getLogger(DeltaToMapConverter.class);
+	private static Logger logger = LogManager.getLogger(DeltaToMapConverter.class);
 	
 	/**
 	 * Convert Delta JSON to full tree map.

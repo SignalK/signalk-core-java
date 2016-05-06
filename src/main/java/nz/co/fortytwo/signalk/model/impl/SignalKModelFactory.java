@@ -35,7 +35,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 /**
  * Factory to get signalKModel singleton
@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
 public class SignalKModelFactory {
 	private static final String SIGNALK_MODEL_SAVE_FILE = "./conf/self.json";
 	private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
-	private static Logger logger = Logger.getLogger(SignalKModelFactory.class);
+	private static Logger logger = LogManager.getLogger(SignalKModelFactory.class);
 	private static SignalKModel signalKModel;
 	private static String rootPath="";
 

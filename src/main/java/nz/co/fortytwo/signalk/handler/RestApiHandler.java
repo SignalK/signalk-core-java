@@ -44,7 +44,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 /*
  * Processes REST requests for Signal K data
@@ -58,7 +58,7 @@ public class RestApiHandler {
 
 	private static final String SLASH = "/";
 	private static final String LIST = "list";
-	private static Logger logger = Logger.getLogger(RestApiHandler.class);
+	private static Logger logger = LogManager.getLogger(RestApiHandler.class);
 	private JsonSerializer ser = new JsonSerializer();
 	private JsonListHandler listHandler = new JsonListHandler();
 	private JsonGetHandler getHandler = new JsonGetHandler();

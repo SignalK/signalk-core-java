@@ -17,14 +17,14 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelImpl;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JsonSerializerTest {
 
-	private static Logger logger = Logger.getLogger(JsonSerializerTest.class);
+	private static Logger logger = LogManager.getLogger(JsonSerializerTest.class);
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Util.getConfig();

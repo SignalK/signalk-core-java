@@ -140,6 +140,7 @@ public class SignalKConstants {
 	public static final String SIGNALK_INSTALL = "/signalk/v1/install";
 	public static final String SIGNALK_UPGRADE = "/signalk/v1/upgrade";
 	public static final String SIGNALK_CONFIG = "/signalk/v1/config";
+	public static final String SIGNALK_LOGGER = "/signalk/logger";
 	
 	//public static final String name = "name";
 	//public static final String mmsi = "mmsi";
@@ -565,6 +566,7 @@ public class SignalKConstants {
 	public static final String tanks_id_level="tanks.*.level";
 	public static final String tanks_id_name="tanks.*.name";
 	public static final String tanks_id_type="tanks.*.type";
+	
 	
 	
 	

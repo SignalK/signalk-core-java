@@ -14,13 +14,13 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class AlarmManagerTest {
-	private static Logger logger = Logger.getLogger(AlarmManagerTest.class);
+	private static Logger logger = LogManager.getLogger(AlarmManagerTest.class);
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Util.getConfig();

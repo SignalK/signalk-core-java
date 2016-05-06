@@ -10,10 +10,10 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.warn;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 public class AlarmManager {
-	private static Logger logger = Logger.getLogger(AlarmManager.class);
+	private static Logger logger = LogManager.getLogger(AlarmManager.class);
 	private Json zones;
 
 	public AlarmManager(Json zones){

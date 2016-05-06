@@ -12,13 +12,13 @@ import nz.co.fortytwo.signalk.handler.NMEAHandler;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import com.cedarsoftware.util.io.JsonWriter;
 
 public class SignalKExamplesGenerator {
-	private static Logger logger = Logger.getLogger(SignalKExamplesGenerator.class);
+	private static Logger logger = LogManager.getLogger(SignalKExamplesGenerator.class);
 	private JsonSerializer ser = new JsonSerializer();
 	private FullToDeltaConverter conv = new FullToDeltaConverter();
 	

@@ -37,7 +37,7 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.AlarmManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 
 
@@ -49,7 +49,7 @@ import org.apache.log4j.Logger;
  */
 public class AlarmHandler {
 
-	private static Logger logger = Logger.getLogger(AlarmHandler.class);
+	private static Logger logger = LogManager.getLogger(AlarmHandler.class);
 	
 	/**
 	 * Scans the signal k model for alarm conditions and sets/unsets alarms

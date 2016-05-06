@@ -33,7 +33,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 
 
@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
  */
 public class TrueWindHandler {
 
-	private static Logger logger = Logger.getLogger(TrueWindHandler.class);
+	private static Logger logger = LogManager.getLogger(TrueWindHandler.class);
 	
 
 

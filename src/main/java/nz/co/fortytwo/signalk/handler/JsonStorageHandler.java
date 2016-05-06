@@ -48,7 +48,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 /**
  * Handles json messages with large blobs 
@@ -58,7 +58,7 @@ import org.apache.log4j.Logger;
  */
 public class JsonStorageHandler {
 
-	private static Logger logger = Logger.getLogger(JsonStorageHandler.class);
+	private static Logger logger = LogManager.getLogger(JsonStorageHandler.class);
 	private File storageDir = new File(Util.getConfigProperty(STORAGE_ROOT));
 	private Map<String, String> mimeMap = new HashMap<String, String>();
 

@@ -51,7 +51,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -63,7 +63,7 @@ import org.joda.time.DateTimeZone;
  */
 public class Util {
 
-	private static Logger logger = Logger.getLogger(Util.class);
+	private static Logger logger = LogManager.getLogger(Util.class);
 	// private static Properties props;
 	private static SignalKModel model = null;
 	public static SimpleDateFormat sdf = new SimpleDateFormat(

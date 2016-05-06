@@ -17,7 +17,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitud
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import net.sf.marineapi.nmea.parser.SentenceFactory;
 import net.sf.marineapi.nmea.sentence.DBTSentence;
@@ -43,7 +43,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 
 public class NMEA0183Producer {
 	private SentenceFactory sf = SentenceFactory.getInstance();
-	private static Logger logger = Logger.getLogger(NMEA0183Producer.class);
+	private static Logger logger = LogManager.getLogger(NMEA0183Producer.class);
 	// RMC,GLL, GGA = position
 	public String createRMC(SignalKModel model) {
 		if (model.get(vessels_dot_self_dot + nav_position_latitude) != null && model.get(vessels_dot_self_dot + nav_position_longitude) != null) {

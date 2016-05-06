@@ -30,12 +30,9 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_headingTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_latitude;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position_longitude;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.IOException;
@@ -44,13 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nz.co.fortytwo.signalk.ais.AisVesselInfo;
-import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-import nz.co.fortytwo.signalk.util.Util;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import dk.dma.ais.message.AisMessage;
 import dk.dma.ais.message.AisMessage18;
@@ -60,6 +53,10 @@ import dk.dma.ais.packet.AisPacket;
 import dk.dma.ais.packet.AisPacketParser;
 import dk.dma.ais.sentence.Abk;
 import dk.dma.ais.sentence.SentenceException;
+import nz.co.fortytwo.signalk.ais.AisVesselInfo;
+import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.Util;
 
 /**
  * Accepts AIVDM messages and translates the VDMs into AisMessages and sends the AisPositionMessages on to the browser.
@@ -70,7 +67,7 @@ import dk.dma.ais.sentence.SentenceException;
  */
 public class AISHandler {
 
-	private static Logger logger = Logger.getLogger(AISHandler.class);
+	private static Logger logger = LogManager.getLogger(AISHandler.class);
 
 	/**
 	 * Reader to parse lines and deliver complete AIS packets.

@@ -54,14 +54,14 @@ import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.TestHelper;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SignalKModelImplTest {
 
-	private static Logger logger = Logger.getLogger(SignalKModelImplTest.class);
+	private static Logger logger = LogManager.getLogger(SignalKModelImplTest.class);
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Util.getConfig();

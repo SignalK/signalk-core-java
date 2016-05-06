@@ -38,7 +38,7 @@ import java.util.List;
 import mjson.Json;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 /**
  * Convert the full format to delta format
@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
  */
 public class FullToDeltaConverter {
 
-	private static Logger logger = Logger.getLogger(FullToDeltaConverter.class);
+	private static Logger logger = LogManager.getLogger(FullToDeltaConverter.class);
 
 
 	/*

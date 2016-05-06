@@ -65,7 +65,7 @@ import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 
 
@@ -78,7 +78,7 @@ import org.apache.log4j.Logger;
  */
 public class NMEAHandler{
 
-	private static Logger logger = Logger.getLogger(NMEAHandler.class);
+	private static Logger logger = LogManager.getLogger(NMEAHandler.class);
 	private static final String DISPATCH_ALL = "DISPATCH_ALL";
 
 	// map of sentence listeners

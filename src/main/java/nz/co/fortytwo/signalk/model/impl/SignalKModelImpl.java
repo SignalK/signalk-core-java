@@ -50,7 +50,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
@@ -66,7 +66,7 @@ import com.google.common.eventbus.EventBus;
  * model.put("vessels.self.navigation.position.latitude", 57.9);
  * model.put("vessels.self.navigation.position.longitude", 17.2);
  * model.put("vessels.self.navigation.position.source", "gps");
- * model.put("vessels.self.navigation.position.teimstamp", model.timestamp());
+ * model.put("vessels.self.navigation.position.timestamp", model.timestamp());
 
  * </pre>
  * <p>
@@ -76,7 +76,7 @@ import com.google.common.eventbus.EventBus;
  */
 public class SignalKModelImpl implements SignalKModel {
     
-	private static Logger logger = Logger.getLogger(SignalKModelImpl.class);
+	private static Logger logger = LogManager.getLogger(SignalKModelImpl.class);
     private final char separator;
     private final NavigableMap<String,Object> root;
     

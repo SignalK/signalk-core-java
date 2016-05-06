@@ -29,13 +29,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 //public class AISHandlerTest extends CamelTestSupport {
 public class AISHandlerTest{
 
-	private static Logger log = Logger.getLogger(AISHandlerTest.class);
+	private static Logger log = LogManager.getLogger(AISHandlerTest.class);
 	/*
 	@EndpointInject(uri = "mock:result")
 	protected MockEndpoint resultEndpoint;

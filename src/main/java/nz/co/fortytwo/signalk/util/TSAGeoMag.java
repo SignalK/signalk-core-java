@@ -48,7 +48,7 @@ import java.io.StreamTokenizer;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 /**<p>
  * 
@@ -222,7 +222,7 @@ public class TSAGeoMag
     /** A logger for this class. Every class MUST have this field, if you want to log from this class.
      *  The class name is the fully qualified class name of the class, such as java.lang.String. If you're not going
      *  to use log4j, then comment all references to the logger, and uncomment the System.***.println statements.*/
-    private static Logger logger = Logger.getLogger(TSAGeoMag.class);
+    private static Logger logger = LogManager.getLogger(TSAGeoMag.class);
     
     //variables for magnetic calculations ////////////////////////////////////
     //

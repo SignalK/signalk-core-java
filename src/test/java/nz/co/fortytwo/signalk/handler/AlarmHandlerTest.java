@@ -19,12 +19,12 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.TestHelper;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
 public class AlarmHandlerTest {
-	private static Logger logger = Logger.getLogger(AlarmHandlerTest.class);
+	private static Logger logger = LogManager.getLogger(AlarmHandlerTest.class);
 	
 
 	@After
