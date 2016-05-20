@@ -83,7 +83,7 @@ public class GenerateSignalkData {
 	public static void createSignalkData(File schemaRoot, String uuid, String filter, boolean skipAttr, boolean skipMeta ) throws IOException{
 		
 		//add definitions
-		File[] definitions = new File[]{new File(schemaRoot,"specification/schemas/definitions.json"),new File(schemaRoot, "specification/schemas/groups/electrical_dc.json")};
+		File[] definitions = new File[]{new File(schemaRoot,"specification/schemas/definitions.json"),new File(schemaRoot, "specification/schemas/groups/electrical.json")};
 		Map<String, Json> defMap=addDefinitions(definitions);
 		
 		//load schema
