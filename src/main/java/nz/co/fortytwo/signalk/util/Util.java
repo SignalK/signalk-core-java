@@ -150,7 +150,7 @@ public class Util {
 	public static void setDefaults(SignalKModel model) {
 		// populate sensible defaults here
 		model.getFullData().put(ConfigConstants.UUID, "self");
-		model.getFullData().put(ConfigConstants.WEBSOCKET_PORT, 3000);
+		model.getFullData().put(ConfigConstants.WEBSOCKET_PORT, 8080);
 		model.getFullData().put(ConfigConstants.REST_PORT, 8080);
 		model.getFullData().put(ConfigConstants.STORAGE_ROOT, "./storage/");
 		model.getFullData().put(ConfigConstants.STATIC_DIR, "./signalk-static");
@@ -185,8 +185,10 @@ public class Util {
 		model.getFullData().put(ConfigConstants.ALLOW_INSTALL, true);
 		model.getFullData().put(ConfigConstants.ALLOW_UPGRADE, true);
 		model.getFullData().put(ConfigConstants.GENERATE_NMEA0183, true);
+		model.getFullData().put(ConfigConstants.ZEROCONF_AUTO, true);
 		model.getFullData().put(ConfigConstants.START_MQTT, true);
 		model.getFullData().put(ConfigConstants.START_STOMP, true);
+		//model.getFullData().put(ConfigConstants.CLIENT_WS, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_TCP, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_MQTT, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_STOMP, null);

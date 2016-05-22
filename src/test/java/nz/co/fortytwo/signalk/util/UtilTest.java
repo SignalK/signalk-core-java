@@ -146,8 +146,10 @@ public class UtilTest {
 			assertNotNull(model.get(ConfigConstants.ALLOW_INSTALL));
 			assertNotNull(model.get(ConfigConstants.ALLOW_UPGRADE));
 			assertNotNull(model.get(ConfigConstants.GENERATE_NMEA0183));
+			assertNotNull(model.get(ConfigConstants.ZEROCONF_AUTO));
 			assertNotNull(model.get(ConfigConstants.START_MQTT));
 			assertNotNull(model.get(ConfigConstants.START_STOMP));
+			assertNull(model.get(ConfigConstants.CLIENT_WS));
 			assertNull(model.get(ConfigConstants.CLIENT_TCP));
 			assertNull(model.get(ConfigConstants.CLIENT_MQTT));
 			assertNull(model.get(ConfigConstants.CLIENT_STOMP));
