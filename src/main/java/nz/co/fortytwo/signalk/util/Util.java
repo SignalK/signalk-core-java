@@ -150,7 +150,7 @@ public class Util {
 	public static void setDefaults(SignalKModel model) {
 		// populate sensible defaults here
 		model.getFullData().put(ConfigConstants.UUID, "self");
-		model.getFullData().put(ConfigConstants.WEBSOCKET_PORT, 8080);
+		model.getFullData().put(ConfigConstants.WEBSOCKET_PORT, 3000);
 		model.getFullData().put(ConfigConstants.REST_PORT, 8080);
 		model.getFullData().put(ConfigConstants.STORAGE_ROOT, "./storage/");
 		model.getFullData().put(ConfigConstants.STATIC_DIR, "./signalk-static");
