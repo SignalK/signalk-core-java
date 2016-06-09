@@ -74,9 +74,16 @@ public class JsonListHandler {
 					||f.getName().startsWith("sensors")
 					||f.getName().startsWith("sources")
 					||f.getName().startsWith("steering")
+					||f.getName().startsWith("notifications")
+					||f.getName().startsWith("registrations")
+					||f.getName().startsWith("sails")
+					||f.getName().startsWith("notifications")
 					||f.getName().startsWith("tanks")
 					||f.getName().startsWith("uuid")
 					||f.getName().startsWith("mmsi")
+					||f.getName().startsWith("flag")
+					||f.getName().startsWith("url")
+					||f.getName().startsWith("port")
 					||f.getName().startsWith("name")){
 						keys.add(f.get(null).toString());
 						if(logger.isDebugEnabled())logger.debug("Added "+f.get(null).toString());

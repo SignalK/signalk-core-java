@@ -29,7 +29,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionChangeAlarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedAlarm;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
@@ -85,8 +85,8 @@ public class SignalKModelImplTest {
 		
 		assertEquals(256.0, signalk.getValue(vessels+dot+"self"+dot+env_wind_angleApparent));
 		
-		assertEquals(18, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
-		assertEquals(111, signalk.getSubMap(vessels+dot+"self").size());
+		assertEquals(15, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
+		assertEquals(105, signalk.getSubMap(vessels+dot+"self").size());
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class SignalKModelImplTest {
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_angleApparent+dot+value),0d);
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_directionChangeAlarm+dot+value),0d);
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_directionTrue+dot+value),0d);
-		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedAlarm+dot+value),0d);
+		
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedApparent+dot+value),0d);
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedTrue+dot+value),7.68d);
 		
