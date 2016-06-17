@@ -70,13 +70,13 @@ public class TrackSimplifier {
         marks[marks.length - 1] = true;
         mark(track, tol2, 0, track.size() - 1, marks);
 
-        ImmutableList.Builder<Position> result = ImmutableList.builder();
+        ArrayList<Position> result = new ArrayList<>();
         for (int i = 0; i < marks.length ; i++ ) {
             if (marks[i]) {
                 result.add(track.get(i));
             }
         }
-        return result.build();
+        return result;
     }
 
     private static void mark(List<Position> track, double tol2, int start, int end, boolean[] marks) {
