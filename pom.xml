@@ -39,13 +39,13 @@
     </repository>
   </repositories>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>signalk-snapshots</id>
-			<name>SignalK Repository</name>
-			<url>http://ec2-52-91-140-52.compute-1.amazonaws.com/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
+<!-- 	<distributionManagement> -->
+<!-- 		<snapshotRepository> -->
+<!-- 			<id>signalk-snapshots</id> -->
+<!-- 			<name>SignalK Repository</name> -->
+<!-- 			<url>http://ec2-52-91-140-52.compute-1.amazonaws.com/artifactory/libs-snapshot-local</url> -->
+<!-- 		</snapshotRepository> -->
+<!-- 	</distributionManagement> -->
 
 	<dependencies>
 		<!-- ais Apache licence -->

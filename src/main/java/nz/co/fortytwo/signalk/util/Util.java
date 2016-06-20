@@ -439,8 +439,8 @@ public class Util {
 	}
 
 	public static String getIsoTimeString() {
-		// TODO Auto-generated method stub
-		return DateTime.now(DateTimeZone.UTC).toDateTimeISO().toString();
+		
+		return getIsoTimeString(System.currentTimeMillis());
 		// return ISO8601DateFormat.getDateInstance().format(new Date());
 	}
 

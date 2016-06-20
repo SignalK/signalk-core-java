@@ -18,8 +18,6 @@ package nz.co.fortytwo.signalk.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * Utility funciton for simplifying a list of positions.
  */
