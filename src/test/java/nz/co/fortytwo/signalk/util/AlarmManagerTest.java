@@ -2,7 +2,7 @@ package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarmState;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.alarms;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.notifications;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.message;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
@@ -96,8 +96,8 @@ public class AlarmManagerTest {
 		Util.setSelf("motu");
 		mgr.setAlarm(model, vessels_dot_self_dot+nav_courseOverGroundMagnetic, alarm, "Test msg");
 		logger.debug(model);
-		assertEquals(alarm, model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+alarmState));
-		assertEquals("Test msg", model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+message));
+		assertEquals(alarm, model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundMagnetic+dot+alarmState));
+		assertEquals("Test msg", model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundMagnetic+dot+message));
 	}
 	@Test
 	public void shouldSetAlarmWithNullMessage(){
@@ -107,8 +107,8 @@ public class AlarmManagerTest {
 		Util.setSelf("motu");
 		mgr.setAlarm(model, vessels_dot_self_dot+nav_courseOverGroundMagnetic, alarm, null);
 		logger.debug(model);
-		assertEquals(alarm, model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+alarmState));
-		assertEquals("", model.get(vessels_dot_self_dot+alarms+dot+nav_courseOverGroundMagnetic+dot+message));
+		assertEquals(alarm, model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundMagnetic+dot+alarmState));
+		assertEquals("", model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundMagnetic+dot+message));
 	}
 
 }

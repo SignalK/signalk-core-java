@@ -59,7 +59,6 @@ public class SignalKConstants {
 	public static final String meta = "meta";
 	public static final String zones = "zones";
 	public static final String attr = "_attr";
-	public static final String alarms = "alarms";
 	public static final String alarm = "alarm";
 	public static final String alarmState = "alarmState";
 	public static final String alarmMessage = "alarmMessage";
