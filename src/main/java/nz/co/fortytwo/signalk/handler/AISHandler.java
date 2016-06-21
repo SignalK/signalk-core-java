@@ -33,6 +33,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_speedOverGround;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_state;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sources;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.IOException;
@@ -159,7 +160,7 @@ public class AISHandler {
 						if(StringUtils.isBlank(device))device=UNKNOWN;
 						String ts = Util.getIsoTimeString(packet.getBestTimestamp());
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
-						String srcRef = aisVessel+"sources.ais";
+						String srcRef = sources+dot+String.valueOf(vInfo.getUserId())+".ais."+vInfo.getMsgType();
 						//create ais source entry
 						model.put(srcRef, packet.getStringMessage(),device,ts);
 						

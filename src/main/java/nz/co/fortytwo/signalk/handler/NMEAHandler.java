@@ -211,7 +211,7 @@ public class NMEAHandler{
 
 		for (SentenceListener sl : listeners.get(DISPATCH_ALL)) {
 			try {
-				SentenceEventSource src = new SentenceEventSource(device, now,model);
+				SentenceEventSource src = new SentenceEventSource(device+".NMEA0183."+sentence.getSentenceId(), now,model);
 				SentenceEvent se = new SentenceEvent(src, sentence);
 				sl.sentenceRead(se);
 			} catch (Exception e) {

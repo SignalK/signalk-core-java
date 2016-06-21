@@ -103,7 +103,7 @@ public class JsonStorageHandler {
 			}
 
 			if (logger.isDebugEnabled())
-				logger.debug("JsonPutHandler processed put  ");
+				logger.debug("JsonPutHandler processed put " + node);
 			return node;
 		}
 		return null;
@@ -119,13 +119,16 @@ public class JsonStorageHandler {
 		for (Json e : array.asJsonList()) {
 			String key = e.at(PATH).asString();
 			// temp.put(ctx+"."+key, e.at(value).getValue());
-			process( ctx + dot + key, e.at(value));
+			if(process( ctx + dot + key, e.at(value))){
+				//its a delete
+				e.set(value, Json.nil());
+			};
 
 		}
 
 	}
 
-	protected void process( String ctx, Json j) throws IOException {
+	protected boolean process( String ctx, Json j) throws IOException {
 		// capture and store any embedded content
 		if (j.isObject()) {
 			if (j.has(PAYLOAD)) {
@@ -134,6 +137,14 @@ public class JsonStorageHandler {
 				String filePath = ctx.replace('.', '/') + SignalKConstants.dot + ext;
 
 				String payload = null;
+				File save = new File(storageDir, filePath);
+				if (j.at(PAYLOAD).isNull()){
+					//we want to delete it
+					logger.debug("Delete from "+save.getAbsolutePath());
+					FileUtils.deleteQuietly(save);
+					//now delete from model
+					return true;
+				}
 				if (j.at(PAYLOAD).isString()) {
 					// save it separately and add a storage url
 					payload = j.at(PAYLOAD).asString();
@@ -142,7 +153,7 @@ public class JsonStorageHandler {
 					// save it separately and add a storage url
 					payload = j.at(PAYLOAD).toString().trim();
 				}
-				File save = new File(storageDir, filePath);
+				
 				logger.debug("Save to from "+save.getAbsolutePath());
 				FileUtils.writeStringToFile(save, payload);
 				j.set(STORAGE_URI, filePath);
@@ -164,6 +175,7 @@ public class JsonStorageHandler {
 				}
 			}
 		}
+		return false;
 	}
 
 	private String getExtension(Json j) {
