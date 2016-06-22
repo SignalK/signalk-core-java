@@ -152,9 +152,9 @@ public class SignalKModelImpl  implements SignalKModel {
     }
 
     private boolean doDelete(String key,NavigableMap<String, Object> map ) {
-        NavigableMap<String,Object> subMap = map.tailMap(key, true);
+        NavigableSet<String> subMap = getKeys().subSet(key, true, key+".\uFFFD", true);
         boolean found = false;
-        for (Iterator<String> i = subMap.keySet().iterator();i.hasNext();) {
+        for (Iterator<String> i = subMap.iterator();i.hasNext();) {
             String mapkey = i.next();
             if (mapkey.startsWith(key) && (mapkey.length() == key.length() || mapkey.charAt(key.length()) == separator)) {
             	eventBus.post(new PathEvent(mapkey, nextrevision ,PathEvent.EventType.DEL));

@@ -58,6 +58,7 @@ import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logg
  */
 public class JsonStorageHandler {
 
+	public static final String PARENT_PATH = "parentPath";
 	private static Logger logger = LogManager.getLogger(JsonStorageHandler.class);
 	private File storageDir = new File(Util.getConfigProperty(STORAGE_ROOT));
 	private Map<String, String> mimeMap = new HashMap<String, String>();
@@ -80,8 +81,11 @@ public class JsonStorageHandler {
 
 	public Json handle(Json node) throws Exception {
 		// avoid full signalk syntax
-		if (node.has(vessels))
-			return null;
+		if (node.has(vessels)){
+			process(vessels,node.at(vessels));
+			return node;
+		}
+			
 		// deal with diff format
 		if (node.has(CONTEXT)) {
 			if (logger.isDebugEnabled())
@@ -89,7 +93,7 @@ public class JsonStorageHandler {
 
 			// go to context
 			String ctx = node.at(CONTEXT).asString();
-			// Json pathNode = temp.addNode(path);
+			ctx=Util.fixSelfKey(ctx);
 
 			Json puts = node.at(PUT);
 			if (puts == null)
@@ -134,14 +138,16 @@ public class JsonStorageHandler {
 			if (j.has(PAYLOAD)) {
 
 				String ext = getExtension(j);
-				String filePath = ctx.replace('.', '/') + SignalKConstants.dot + ext;
+				String filePath = ctx.replace('.', '/') ;
 
 				String payload = null;
-				File save = new File(storageDir, filePath);
+				File content = new File(storageDir, filePath + SignalKConstants.dot+ ext);
+				File data = new File(storageDir, filePath+ "db.json");
 				if (j.at(PAYLOAD).isNull()){
 					//we want to delete it
-					logger.debug("Delete from "+save.getAbsolutePath());
-					FileUtils.deleteQuietly(save);
+					if (logger.isDebugEnabled())logger.debug("Delete from "+content.getAbsolutePath());
+					FileUtils.deleteQuietly(content);
+					FileUtils.deleteQuietly(data);
 					//now delete from model
 					return true;
 				}
@@ -154,14 +160,18 @@ public class JsonStorageHandler {
 					payload = j.at(PAYLOAD).toString().trim();
 				}
 				
-				logger.debug("Save to from "+save.getAbsolutePath());
-				FileUtils.writeStringToFile(save, payload);
-				j.set(STORAGE_URI, filePath);
+				if (logger.isDebugEnabled())logger.debug("Save to from "+content.getAbsolutePath());
+				FileUtils.writeStringToFile(content, payload);
+				j.set(STORAGE_URI, filePath + SignalKConstants.dot+ ext);
 				j.delAt(PAYLOAD);
+				Json dataJson = j.dup();
+				dataJson.set(PARENT_PATH, ctx);
+				//save the data
+				FileUtils.writeStringToFile(data, dataJson.toString());
 			} else if (j.has(STORAGE_URI)) {
 				String filePath = j.at(STORAGE_URI).asString();
 				File save = new File(storageDir, filePath);
-				logger.debug("Retrieve from "+save.getAbsolutePath());
+				if (logger.isDebugEnabled())logger.debug("Retrieve from "+save.getAbsolutePath());
 				String payload = FileUtils.readFileToString(save);
 				if (payload.startsWith("{") && payload.endsWith("}")) {
 					j.set(PAYLOAD, Json.read(payload));
@@ -171,6 +181,7 @@ public class JsonStorageHandler {
 				j.delAt(STORAGE_URI);
 			} else {
 				for (Json child : j.asJsonMap().values()) {
+					if (logger.isDebugEnabled())logger.debug("Retrieve from "+ctx + dot + j.getParentKey()+", json:"+j);
 					process( ctx + dot + j.getParentKey(), child);
 				}
 			}

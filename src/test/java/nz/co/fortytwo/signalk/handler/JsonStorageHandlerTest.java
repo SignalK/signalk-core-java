@@ -40,7 +40,7 @@ import org.junit.Test;
 
 public class JsonStorageHandlerTest {
 
-	String jsonDiff = "{\"context\":\"resources\",\"put\":[{\"timestamp\":\"2015-03-23T01:57:01.856Z\",\"values\":[{\"path\":\"routes.SignalKConstants.self.currentTrack\",\"value\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\",\"mimetype\":\"application/vnd.geo+json\",\"payload\":{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[23.366832680000005,59.85969252999999],[23.367125929999997,59.85961481000001],[23.367415009999995,59.85953943999999]]},\"properties\":{\"name\":\"CurrentTrack\",\"description\":\"Thecurrentvesseltrack\"}}}}],\"source\":\"vessels.motu\"}]}";
+	String jsonDiff = "{\"context\":\"vessels.self\",\"put\":[{\"timestamp\":\"2015-03-23T01:57:01.856Z\",\"values\":[{\"path\":\"routes.currentTrack\",\"value\":{\"name\":\"CurrentTrack\",\"description\":\"The current vessel track\",\"mimetype\":\"application/vnd.geo+json\",\"payload\":{\"type\":\"Feature\",\"geometry\":{\"type\":\"LineString\",\"coordinates\":[[23.366832680000005,59.85969252999999],[23.367125929999997,59.85961481000001],[23.367415009999995,59.85953943999999]]},\"properties\":{\"name\":\"CurrentTrack\",\"description\":\"The current vessel track\"}}}}],\"source\":\"vessels.motu\"}]}";
 	
 	private static Logger logger = LogManager.getLogger(JsonStorageHandlerTest.class);
 	@BeforeClass
@@ -56,23 +56,28 @@ public class JsonStorageHandlerTest {
 	public void shouldProcessPut() throws Exception{
 		Json diff = Json.read(jsonDiff);
 		File dataRoot = new File(Util.getConfigProperty(ConfigConstants.STORAGE_ROOT));
+		logger.debug("Storage location:"+dataRoot.getAbsolutePath());
 		//empty it
 		FileUtils.deleteDirectory(dataRoot);
-		
+		dataRoot.mkdirs();
 		JsonStorageHandler processor = new JsonStorageHandler();
 		Json output = processor.handle(diff);
 		logger.debug(output);
 		assertTrue(!output.at("put").at(0).at("values").at(0).at("value").has("payload"));
 		String filePath = output.at("put").at(0).at("values").at(0).at("value").at("uri").asString();
-		logger.debug(filePath);
+		logger.debug("Relative path:"+filePath);
 		assertNotNull(filePath);
-		File data = new File(Util.getConfigProperty(ConfigConstants.STORAGE_ROOT)+filePath);
+		File content = new File(dataRoot,filePath);
+		File data = new File(dataRoot,filePath);
+		
+		assertTrue(content.exists());
 		assertTrue(data.exists());
 		//logger.debug(filePath);
 		//now retrieve it again
 		output = processor.handle(output);
 		assertTrue(output.at("put").at(0).at("values").at(0).at("value").has("payload"));
 		assertTrue(!output.at("put").at(0).at("values").at(0).at("value").has("uri"));
+		content.delete();
 		data.delete();
 	}
 	

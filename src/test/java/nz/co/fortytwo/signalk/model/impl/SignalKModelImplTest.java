@@ -246,6 +246,7 @@ public class SignalKModelImplTest {
 		logger.debug(signalk);
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()>0);
 		signalk.put(vessels_dot_self_dot+nav_position,null,"dummy",Util.getIsoTimeString());
+		logger.error(signalk.getTree(vessels_dot_self_dot+ nav_position).size());
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()==0);
 		
 	}
