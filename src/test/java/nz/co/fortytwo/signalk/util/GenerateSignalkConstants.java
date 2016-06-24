@@ -26,11 +26,13 @@ package nz.co.fortytwo.signalk.util;
 
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.nav;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.pgn;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.type;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.values;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.apache.commons.io.FileUtils;
@@ -48,11 +49,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import mjson.Json;
-import nz.co.fortytwo.signalk.handler.FullToDeltaConverter;
-import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
-public class GenerateSignalkData {
+public class GenerateSignalkConstants {
 
 	//private  defMap;
 
@@ -69,7 +67,7 @@ public class GenerateSignalkData {
 	//@Ignore
 	public void test() throws Exception {
 		
-		createSignalkData("./../", "motu", nav, true,true);
+		createSignalkData("./../", "motu", "", true,true);
 	}
 	
 	public static void createSignalkData(String schemaDir, String uuid, String filter, boolean skipAttr, boolean skipMeta ) throws IOException{
@@ -79,7 +77,12 @@ public class GenerateSignalkData {
 	public static void createSignalkData(File schemaRoot, String uuid, String filter, boolean skipAttr, boolean skipMeta ) throws IOException{
 		
 		//add definitions
-		File[] definitions = new File[]{new File(schemaRoot,"specification/schemas/definitions.json"),new File(schemaRoot, "specification/schemas/groups/electrical.json")};
+		File[] definitions = new File[]{
+				new File(schemaRoot,"specification/schemas/definitions.json"),
+				//new File(schemaRoot,"specification/schemas/external/geojson/geometry.json"),
+				new File(schemaRoot,"specification/schemas/groups/environment.json"),
+				new File(schemaRoot,"specification/schemas/groups/tanks.json"),
+				new File(schemaRoot, "specification/schemas/groups/electrical.json")};
 		Map<String, Json> defMap=addDefinitions(definitions);
 		
 		//load schema
@@ -102,22 +105,18 @@ public class GenerateSignalkData {
 			}
 		}
 		// output json
-		SignalKModel model = SignalKModelFactory.getWrappedInstance(outList);
-		JsonSerializer ser = new JsonSerializer();
-		Json modelJson = ser.writeJson(model);
-		System.out.println("\nFull Json:");
-		System.out.println(modelJson);
-		
-		FullToDeltaConverter fullToDelta = new FullToDeltaConverter();
-		List<Json> delta = fullToDelta.handle(modelJson);
-		System.out.println("\nDelta Json:");
-		System.out.println(delta);
-		
+
 		System.out.println("\nJava:");
 		for(Entry<String, Object> entry: outList.entrySet()){
 			if(entry.getKey().contains(filter)){
-				String mark = (entry.getValue() instanceof String)?"\"":"";
-				System.out.println("model.getFullData().put(\""+entry.getKey()+"\","+mark+entry.getValue()+mark+");");
+				String key = entry.getKey();
+				key=key.replace("vessels.motu.","");
+				String val = key;
+				val=val.replace(".id.", ".*.");
+				key=key.replace(".","_");
+				key=key.replace("navigation","nav");
+				key=key.replace("environment","env");
+				System.out.println("public static final String "+key +"=\""+val+"\";");
 			}
 		}
 		
@@ -191,25 +190,18 @@ public class GenerateSignalkData {
 					continue;
 				}
 				if (e.equals(timestamp)){
-					keyList.put(pad +  sanitiseKey(e), Util.getIsoTimeString());
+					//keyList.put(pad +  sanitiseKey(e), Util.getIsoTimeString());
 					continue;
 				}
-				if (e.equals(sourceRef) || e.equals(source)){
-					keyList.put(pad +  source+dot+type, "testType");
-					keyList.put(pad +  source+".label", "testLabel");
+				if (e.equals(sourceRef) || e.equals(source)||e.equals(pgn)||e.equals(value)||e.equals(values)||e.equals("sentence")){
+					//keyList.put(pad +  source+dot+type, "testType");
+					//keyList.put(pad +  source+".label", "testLabel");
 					continue;
 				}
 				//System.out.println("properties key="+pad +  e);
-				try{
-					Object value = getValueForType(map.get(e).asJsonMap());
-					if(value!=null){
-						keyList.put(pad +  sanitiseKey(e), value);
-						//System.out.println("    key="+pad +  sanitiseKey(e)+"="+value); 
-						
-					}
-				}catch(UnsupportedOperationException use){
-					System.out.println("   No type in map="+e+" : "+map);
-				}
+				
+				keyList.put(pad +  sanitiseKey(e), "dummy");
+					
 				if (props.at(e).isObject()) {
 					//System.out.println("   Recurse:"+e);
 					recurse(props.at(e), defMap,pad +sanitiseKey(e)+"." , schemaFile, keyList,skipAttr,skipMeta);
@@ -264,19 +256,21 @@ public class GenerateSignalkData {
 	}
 
 	private static String sanitiseKey(String e) {
-		String uuid = UUID.randomUUID().toString();
-		if(e.equals("(^urn:mrn:(imo|signalk):(mmsi:[2-7][0-9]{8,8}|uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}))|^(http(s?):.*|mailto:.*|tel:(\\+?)[0-9]{4,})$"))return "urn:mrn:signalk:uuid:"+uuid;
-		if(e.equals("^urn:mrn:signalk:uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"))return "urn:mrn:signalk:uuid:"+uuid;
+		//String uuid = UUID.randomUUID().toString();
+		if(e.equals("(^urn:mrn:(imo|signalk):(mmsi:[2-7][0-9]{8,8}|uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}))|^(http(s?):.*|mailto:.*|tel:(\\+?)[0-9]{4,})$"))return "id";
+		if(e.equals("^urn:mrn:signalk:uuid:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"))return "id";
 		if(e.equals("(^source$)"))return "source";
 		if(e.equals("(^message$)"))return "message";
 		if(e.equals("(^method$)"))return "method";
 		if(e.equals("(^timestamp$)"))return "timestamp";
 		if(e.equals("(^state$)"))return "state";
-		if(e.equals("(^[A-Za-z0-9]+$)"))return uuid.substring(0,7);
-		if(e.equals("(^[A-Za-z0-9_-]{8,}$)"))return uuid.substring(0,8);
-		if(e.equals(".*"))return uuid.substring(0,7);
-		if(e.equals("(^[A-Za-z0-9-]+$)"))return uuid.substring(0,7);
-		if(e.equals("(^[A-Za-z0-9_-]+$)"))return uuid.substring(0,7);
+		if(e.equals("(^[A-Za-z0-9]+$)"))return "id";
+		if(e.equals("(^[A-Za-z0-9_-]{8,}$)"))return "id";
+		if(e.equals(".*"))return "id";
+		if(e.equals("(^[A-Za-z0-9-]+$)"))return "id";
+		if(e.equals("(^[A-Za-z0-9_-]+$)"))return "id";
+		if(e.equals("(single)|([A-C])"))return "id";
+		if(e.equals("(^[a-zA-Z0-9]+$)"))return "id";
 		return e;
 	}
 

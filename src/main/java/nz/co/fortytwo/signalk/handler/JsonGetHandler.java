@@ -39,7 +39,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
 
@@ -52,7 +52,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class JsonGetHandler {
 
-	private static Logger logger = Logger.getLogger(JsonGetHandler.class);
+	private static Logger logger = LogManager.getLogger(JsonGetHandler.class);
 
 	/**
 	 * Processes the getNode against the signalKModel and returns a temporary signalkModel with the matching paths

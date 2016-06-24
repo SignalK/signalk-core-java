@@ -35,7 +35,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -50,7 +50,7 @@ import org.eclipse.jgit.transport.FetchResult;
 public class GitHandler {
 
 	private static final String SLASH = "/";
-	private static Logger logger = Logger.getLogger(GitHandler.class);
+	private static Logger logger = LogManager.getLogger(GitHandler.class);
 	private File staticDir = null;
 	
 	private static String github = "https://github.com/SignalK/";
@@ -231,14 +231,15 @@ public class GitHandler {
 			String gitPath = github+path+".git";
 			logger.debug("Cloning from " + gitPath + " to " + destDir.getAbsolutePath());
 			FileUtils.writeStringToFile(output, "Updating from " + gitPath + " to " + destDir.getAbsolutePath()+"\n",false);
+			Git git = null;
 			try{
 				FileRepositoryBuilder builder = new FileRepositoryBuilder();
 				repository = builder.setGitDir(destDir)
 					.readEnvironment() // scan environment GIT_* variables
 					.findGitDir() // scan up the file system tree
 					.build();
-				
-				FetchResult result = new Git(repository).fetch().setRemote(gitPath).setCheckFetchedObjects(true).call();
+				git = new Git(repository);
+				FetchResult result = git.fetch().setRemote(gitPath).setCheckFetchedObjects(true).call();
 				FileUtils.writeStringToFile(output, result.getMessages(),true);
 				logger.debug("Updated "+gitPath+" repository: " + result.getMessages());
 				
@@ -248,6 +249,9 @@ public class GitHandler {
 				FileUtils.writeStringToFile(output, e.getMessage(),true);
 				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
 				logger.debug("Error updating "+gitPath+" repository: " + e.getMessage(),e);
+			}finally{
+				if(git!=null) git.close();
+				if(repository!=null)repository.close();
 			}
 			return logFile;
 		

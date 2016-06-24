@@ -29,14 +29,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import mjson.Json;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class JsonListHandlerTest {
 
-	private static Logger logger = Logger.getLogger(JsonListHandlerTest.class);
+	private static Logger logger = LogManager.getLogger(JsonListHandlerTest.class);
 	@Before
 	public void setUp() throws Exception {
 		
@@ -54,7 +54,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertEquals(55,reply.asList().size());
+		assertEquals(79,reply.asList().size());
 	}
 	
 	@Test
@@ -65,7 +65,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertEquals(5,reply.asList().size());
+		assertEquals(31,reply.asList().size());
 	}
 	
 	@Test
@@ -76,7 +76,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertEquals(5,reply.asList().size());
+		assertEquals(31,reply.asList().size());
 	}
 	@Test
 	public void shouldProduceSpecificPathList() throws Exception {

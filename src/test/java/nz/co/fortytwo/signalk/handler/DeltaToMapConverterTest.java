@@ -41,7 +41,7 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class DeltaToMapConverterTest {
 			+ ".navigation\",\"updates\":[{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"source\": {\"type\" : \"n2k\",\"device\" : \"/dev/actisense\",\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"pgn\":\"128267\"},\"values\": [{ \"path\": \"courseOverGroundTrue\",\"value\": 3.0176 },{ \"path\": \"speedOverGround\",\"value\": 3.85 }]},{\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"source\": {\"type\" : \"n2k\",\"device\" : \"/dev/ttyUSB0\",\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"src\":\"115\",\"pgn\":\"128267\"},\"values\": [{ \"path\": \"courseOverGroundMagnetic\",\"value\": 152.9 },{ \"path\": \"speedThroughWater\",\"value\": 2.85 }]}]}";
 	String jsonDiff3 = "{\"updates\":[{\"values\":[{\"value\":3.0176,\"path\":\"courseOverGroundTrue\"},{\"value\":3.85,\"path\":\"speedOverGround\"}],\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"source\":{\"type\" : \"n2k\",\"timestamp\":\"2014-08-15T16:00:00.081+00:00\",\"device\":\"/dev/actisense\",\"pgn\":\"128267\",\"src\":\"115\"}}],\"context\":\"vessels."
 			+ self + ".navigation\"}";
-	private static Logger logger = Logger.getLogger(DeltaToMapConverterTest.class);
+	private static Logger logger = LogManager.getLogger(DeltaToMapConverterTest.class);
 
 	@Before
 	public void setUp() throws Exception {

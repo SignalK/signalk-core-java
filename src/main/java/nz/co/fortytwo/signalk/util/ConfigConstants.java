@@ -90,6 +90,7 @@ public class ConfigConstants {
 	public static final String TCP_NMEA_PORT = "config.server.server.tcp.nmea.port";
 	public static final String UDP_NMEA_PORT = "config.server.server.udp.nmea.port";
 	public static final String GENERATE_NMEA0183 = "config.server.server.nmea.generate0183";
+	public static final String ZEROCONF_AUTO = "config.server.server.zeroconf.auto";
 	//STOMP
 	public static final String STOMP_PORT = "config.server.server.stomp.port";
 	public static final String START_STOMP = "config.server.server.stomp.start";
@@ -98,6 +99,7 @@ public class ConfigConstants {
 	public static final String START_MQTT = "config.server.server.mqtt.start";
 	
 	//clients
+	public static final String CLIENT_WS = "config.server.client.ws.connect";
 	public static final String CLIENT_TCP = "config.server.client.tcp.connect";
 	public static final String CLIENT_MQTT = "config.server.client.mqtt.connect";
 	public static final String CLIENT_STOMP = "config.server.client.stomp.connect";

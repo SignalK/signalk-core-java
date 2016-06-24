@@ -35,14 +35,14 @@ import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class UtilTest {
 
-	private static Logger logger = Logger.getLogger(UtilTest.class);
+	private static Logger logger = LogManager.getLogger(UtilTest.class);
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
@@ -146,8 +146,10 @@ public class UtilTest {
 			assertNotNull(model.get(ConfigConstants.ALLOW_INSTALL));
 			assertNotNull(model.get(ConfigConstants.ALLOW_UPGRADE));
 			assertNotNull(model.get(ConfigConstants.GENERATE_NMEA0183));
+			assertNotNull(model.get(ConfigConstants.ZEROCONF_AUTO));
 			assertNotNull(model.get(ConfigConstants.START_MQTT));
 			assertNotNull(model.get(ConfigConstants.START_STOMP));
+			assertNull(model.get(ConfigConstants.CLIENT_WS));
 			assertNull(model.get(ConfigConstants.CLIENT_TCP));
 			assertNull(model.get(ConfigConstants.CLIENT_MQTT));
 			assertNull(model.get(ConfigConstants.CLIENT_STOMP));

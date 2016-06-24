@@ -51,7 +51,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -63,7 +63,7 @@ import org.joda.time.DateTimeZone;
  */
 public class Util {
 
-	private static Logger logger = Logger.getLogger(Util.class);
+	private static Logger logger = LogManager.getLogger(Util.class);
 	// private static Properties props;
 	private static SignalKModel model = null;
 	public static SimpleDateFormat sdf = new SimpleDateFormat(
@@ -185,8 +185,10 @@ public class Util {
 		model.getFullData().put(ConfigConstants.ALLOW_INSTALL, true);
 		model.getFullData().put(ConfigConstants.ALLOW_UPGRADE, true);
 		model.getFullData().put(ConfigConstants.GENERATE_NMEA0183, true);
+		model.getFullData().put(ConfigConstants.ZEROCONF_AUTO, true);
 		model.getFullData().put(ConfigConstants.START_MQTT, true);
 		model.getFullData().put(ConfigConstants.START_STOMP, true);
+		//model.getFullData().put(ConfigConstants.CLIENT_WS, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_TCP, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_MQTT, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_STOMP, null);
@@ -437,8 +439,8 @@ public class Util {
 	}
 
 	public static String getIsoTimeString() {
-		// TODO Auto-generated method stub
-		return DateTime.now(DateTimeZone.UTC).toDateTimeISO().toString();
+		
+		return getIsoTimeString(System.currentTimeMillis());
 		// return ISO8601DateFormat.getDateInstance().format(new Date());
 	}
 
@@ -521,7 +523,7 @@ public class Util {
 		byte[] a1 = InetAddress.getByName(localAddress).getAddress();
 		byte[] a2 = InetAddress.getByName(remoteAddress).getAddress();
 		byte[] m = InetAddress.getByName(normalizeFromCIDR(netmask)).getAddress();
-		if(logger.isDebugEnabled())logger.debug("sameNetwork?:"+a1+","+a2+","+m);
+		if(logger.isDebugEnabled())logger.debug("sameNetwork?:"+localAddress+","+remoteAddress+","+netmask);
 		for (int i = 0; i < a1.length; i++)
 			if ((a1[i] & m[i]) != (a2[i] & m[i]))
 				return false;

@@ -49,13 +49,13 @@ import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class FullToDeltaConverterTest {
-	private static Logger logger = Logger.getLogger(FullToDeltaConverterTest.class);
+	private static Logger logger = LogManager.getLogger(FullToDeltaConverterTest.class);
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -214,9 +214,9 @@ public class FullToDeltaConverterTest {
 		//now check
 		assertEquals("vessels.urn:mrn:signalk:uuid:6b0e776f-811a-4b35-980e-b93405371bc5",delta.at("context").asString());
 		Json updates = delta.at("updates");
-		assertEquals("2016-03-30T08:06:18.556Z",updates.asJsonList().get(0).at("timestamp").asString());
+		assertEquals("2016-03-30T08:06:18.556Z",updates.asJsonList().get(2).at("timestamp").asString());
 		//assertEquals("testLabel",updates.asJsonList().get(0).at("source").at("label").asString());
-		List<Json> valuesList = updates.asJsonList().get(0).at("values").asJsonList();
+		List<Json> valuesList = updates.asJsonList().get(2).at("values").asJsonList();
 		assertEquals("navigation.position", valuesList.get(0).at("path").asString());
 		Json val = valuesList.get(0).at("value");
 		assertEquals(-122.44718333d , val.at("longitude").asDouble(), 0.00001);
@@ -308,10 +308,10 @@ public class FullToDeltaConverterTest {
 		assertEquals("vessels.urn:mrn:signalk:uuid:9119b97a-19ee-4f45-a27f-a9a99ce0d0c2",delta.at("context").asString());
 		Json updates = delta.at("updates");
 		assertEquals("2016-03-14T08:51:56.744Z",updates.asJsonList().get(0).at("timestamp").asString());
-		assertEquals("testLabel",updates.asJsonList().get(0).at("source").at("label").asString());
-		List<Json> valuesList = updates.asJsonList().get(0).at("values").asJsonList();
-		assertEquals("navigation.position", valuesList.get(0).at("path").asString());
-		Json val = valuesList.get(0).at("value");
+		assertEquals("testLabel",updates.asJsonList().get(2).at("source").at("label").asString());
+		List<Json> valuesList = updates.asJsonList().get(2).at("values").asJsonList();
+		assertEquals("navigation.position", valuesList.get(2).at("path").asString());
+		Json val = valuesList.get(2).at("value");
 		assertEquals(96.98441049156695d , val.at("longitude").asDouble(), 0.00001);
 		assertEquals(77.65327885982339d , val.at("latitude").asDouble(), 0.00001);
 		assertEquals(0.0d , val.at("altitude").asDouble(), 0.00001);

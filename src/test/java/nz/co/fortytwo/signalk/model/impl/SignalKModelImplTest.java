@@ -29,7 +29,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionChangeAlarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedAlarm;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
@@ -54,14 +54,14 @@ import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.TestHelper;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SignalKModelImplTest {
 
-	private static Logger logger = Logger.getLogger(SignalKModelImplTest.class);
+	private static Logger logger = LogManager.getLogger(SignalKModelImplTest.class);
 	@BeforeClass
 	public static void setUp() throws Exception {
 		Util.getConfig();
@@ -85,8 +85,8 @@ public class SignalKModelImplTest {
 		
 		assertEquals(256.0, signalk.getValue(vessels+dot+"self"+dot+env_wind_angleApparent));
 		
-		assertEquals(18, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
-		assertEquals(111, signalk.getSubMap(vessels+dot+"self").size());
+		assertEquals(15, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
+		assertEquals(105, signalk.getSubMap(vessels+dot+"self").size());
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class SignalKModelImplTest {
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_angleApparent+dot+value),0d);
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_directionChangeAlarm+dot+value),0d);
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_directionTrue+dot+value),0d);
-		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedAlarm+dot+value),0d);
+		
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedApparent+dot+value),0d);
 		assertEquals(branch.get(vessels_dot_self_dot+env_wind_speedTrue+dot+value),7.68d);
 		
@@ -246,6 +246,7 @@ public class SignalKModelImplTest {
 		logger.debug(signalk);
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()>0);
 		signalk.put(vessels_dot_self_dot+nav_position,null,"dummy",Util.getIsoTimeString());
+		logger.error(signalk.getTree(vessels_dot_self_dot+ nav_position).size());
 		assertTrue(signalk.getTree(vessels_dot_self_dot+ nav_position).size()==0);
 		
 	}

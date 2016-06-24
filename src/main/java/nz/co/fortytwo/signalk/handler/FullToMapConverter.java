@@ -31,7 +31,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -43,7 +43,7 @@ import org.joda.time.format.ISODateTimeFormat;
  */
 public class FullToMapConverter {
 
-	private static Logger logger = Logger.getLogger(FullToMapConverter.class);
+	private static Logger logger = LogManager.getLogger(FullToMapConverter.class);
 	private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	 
 	private JsonSerializer ser = new JsonSerializer();

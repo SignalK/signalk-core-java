@@ -44,13 +44,13 @@ import java.io.IOException;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class N2KHandlerTest {
-	private static Logger logger = Logger.getLogger(N2KHandlerTest.class);
+	private static Logger logger = LogManager.getLogger(N2KHandlerTest.class);
 	
 
 	@Before

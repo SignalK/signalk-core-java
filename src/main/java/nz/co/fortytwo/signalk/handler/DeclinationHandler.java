@@ -31,7 +31,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.TSAGeoMag;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 
 /**
@@ -42,7 +42,7 @@ import org.joda.time.DateTime;
  */
 public class DeclinationHandler {
 
-	private static Logger logger = Logger.getLogger(DeclinationHandler.class);
+	private static Logger logger = LogManager.getLogger(DeclinationHandler.class);
 	
 	private TSAGeoMag geoMag = new TSAGeoMag();
 

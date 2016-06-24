@@ -50,7 +50,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import com.google.common.eventbus.EventBus;
 
@@ -66,7 +66,7 @@ import com.google.common.eventbus.EventBus;
  * model.put("vessels.self.navigation.position.latitude", 57.9);
  * model.put("vessels.self.navigation.position.longitude", 17.2);
  * model.put("vessels.self.navigation.position.source", "gps");
- * model.put("vessels.self.navigation.position.teimstamp", model.timestamp());
+ * model.put("vessels.self.navigation.position.timestamp", model.timestamp());
 
  * </pre>
  * <p>
@@ -74,9 +74,9 @@ import com.google.common.eventbus.EventBus;
  * obtain the event bus (getEventBus()) and register for PathEvent
  * </p>
  */
-public class SignalKModelImpl implements SignalKModel {
+public class SignalKModelImpl  implements SignalKModel {
     
-	private static Logger logger = Logger.getLogger(SignalKModelImpl.class);
+	private static Logger logger = LogManager.getLogger(SignalKModelImpl.class);
     private final char separator;
     private final NavigableMap<String,Object> root;
     
@@ -117,6 +117,14 @@ public class SignalKModelImpl implements SignalKModel {
     }
 
 
+    /**
+     * Put the key:value into the map
+     * Checks the path is a valid leaf, not conflicting with a branch
+     * Fires an event if the key value changes and then returns true, otherwise false;
+     * @param key
+     * @param val
+     * @return
+     */
     private boolean doPut(String key, Object val) {
         // If val = "aa.bb.cc", fail if map contains "aa.bb" or "aa.bb.cc.dd"
         String othkey = root.lowerKey(key);
@@ -144,9 +152,9 @@ public class SignalKModelImpl implements SignalKModel {
     }
 
     private boolean doDelete(String key,NavigableMap<String, Object> map ) {
-        NavigableMap<String,Object> subMap = map.tailMap(key, true);
+        NavigableSet<String> subMap = getKeys().subSet(key, true, key+".\uFFFD", true);
         boolean found = false;
-        for (Iterator<String> i = subMap.keySet().iterator();i.hasNext();) {
+        for (Iterator<String> i = subMap.iterator();i.hasNext();) {
             String mapkey = i.next();
             if (mapkey.startsWith(key) && (mapkey.length() == key.length() || mapkey.charAt(key.length()) == separator)) {
             	eventBus.post(new PathEvent(mapkey, nextrevision ,PathEvent.EventType.DEL));
@@ -207,27 +215,32 @@ public class SignalKModelImpl implements SignalKModel {
 		if(StringUtils.isBlank(src)) src=UNKNOWN;
 		
 		boolean success = putValues(key, val, src, ts);
-		String curSource = (String) root.get(key+dot+SignalKConstants.sourceRef);
-		if(success && (StringUtils.isBlank(curSource)||StringUtils.equals(curSource, src))){
-			if(ts!=null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.sourceRef, src)&& doPut(key+dot+timestamp, ts));
-			if(ts==null)return(doPut(key+dot+value, val)&& doPut(key+dot+SignalKConstants.sourceRef, src));
+		String curSource = (String) root.get(key+dot+sourceRef);
+		if(logger.isDebugEnabled())logger.debug("Put current val "+key+"="+val+", curSource="+curSource+", ts="+ts);
+		if( (StringUtils.isBlank(curSource)||StringUtils.equals(curSource, src))){
+			boolean result=doPut(key+dot+value, val);
+			
+			if(ts!=null){
+				result=result&& doPut(key+dot+timestamp, ts);
+			}
+			return result&&doPut(key+dot+sourceRef, src);
 		}
 		return success;
 	}
 	
 	@Override
 	public boolean putSource(String key, Object val, String ts) throws IllegalArgumentException {
-		key = vessels_dot_self_dot+"sources."+key;
+		key = sources+dot+key;
 		key = fixSelfKey(key);
 		if(val == null){
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
+		boolean result=doPut(key+dot+value, val);
 		if(ts!=null){
-			return(doPut(key+dot+value, val)&& doPut(key+dot+timestamp, ts));
-		}else{
-			return(doPut(key+dot+value, val));
+			result=result&& doPut(key+dot+timestamp, ts);
 		}
+		return result;
 	
 	}
     
@@ -244,13 +257,13 @@ public class SignalKModelImpl implements SignalKModel {
 		if(!handleMultipleValues)return true;
 		
 		String vKey = key+".values."+src;
-		if(ts!=null){
-			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+sourceRef, src)&& doPut(vKey+dot+timestamp, ts));
-		}else{
-			return (doPut(vKey+dot+value, val)&& doPut(vKey+dot+sourceRef, src));
-		}
+		boolean result=doPut(vKey+dot+value, val);
 		
-
+		if(ts!=null){
+			result=result&& doPut(vKey+dot+timestamp, ts);
+		}
+		return result&&doPut(vKey+dot+sourceRef, src);
+		
 	}
 
 	/* (non-Javadoc)
@@ -344,7 +357,7 @@ public class SignalKModelImpl implements SignalKModel {
 			boolean s = put(entry.getKey(),entry.getValue());
 			success = success && s;
 		}
-		if(logger.isDebugEnabled())logger.debug("putAll done: "+this);
+		if(logger.isTraceEnabled())logger.trace("putAll done: "+this);
 		return success;
 	}
 

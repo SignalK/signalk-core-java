@@ -39,7 +39,7 @@ import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
 
@@ -51,7 +51,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class JsonListHandler {
 
-	private static Logger logger = Logger.getLogger(JsonListHandler.class);
+	private static Logger logger = LogManager.getLogger(JsonListHandler.class);
 	//private static DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	
 	private List<String> keys = new ArrayList<String>();
@@ -74,9 +74,16 @@ public class JsonListHandler {
 					||f.getName().startsWith("sensors")
 					||f.getName().startsWith("sources")
 					||f.getName().startsWith("steering")
+					||f.getName().startsWith("notifications")
+					||f.getName().startsWith("registrations")
+					||f.getName().startsWith("sails")
+					||f.getName().startsWith("notifications")
 					||f.getName().startsWith("tanks")
 					||f.getName().startsWith("uuid")
 					||f.getName().startsWith("mmsi")
+					||f.getName().startsWith("flag")
+					||f.getName().startsWith("url")
+					||f.getName().startsWith("port")
 					||f.getName().startsWith("name")){
 						keys.add(f.get(null).toString());
 						if(logger.isDebugEnabled())logger.debug("Added "+f.get(null).toString());

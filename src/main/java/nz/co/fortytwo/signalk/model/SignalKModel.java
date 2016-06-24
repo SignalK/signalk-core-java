@@ -45,11 +45,8 @@ public interface SignalKModel{
 	public abstract NavigableSet<String> getTree(String key);
 
 	/**
-	 * Release the write lock, update the revision (assuming the model
-	 * has changed) and call {@link #modelChanged}
+	 * Get the common event bus instance.
 	 */
-	//public abstract boolean unlock();
-
 	public abstract EventBus getEventBus();
 
 	/**
@@ -146,5 +143,7 @@ public interface SignalKModel{
 	 * @throws IllegalArgumentException
 	 */
 	boolean putSource(String key, Object val, String ts) throws IllegalArgumentException;
+
+	
 
 }

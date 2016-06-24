@@ -48,7 +48,7 @@ import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -75,7 +75,7 @@ public class N2KHandler {
 	private static final CharSequence STRING = "string";
 	private static final String VALUE = "value";
 
-	private static Logger logger = Logger.getLogger(N2KHandler.class);
+	private static Logger logger = LogManager.getLogger(N2KHandler.class);
 
 	private NumberFormat numberFormat = DecimalFormat.getInstance();
 	private Json mappings = null;

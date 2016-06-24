@@ -2,7 +2,7 @@ package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.alarmState;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.alarms;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.notifications;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.message;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.normal;
@@ -10,10 +10,10 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.warn;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 public class AlarmManager {
-	private static Logger logger = Logger.getLogger(AlarmManager.class);
+	private static Logger logger = LogManager.getLogger(AlarmManager.class);
 	private Json zones;
 
 	public AlarmManager(Json zones){
@@ -71,7 +71,7 @@ public class AlarmManager {
 	
 	/**
 	 * Set the alarm key and value for key. Only resets it if its changed.
-	 * key is the real key, it will be inserted into vessels.*.alarms.* automatically
+	 * key is the real key, it will be inserted into vessels.*.notifications.* automatically
 	 * @param signalkModel
 	 * @param alarmKey
 	 * @param value
@@ -79,7 +79,7 @@ public class AlarmManager {
 	public void setAlarm(SignalKModel signalkModel,String key, String value, String msg) {
 		int pos = key.indexOf(dot);
 		pos=key.indexOf(dot,pos+1)+1;
-		String alarmKey = key.substring(0,pos)+alarms+dot+key.substring(pos);
+		String alarmKey = key.substring(0,pos)+notifications+dot+key.substring(pos);
 		Object obj = signalkModel.get(alarmKey);
 		if(obj!=null && obj instanceof Json){
 			Json json = ((Json)obj).at(alarmState);

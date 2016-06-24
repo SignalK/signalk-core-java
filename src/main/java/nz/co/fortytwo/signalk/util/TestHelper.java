@@ -2,13 +2,11 @@ package nz.co.fortytwo.signalk.util;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_airPressure;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_airPressureChangeRateAlarm;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_waterTemp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_outside_pressure;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_water_temperature;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionChangeAlarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedAlarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_anchor_maxRadius;
@@ -50,6 +48,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.type;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
+
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
@@ -57,15 +56,13 @@ public class TestHelper {
 
 	public static SignalKModel getOtherModel(){
 		SignalKModel other = SignalKModelFactory.getCleanInstance();
-		other.getFullData().put(vessels+dot+"other"+dot+env_airPressure+dot+sourceRef , UNKNOWN);
-		 other.getFullData().put(vessels+dot+"other"+dot+env_airPressure+dot+timestamp , "2015-03-16T03:31:22.110Z");
-		 other.getFullData().put(vessels+dot+"other"+dot+env_airPressure+dot+value , 1024);
-		 other.getFullData().put(vessels+dot+"other"+dot+env_airPressureChangeRateAlarm+dot+sourceRef , UNKNOWN);
-		 other.getFullData().put(vessels+dot+"other"+dot+env_airPressureChangeRateAlarm+dot+timestamp , "2015-03-16T03:31:22.324Z");
-		 other.getFullData().put(vessels+dot+"other"+dot+env_airPressureChangeRateAlarm+dot+value , 0d);
-		 other.getFullData().put(vessels+dot+"other"+dot+env_waterTemp+dot+sourceRef , UNKNOWN);
-		 other.getFullData().put(vessels+dot+"other"+dot+env_waterTemp+dot+timestamp , "2015-03-16T03:31:22.324Z");
-		 other.getFullData().put(vessels+dot+"other"+dot+env_waterTemp+dot+value , 0d);
+		other.getFullData().put(vessels+dot+"other"+dot+env_outside_pressure+dot+sourceRef , UNKNOWN);
+		 other.getFullData().put(vessels+dot+"other"+dot+env_outside_pressure+dot+timestamp , "2015-03-16T03:31:22.110Z");
+		 other.getFullData().put(vessels+dot+"other"+dot+env_outside_pressure+dot+value , 1024);
+		
+		 other.getFullData().put(vessels+dot+"other"+dot+env_water_temperature+dot+sourceRef , UNKNOWN);
+		 other.getFullData().put(vessels+dot+"other"+dot+env_water_temperature+dot+timestamp , "2015-03-16T03:31:22.324Z");
+		 other.getFullData().put(vessels+dot+"other"+dot+env_water_temperature+dot+value , 0d);
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_angleApparent+dot+sourceRef , UNKNOWN);
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_angleApparent+dot+timestamp , "2015-03-16T03:31:22.325Z");
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_angleApparent+dot+value ,  Math.toRadians(0d));
@@ -75,9 +72,7 @@ public class TestHelper {
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_directionTrue+dot+sourceRef , UNKNOWN);
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_directionTrue+dot+timestamp , "2015-03-16T03:31:22.327Z");
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_directionTrue+dot+value ,  Math.toRadians(0d));
-		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_speedAlarm+dot+sourceRef , UNKNOWN);
-		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_speedAlarm+dot+timestamp , "2015-03-16T03:31:22.327Z");
-		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_speedAlarm+dot+value , 0d);
+		 
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_speedApparent+dot+sourceRef , UNKNOWN);
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_speedApparent+dot+timestamp , "2015-03-16T03:31:22.328Z");
 		 other.getFullData().put(vessels+dot+"other"+dot+env_wind_speedApparent+dot+value , 0d);
@@ -176,15 +171,13 @@ public class TestHelper {
 
 	public static SignalKModel getBasicModel() {
 		SignalKModel basic = SignalKModelFactory.getCleanInstance();
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+sourceRef,UNKNOWN);
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+timestamp,"2015-03-16T03:31:22.110Z");
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+value,1024);
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressureChangeRateAlarm+dot+sourceRef,UNKNOWN);
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressureChangeRateAlarm+dot+timestamp,"2015-03-16T03:31:22.324Z");
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressureChangeRateAlarm+dot+value,0d);
-		basic.getFullData().put(vessels_dot_self_dot+env_waterTemp+dot+sourceRef,UNKNOWN);
-		basic.getFullData().put(vessels_dot_self_dot+env_waterTemp+dot+timestamp,"2015-03-16T03:31:22.324Z");
-		basic.getFullData().put(vessels_dot_self_dot+env_waterTemp+dot+value,0d);
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+sourceRef,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+timestamp,"2015-03-16T03:31:22.110Z");
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+value,1024);
+		
+		basic.getFullData().put(vessels_dot_self_dot+env_water_temperature+dot+sourceRef,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+env_water_temperature+dot+timestamp,"2015-03-16T03:31:22.324Z");
+		basic.getFullData().put(vessels_dot_self_dot+env_water_temperature+dot+value,0d);
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_angleApparent+dot+sourceRef,UNKNOWN);
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_angleApparent+dot+timestamp,"2015-03-16T03:31:22.325Z");
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_angleApparent+dot+value, Math.toRadians(0d));
@@ -194,9 +187,6 @@ public class TestHelper {
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_directionTrue+dot+sourceRef,UNKNOWN);
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_directionTrue+dot+timestamp,"2015-03-16T03:31:22.327Z");
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_directionTrue+dot+value, Math.toRadians(0d));
-		basic.getFullData().put(vessels_dot_self_dot+env_wind_speedAlarm+dot+sourceRef,UNKNOWN);
-		basic.getFullData().put(vessels_dot_self_dot+env_wind_speedAlarm+dot+timestamp,"2015-03-16T03:31:22.327Z");
-		basic.getFullData().put(vessels_dot_self_dot+env_wind_speedAlarm+dot+value,0d);
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_speedApparent+dot+sourceRef,UNKNOWN);
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_speedApparent+dot+timestamp,"2015-03-16T03:31:22.328Z");
 		basic.getFullData().put(vessels_dot_self_dot+env_wind_speedApparent+dot+value,0d);
@@ -299,10 +289,10 @@ public class TestHelper {
 	 */
 	public static SignalKModel getSourcesModel() {
 		SignalKModel basic = SignalKModelFactory.getCleanInstance();
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+source+dot+type,UNKNOWN);
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+source+dot+"label","testAirP");
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+timestamp,"2015-03-16T03:31:22.110Z");
-		basic.getFullData().put(vessels_dot_self_dot+env_airPressure+dot+value,1024);
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+source+dot+type,UNKNOWN);
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+source+dot+"label","testAirP");
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+timestamp,"2015-03-16T03:31:22.110Z");
+		basic.getFullData().put(vessels_dot_self_dot+env_outside_pressure+dot+value,1024);
 		
 		
 		basic.getFullData().put(vessels_dot_self_dot+nav_courseOverGroundMagnetic+dot+source+dot+type,UNKNOWN);

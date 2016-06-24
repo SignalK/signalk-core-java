@@ -45,13 +45,13 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class NMEAHandlerTest {
 
-	private static Logger logger = Logger.getLogger(NMEAHandlerTest.class);
+	private static Logger logger = LogManager.getLogger(NMEAHandlerTest.class);
 	private SignalKModel signalkModel=SignalKModelFactory.getMotuTestInstance();
 	
 

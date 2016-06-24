@@ -8,7 +8,9 @@ This project was ripped from the server project with minimal thought to the idea
 
 Using
 =====
-The project is not in any public maven repository yet. So for now you will have to build the project locally on your dev system, and do a maven install to install into your local m2 repository. 
+The project is not in any public maven repository yet but is available from jitpack.io. 
+
+For dev you will have to build the project locally on your dev system, and do a maven install to install into your local m2 repository. 
 
 Then add the following to the pom of your project.
 ```

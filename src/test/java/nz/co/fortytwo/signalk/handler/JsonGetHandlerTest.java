@@ -38,14 +38,14 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.TestHelper;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class JsonGetHandlerTest {
 
-	private static Logger logger = Logger.getLogger(JsonGetHandlerTest.class);
+	private static Logger logger = LogManager.getLogger(JsonGetHandlerTest.class);
 	@Before
 	public void setUp() throws Exception { 
 		

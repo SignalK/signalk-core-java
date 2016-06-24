@@ -36,13 +36,13 @@ import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.JsonSerializerTest;
 import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
 
 public class NMEA0183ProducerTest {
 
-	private static Logger logger = Logger.getLogger(NMEA0183ProducerTest.class);
+	private static Logger logger = LogManager.getLogger(NMEA0183ProducerTest.class);
 	@After
 	public void tearDown() throws Exception {
 	}

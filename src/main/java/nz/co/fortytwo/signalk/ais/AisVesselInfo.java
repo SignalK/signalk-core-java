@@ -100,7 +100,15 @@ public class AisVesselInfo {
     //time message received, so we can clean up old ones
     protected long received; //millis time message recieved
     
+    public enum MsgType {Position, StaticCommon, Message18};
+    protected String msgType = null;
+    		
+	public String getMsgType() {
+		return msgType;
+	}
+
 	public AisVesselInfo(AisPositionMessage vessel){
+		msgType=MsgType.Position.name();
 		received=System.currentTimeMillis();
 		userId=vessel.getUserId();
 		utcSec=vessel.getUtcSec();
@@ -113,6 +121,7 @@ public class AisVesselInfo {
 	}
 
 	public AisVesselInfo(AisStaticCommon vessel) {
+		msgType=MsgType.StaticCommon.name();
 		received=System.currentTimeMillis();
 		userId=vessel.getUserId();
 		position=vessel.getValidPosition();
@@ -123,6 +132,7 @@ public class AisVesselInfo {
 	}
 
 	public AisVesselInfo(AisMessage18 vessel) {
+		msgType=MsgType.Message18.name();
 		received=System.currentTimeMillis();
 		userId=vessel.getUserId();
 		utcSec=vessel.getUtcSec();
