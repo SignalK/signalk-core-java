@@ -42,6 +42,7 @@ import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.math.BigDecimal;
 
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -282,6 +283,11 @@ public class SignalKModelImpl  implements SignalKModel {
      */
     private Object nullFix(Object object) {
 		if("null".equals(object))return null;
+		if (object instanceof BigDecimal) {
+                        object=((BigDecimal)object).doubleValue();
+                } else if (object instanceof Long) {
+                        object=((Long)object).doubleValue();
+                }
 		return object;
 	}
 
