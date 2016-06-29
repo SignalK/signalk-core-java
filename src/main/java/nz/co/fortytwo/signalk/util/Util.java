@@ -197,8 +197,8 @@ public class Util {
 
 	public static Json getWelcomeMsg() {
 		Json msg = Json.object();
-		msg.set(SignalKConstants.version, getVersion());
-		msg.set(SignalKConstants.timestamp, getIsoTimeString());
+		msg.set(version, getVersion());
+		msg.set(timestamp, getIsoTimeString());
 		msg.set(self_str, getConfigProperty(ConfigConstants.UUID));
 		return msg;
 	}
@@ -361,7 +361,7 @@ public class Util {
 
 	public static String sanitizePath(String newPath) {
 		newPath = newPath.replace('/', '.');
-		if (newPath.startsWith(SignalKConstants.dot))
+		if (newPath.startsWith(dot))
 			newPath = newPath.substring(1);
 		if (!newPath.endsWith("*") || !newPath.endsWith("?"))
 			newPath = newPath + "*";
@@ -472,12 +472,20 @@ public class Util {
 		// "list/vessels"
 		if (StringUtils.isBlank(path))
 			return "";
-		if (path.equals(SignalKConstants.CONFIG)) {
+		if (path.equals(resources)||path.startsWith(resources + dot)) {
 			return path;
 		}
-		if (path.startsWith(SignalKConstants.CONFIG + dot)) {
-			int p1 = path.indexOf(SignalKConstants.CONFIG)
-					+ SignalKConstants.CONFIG.length() + 1;
+		
+		if (path.equals(sources)||path.startsWith(sources + dot)) {
+			return path;
+		}
+		
+		if (path.equals(CONFIG)) {
+			return path;
+		}
+		if (path.startsWith(CONFIG + dot)) {
+			int p1 = path.indexOf(CONFIG)
+					+ CONFIG.length() + 1;
 
 			int pos = path.indexOf(".", p1);
 			if (pos < 0)
@@ -488,7 +496,7 @@ public class Util {
 			return path;
 		}
 		if (path.startsWith(vessels + dot)
-				|| path.startsWith(SignalKConstants.LIST + dot + vessels + dot)) {
+				|| path.startsWith(LIST + dot + vessels + dot)) {
 			int p1 = path.indexOf(vessels) + vessels.length() + 1;
 
 			int pos = path.indexOf(".", p1);
@@ -504,10 +512,10 @@ public class Util {
 		dot_self_dot = dot + self + dot;
 		dot_self = dot + self;
 		SignalKConstants.self = self;
-		SignalKConstants.vessels_dot_self_dot = vessels + dot + self + dot;
-		SignalKConstants.vessels_dot_self = vessels + dot + self;
-		logger.info("Setting self:"+SignalKConstants.self);
-		logger.info("Setting vessels.self:"+SignalKConstants.vessels_dot_self);
+		vessels_dot_self_dot = vessels + dot + self + dot;
+		vessels_dot_self = vessels + dot + self;
+		logger.info("Setting self:"+self);
+		logger.info("Setting vessels.self:"+vessels_dot_self);
 	}
 
 	public static boolean sameNetwork(String localAddress, String remoteAddress)
