@@ -153,7 +153,7 @@ public class FullToDeltaConverter {
 	private void getEntries(Json updates, Json values, String jsSrcRef, String tsRef, Json j, int prefix) {
 		if (!j.isObject())
 			return;
-		
+		boolean added = false;
 		Json entry = Json.object();
 		
 		for (Json js : j.asJsonMap().values()) {
@@ -195,6 +195,7 @@ public class FullToDeltaConverter {
 				value.set(PATH, path);
 				value.set(SignalKConstants.value, js);
 				values.add(value);
+				added=true;
 				continue;
 			}
 			if (js.isObject() && js.has(SignalKConstants.value)){
@@ -208,8 +209,10 @@ public class FullToDeltaConverter {
 					if(logger.isDebugEnabled())logger.debug("Process meta : "+js);
 					value.set(meta, js.at(meta));
 					values.add(value);
+					added=true;
 				}
 				values.add(value);
+				added=true;
 				continue;
 			}
 			
@@ -230,6 +233,7 @@ public class FullToDeltaConverter {
 					//values.add(value);
 				}
 				values.add(value);
+				added=true;
 				continue;
 			}
 			if (js.isPrimitive()) {
@@ -241,6 +245,7 @@ public class FullToDeltaConverter {
 				value.set(PATH, path);
 				value.set(SignalKConstants.value, js);
 				values.add(value);
+				added=true;
 				continue;
 			}
 			if (js.isObject()) {
@@ -256,8 +261,9 @@ public class FullToDeltaConverter {
 			if(logger.isDebugEnabled())logger.debug("Clean up last values array : "+values);
 			updates.add(entry);
 		}else{
-			if(values.asList().size()>0){
+			if(added){
 				entry.set(SignalKConstants.values, values);
+				if(logger.isDebugEnabled())logger.debug("Add entry : "+entry);
 				updates.add(entry);
 			}
 		}
