@@ -83,7 +83,7 @@ public class DeltaToMapConverterTest {
 		assertEquals("2015-05-08T06:29:26.455Z", output.get("vessels.self.navigation.anchor.currentRadius.meta.timestamp"));
 		assertEquals("visual", output.get("vessels.self.navigation.anchor.currentRadius.meta.warnMethod"));
 		assertEquals(Json.read("[[0,50,\"normal\"],[50,999999,\"alarm\"]]"), output.get("vessels.self.navigation.anchor.currentRadius.meta.zones"));
-		assertEquals(50l, output.getValue("vessels.self.navigation.anchor.maxRadius"));
+		assertEquals(50.0, output.getValue("vessels.self.navigation.anchor.maxRadius"));
 
 		assertEquals(60.08087031, output.get("vessels.self.navigation.anchor.position.latitude"));
 		assertEquals(23.53406503, output.get("vessels.self.navigation.anchor.position.longitude"));
