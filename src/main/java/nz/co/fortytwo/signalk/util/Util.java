@@ -407,7 +407,7 @@ public class Util {
 	}
 
 	/**
-	 * Recursive findNode()
+	 * Recursive findNode(). Returns null if not found
 	 * 
 	 * @param node
 	 * @param fullPath
