@@ -524,9 +524,11 @@ public class Util {
 		byte[] a2 = InetAddress.getByName(remoteAddress).getAddress();
 		byte[] m = InetAddress.getByName(normalizeFromCIDR(netmask)).getAddress();
 		if(logger.isDebugEnabled())logger.debug("sameNetwork?:"+localAddress+","+remoteAddress+","+netmask);
-		for (int i = 0; i < a1.length; i++)
-			if ((a1[i] & m[i]) != (a2[i] & m[i]))
+		for (int i = 0; i < a1.length; i++){
+			if ((a1[i] & m[i]) != (a2[i] & m[i])){
 				return false;
+			}
+		}
 
 		return true;
 
