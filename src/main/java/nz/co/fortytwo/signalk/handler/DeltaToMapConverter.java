@@ -39,6 +39,7 @@ import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.Util;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 
@@ -98,7 +99,9 @@ public class DeltaToMapConverter {
 		for(Json e : array.asJsonList()){
 			String key = e.at(PATH).asString();
 			//temp.put(ctx+"."+key, e.at(value).getValue());
-			addRecursively(temp, ctx+dot+key, e.at(value));
+			if(e.has(value)){
+				addRecursively(temp, ctx+dot+key, e.at(value));
+			}
 			
 			if(update.has(source)){
 				//TODO:generate a proper src ref.
@@ -115,10 +118,13 @@ public class DeltaToMapConverter {
 	}
 
 	protected void addRecursively(SignalKModel temp, String ctx, Json j) throws Exception {
-		if(j==null||j.isNull())return;
+		if(j==null)return;
+		//need to handle json null object
 		if(logger.isDebugEnabled())logger.debug("Key:"+ctx+dot+j.getParentKey()+", Object: "+j );
 		preProcess(temp,ctx,j);
-		if(j.isPrimitive()){
+		if(j.isNull()){
+			temp.getFullData().put(ctx , "delete");
+		}else if(j.isPrimitive()){
 			temp.getFullData().put(ctx+dot+j.getParentKey(), j.getValue());
 		}else if(j.isArray()){
 			temp.getFullData().put(ctx+dot+j.getParentKey(), j);

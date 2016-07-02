@@ -50,6 +50,7 @@ import nz.co.fortytwo.signalk.model.event.PathEvent;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
@@ -153,11 +154,14 @@ public class SignalKModelImpl  implements SignalKModel {
     }
 
     private boolean doDelete(String key,NavigableMap<String, Object> map ) {
+    	if(logger.isDebugEnabled())logger.debug("Delete "+key);
         NavigableSet<String> subMap = getKeys().subSet(key, true, key+".\uFFFD", true);
+        if(logger.isDebugEnabled())logger.debug("Found keys "+subMap.size());
         boolean found = false;
         for (Iterator<String> i = subMap.iterator();i.hasNext();) {
             String mapkey = i.next();
             if (mapkey.startsWith(key) && (mapkey.length() == key.length() || mapkey.charAt(key.length()) == separator)) {
+            	if(logger.isDebugEnabled())logger.debug("Delete key "+mapkey);
             	eventBus.post(new PathEvent(mapkey, nextrevision ,PathEvent.EventType.DEL));
                 i.remove();
                 found = true;
@@ -174,8 +178,9 @@ public class SignalKModelImpl  implements SignalKModel {
 	 */
     //@Override
 	private boolean put(String key, Object val) throws IllegalArgumentException{
+		if(logger.isDebugEnabled())logger.debug("Put received: "+key+"="+val);
     	key = fixSelfKey(key);
-    	if(val == null){
+    	if(val == null || "delete".equals(val)){
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
@@ -187,9 +192,10 @@ public class SignalKModelImpl  implements SignalKModel {
     		return doPut(key, val);
     	}
     	if(val instanceof Json && ((Json)val).isArray() ){
-    		if(logger.isDebugEnabled())logger.debug("Put "+key+"="+val);
+    		if(logger.isDebugEnabled())logger.debug("Put json"+key+"="+val);
     		return doPut(key, val);
     	}
+    	if(logger.isDebugEnabled())logger.debug("Must be String, Number,Boolean or null : "+val.getClass()+":"+val);
     	throw new IllegalArgumentException("Must be String, Number,Boolean or null : "+val.getClass()+":"+val);
     }
 
@@ -357,10 +363,11 @@ public class SignalKModelImpl  implements SignalKModel {
 
 	@Override
 	public boolean putAll(SortedMap<String, Object> map) {
+		if(logger.isDebugEnabled())logger.debug("putAll: "+map);
 		boolean success = true;
-		for(Entry<String, Object> entry: map.entrySet()){
-			if(logger.isDebugEnabled())logger.debug("Adding "+entry.getKey()+"="+entry.getValue());
-			boolean s = put(entry.getKey(),entry.getValue());
+		for(String key :map.keySet()){
+			if(logger.isDebugEnabled())logger.debug("Adding "+key+"="+map.get(key));
+			boolean s = put(key,map.get(key));
 			success = success && s;
 		}
 		if(logger.isTraceEnabled())logger.trace("putAll done: "+this);
