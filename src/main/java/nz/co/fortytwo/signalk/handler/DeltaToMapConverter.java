@@ -123,7 +123,7 @@ public class DeltaToMapConverter {
 		if(logger.isDebugEnabled())logger.debug("Key:"+ctx+dot+j.getParentKey()+", Object: "+j );
 		preProcess(temp,ctx,j);
 		if(j.isNull()){
-			temp.getFullData().put(ctx , "delete");
+			temp.getFullData().put(ctx , ObjectUtils.NULL);
 		}else if(j.isPrimitive()){
 			temp.getFullData().put(ctx+dot+j.getParentKey(), j.getValue());
 		}else if(j.isArray()){

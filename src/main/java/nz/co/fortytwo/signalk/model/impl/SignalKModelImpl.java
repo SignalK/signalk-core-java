@@ -180,7 +180,7 @@ public class SignalKModelImpl  implements SignalKModel {
 	private boolean put(String key, Object val) throws IllegalArgumentException{
 		if(logger.isDebugEnabled())logger.debug("Put received: "+key+"="+val);
     	key = fixSelfKey(key);
-    	if(val == null || "delete".equals(val)){
+    	if(val == null || ObjectUtils.NULL.equals(val)){
     		//TODO: we delete the val, and the values equiv, then promote the next values object
     		return doDelete(key, root);
 		}
