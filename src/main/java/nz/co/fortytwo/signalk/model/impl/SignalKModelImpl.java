@@ -131,10 +131,12 @@ public class SignalKModelImpl  implements SignalKModel {
         // If val = "aa.bb.cc", fail if map contains "aa.bb" or "aa.bb.cc.dd"
         String othkey = root.lowerKey(key);
         if (othkey != null && key.startsWith(othkey) && key.charAt(othkey.length()) == separator) {
+        	if(logger.isDebugEnabled())logger.debug("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
         }
         othkey = root.higherKey(key);
         if (othkey != null && othkey.startsWith(key) && othkey.charAt(key.length()) == separator) {
+        	if(logger.isDebugEnabled())logger.debug("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
             throw new IllegalArgumentException("Can't insert key \""+key+"\" into Model containing \""+othkey+"\"");
         }
         //meta.zones array
