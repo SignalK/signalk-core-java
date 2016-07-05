@@ -153,8 +153,8 @@ public class Util {
 		model.getFullData().put(ConfigConstants.WEBSOCKET_PORT, 3000);
 		model.getFullData().put(ConfigConstants.REST_PORT, 8080);
 		model.getFullData().put(ConfigConstants.STORAGE_ROOT, "./storage/");
-		model.getFullData().put(ConfigConstants.STATIC_DIR, "./signalk-static");
-		model.getFullData().put(ConfigConstants.MAP_DIR, "./mapcache");
+		model.getFullData().put(ConfigConstants.STATIC_DIR, "./signalk-static/");
+		model.getFullData().put(ConfigConstants.MAP_DIR, "./mapcache/");
 		model.getFullData().put(ConfigConstants.DEMO, false);
 		model.getFullData().put(ConfigConstants.STREAM_URL,
 				"motu.log");
