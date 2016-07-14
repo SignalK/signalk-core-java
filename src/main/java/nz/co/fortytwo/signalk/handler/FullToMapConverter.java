@@ -25,6 +25,7 @@ package nz.co.fortytwo.signalk.handler;
 
 import static nz.co.fortytwo.signalk.util.SignalKConstants.CONFIG;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.CONTEXT;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.resources;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -61,7 +62,7 @@ public class FullToMapConverter {
 		//avoid diff signalk syntax
 		if(node.has(CONTEXT))return null;
 		//deal with full format
-		if(node.has(vessels) || node.has(CONFIG)){
+		if(node.has(vessels) || node.has(CONFIG)|| node.has(resources)){
 			if(logger.isDebugEnabled())logger.debug("processing full  "+node );
 			//process it
 			SignalKModel temp =  SignalKModelFactory.getCleanInstance();

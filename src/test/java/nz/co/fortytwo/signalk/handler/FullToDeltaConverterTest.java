@@ -147,6 +147,43 @@ public class FullToDeltaConverterTest {
 	}
 	
 	@Test
+	public void shouldConvertNotifications() throws IOException{
+		SignalKModel model = SignalKModelFactory.getCleanInstance();
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.notifications.navigation.anchor.currentRadius.alarmState","normal");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.notifications.navigation.anchor.currentRadius.message","");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.notifications.navigation.anchor.currentRadius.alarmState","normal");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.altitude",0.0);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.latitude",56.08612787724117);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.longitude",21.891184134073562);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.pgn",123456);
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.sentence","ipsum");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.source.label","testLabel");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.source.type","testType");
+		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.timestamp","2016-03-14T08:15:40.418Z");
+		//get full json
+		JsonSerializer ser = new JsonSerializer();
+		Json json = ser.writeJson(model);
+		//to Delta
+		FullToDeltaConverter processor = new FullToDeltaConverter();
+		Json delta = processor.handle(json).get(0);
+		logger.debug(delta);
+		
+		//now check
+		assertEquals("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b",delta.at("context").asString());
+		Json updates = delta.at("updates");
+		assertEquals(2, updates.asList().size());
+		assertEquals("2016-03-14T08:15:40.418Z",updates.asJsonList().get(0).at("timestamp").asString());
+		assertEquals("testLabel",updates.asJsonList().get(0).at("source").at("label").asString());
+		List<Json> valuesList = updates.asJsonList().get(0).at("values").asJsonList();
+		assertEquals("navigation.position", valuesList.get(0).at("path").asString());
+		Json val = valuesList.get(0).at("value");
+		assertEquals(21.89118413d , val.at("longitude").asDouble(), 0.00001);
+		assertEquals(56.08612788d , val.at("latitude").asDouble(), 0.00001);
+		assertEquals(0.0d , val.at("altitude").asDouble(), 0.00001);
+	}
+	
+	
+	@Test
 	public void shouldConvertPosition() throws IOException{
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		model.getFullData().put("vessels.urn:mrn:signalk:uuid:c42e5095-d3c3-49b6-a317-c633464a4f2b.navigation.position.altitude",0.0);
