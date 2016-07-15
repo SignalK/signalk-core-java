@@ -175,12 +175,20 @@ public class Util {
 		model.getFullData().put(ConfigConstants.STOMP_PORT, 61613);
 		model.getFullData().put(ConfigConstants.MQTT_PORT, 1883);
 		model.getFullData().put(ConfigConstants.CLOCK_source, "system");
+		
 		model.getFullData().put(ConfigConstants.HAWTIO_PORT, 8000);
 		model.getFullData().put(ConfigConstants.HAWTIO_AUTHENTICATE, false);
 		model.getFullData().put(ConfigConstants.HAWTIO_CONTEXT, "/hawtio");
 		model.getFullData().put(ConfigConstants.HAWTIO_WAR,
 				"./hawtio/hawtio-default-offline-1.4.48.war");
 		model.getFullData().put(ConfigConstants.HAWTIO_START, false);
+		
+		model.getFullData().put(ConfigConstants.JOLOKIA_PORT, 8001);
+		model.getFullData().put(ConfigConstants.JOLOKIA_AUTHENTICATE, false);
+		model.getFullData().put(ConfigConstants.JOLOKIA_CONTEXT, "/jolokia");
+		model.getFullData().put(ConfigConstants.JOLOKIA_WAR,
+				"./hawtio/jolokia-war-1.3.3.war");
+		
 		model.getFullData().put(ConfigConstants.VERSION, "v1.0.0");
 		model.getFullData().put(ConfigConstants.ALLOW_INSTALL, true);
 		model.getFullData().put(ConfigConstants.ALLOW_UPGRADE, true);
