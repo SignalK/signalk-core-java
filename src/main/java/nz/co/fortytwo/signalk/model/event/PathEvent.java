@@ -29,11 +29,13 @@ public class PathEvent {
 	private String path;
 	private EventType type;
 	private int revision;
+	private long timestamp;
 
 	public PathEvent(String path, int revision, EventType type) {
 		this.path=path;
 		this.revision=revision;
 		this.type=type;
+		this.setTimestamp(System.currentTimeMillis());
 	}
 
 	
@@ -52,6 +54,18 @@ public class PathEvent {
 
 	public int getRevision() {
 		return revision;
+	}
+
+
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 
