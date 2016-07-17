@@ -157,20 +157,20 @@ public class GitHandler {
 				result = Git.cloneRepository().setURI(gitPath).setDirectory(destDir).call();
 				result.fetch().setRemote(gitPath);
 				logger.debug("Cloned "+gitPath+" repository: " + result.getRepository().getDirectory());
-				FileUtils.writeStringToFile(output, "Cloned "+gitPath+" repository: " + result.getRepository().getDirectory(), true);
+				FileUtils.writeStringToFile(output, "DONE: Cloned "+gitPath+" repository: " + result.getRepository().getDirectory(), true);
 			}catch(Exception e){
 				FileUtils.writeStringToFile(output, e.getMessage(),true);
 				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
 				logger.debug("Error updating "+gitPath+" repository: " + e.getMessage(),e);
 			}
-			try{
+			/*try{
 				//now run npm install
 				runNpmInstall(output, destDir);
 			}catch(Exception e){
 				FileUtils.writeStringToFile(output, e.getMessage(),true);
 				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
 				logger.debug("Error updating "+gitPath+" repository: " + e.getMessage(),e);
-			}
+			}*/
 			return logFile;
 			
 		
@@ -241,10 +241,10 @@ public class GitHandler {
 				git = new Git(repository);
 				FetchResult result = git.fetch().setRemote(gitPath).setCheckFetchedObjects(true).call();
 				FileUtils.writeStringToFile(output, result.getMessages(),true);
-				logger.debug("Updated "+gitPath+" repository: " + result.getMessages());
+				logger.debug("DONE: Updated "+gitPath+" repository: " + result.getMessages());
 				
 				//now run npm install
-				runNpmInstall(output, destDir);
+				//runNpmInstall(output, destDir);
 			}catch(Exception e){
 				FileUtils.writeStringToFile(output, e.getMessage(),true);
 				FileUtils.writeStringToFile(output, e.getStackTrace().toString(),true);
