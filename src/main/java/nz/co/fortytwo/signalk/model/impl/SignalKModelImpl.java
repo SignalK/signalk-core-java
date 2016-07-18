@@ -143,12 +143,9 @@ public class SignalKModelImpl  implements SignalKModel {
         if (!val.equals(root.put(key, val))) {
         	if(logger.isDebugEnabled())logger.debug("doPut "+key+"="+val);
         	//for .source
-        	if(!key.endsWith(dot+source)
-        			&& !key.endsWith(dot+timestamp)
-        			&&!key.contains(dot+source+dot)
-        			&& !key.endsWith(dot+sourceRef)){
-        		eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
-        	}
+        	
+        	eventBus.post(new PathEvent(key, nextrevision, PathEvent.EventType.ADD));
+        	
             return true;
         } else {
             return false;

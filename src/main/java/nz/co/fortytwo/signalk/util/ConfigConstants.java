@@ -114,6 +114,13 @@ public class ConfigConstants {
 	public static final String HAWTIO_CONTEXT = "config.hawtio.context";
 	public static final String HAWTIO_WAR = "config.hawtio.war";
 	public static final String HAWTIO_START = "config.hawtio.start";
+	
+	//Jolokia
+	public static final String JOLOKIA_PORT = "config.jolokia.port";
+	public static final String JOLOKIA_AUTHENTICATE = "config.jolokia.authenticationEnabled";
+	public static final String JOLOKIA_CONTEXT = "config.jolokia.context";
+	public static final String JOLOKIA_WAR = "config.jolokia.war";
+	
 
 	
 	public ConfigConstants() {
