@@ -37,6 +37,7 @@ import nz.co.fortytwo.signalk.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
@@ -229,19 +230,19 @@ public class GitHandler {
 			destDir.mkdirs();
 			File output = new File(installLogDir,logFile);
 			String gitPath = github+path+".git";
-			logger.debug("Cloning from " + gitPath + " to " + destDir.getAbsolutePath());
+			logger.debug("Updating from " + gitPath + " to " + destDir.getAbsolutePath());
 			FileUtils.writeStringToFile(output, "Updating from " + gitPath + " to " + destDir.getAbsolutePath()+"\n",false);
 			Git git = null;
 			try{
 				FileRepositoryBuilder builder = new FileRepositoryBuilder();
-				repository = builder.setGitDir(destDir)
+				repository = builder.setGitDir(new File(destDir,"/.git"))
 					.readEnvironment() // scan environment GIT_* variables
 					.findGitDir() // scan up the file system tree
 					.build();
 				git = new Git(repository);
-				FetchResult result = git.fetch().setRemote(gitPath).setCheckFetchedObjects(true).call();
-				FileUtils.writeStringToFile(output, result.getMessages(),true);
-				logger.debug("DONE: Updated "+gitPath+" repository: " + result.getMessages());
+				PullResult result = git.pull().call();
+				FileUtils.writeStringToFile(output, result.getMergeResult().toString(),true);
+				logger.debug("DONE: Updated "+gitPath+" repository: " + result.getMergeResult().toString());
 				
 				//now run npm install
 				//runNpmInstall(output, destDir);
