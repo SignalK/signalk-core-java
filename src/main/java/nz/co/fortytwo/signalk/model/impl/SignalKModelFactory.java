@@ -22,6 +22,9 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.NavigableMap;
@@ -136,7 +139,11 @@ public class SignalKModelFactory {
 				
 				Util.setSelf(self);
 				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"uuid", self);
-				
+				//load other vessel specifics.
+				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+mmsi, model.get(ConfigConstants.MMSI));
+				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+name, model.get(ConfigConstants.NAME));
+				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"flag", model.get(ConfigConstants.FLAG));
+				model.getFullData().put(SignalKConstants.vessels_dot_self_dot+"port", model.get(ConfigConstants.PORT));
 				logger.info("   Saved config loaded from "+rootPath+SIGNALK_CFG_SAVE_FILE);
 			}catch(Exception ex){
 				logger.error(ex.getMessage(),ex);
