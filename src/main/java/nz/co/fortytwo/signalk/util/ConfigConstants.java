@@ -28,6 +28,10 @@ public class ConfigConstants {
 	public static final String VERSION = "config.server.version";
 	
 	public static final String UUID = "config.server.vessel.uuid";
+	public static final String FLAG = "config.server.vessel.flag";
+	public static final String MMSI = "config.server.vessel.mmsi";
+	public static final String NAME = "config.server.vessel.name";
+	public static final String PORT = "config.server.vessel.port";
 	
 	//camel output destination types
 	public static final String OUTPUT_TYPE = "OUTPUT_TYPE";
