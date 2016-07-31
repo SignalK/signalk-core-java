@@ -661,6 +661,8 @@ public class SignalKConstants {
 	public static final String tanks_wasteWater_id_currentVolume="tanks.wasteWater.*.currentVolume";
 	public static final String tanks_wasteWater_id_name="tanks.wasteWater.*.name";
 	public static final String tanks_wasteWater_id_type="tanks.wasteWater.*.type";
+	public static final String _SIGNALK_HTTP_TCP_LOCAL = "_signalk-http._tcp.local.";
+	public static final String _SIGNALK_WS_TCP_LOCAL = "_signalk-ws._tcp.local.";
 	
 	
 	
