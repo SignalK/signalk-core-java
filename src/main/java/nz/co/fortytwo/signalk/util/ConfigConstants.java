@@ -41,6 +41,7 @@ public class ConfigConstants {
 	public static final String OUTPUT_WS = "OUTPUT_WS";
 	public static final String OUTPUT_NMEA = "OUTPUT_NMEA";
 	public static final String OUTPUT_REST = "OUTPUT_REST";
+	public static final String OUTPUT_XMPP = "OUTPUT_XMPP";
 	
 	//misc camel header constants
 	public static final String DESTINATION = "destination";
@@ -84,6 +85,7 @@ public class ConfigConstants {
 	//demo
 	public static final String DEMO = "config.server.demo.start";
 	public static final String STREAM_URL = "config.server.demo.file";
+	public static final String XMPP = "config.server.xmpp";
 //	public static final String SESSIONID = "signalk.session";
 	
 	//servers
