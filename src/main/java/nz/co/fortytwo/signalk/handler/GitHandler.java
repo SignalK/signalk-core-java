@@ -91,7 +91,7 @@ public class GitHandler {
 		try {
 			String fileName = install(path);
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.sendRedirect("/logs.html");
+			response.sendRedirect("/config/logs.html");
 			return fileName;
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
@@ -130,7 +130,7 @@ public class GitHandler {
 		try {
 			String fileName = upgrade(path);
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.sendRedirect("/logs.html");
+			response.sendRedirect("/config/logs.html");
 			return fileName;
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
