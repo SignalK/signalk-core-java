@@ -192,6 +192,7 @@ public class SignalKModelFactory {
 		if (model != null) {
 			File jsonFile = new File(rootPath+SIGNALK_MODEL_SAVE_FILE);
 			JsonSerializer ser = new JsonSerializer();
+			ser.setPretty(3);
 			Json modelJson = ser.writeJson(model);
 			//remove config
 			if(modelJson.has(SignalKConstants.CONFIG)){
