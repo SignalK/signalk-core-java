@@ -14,6 +14,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -86,7 +87,7 @@ public class AttrMapFactory {
 			for( String key: model.keySet()){
 				buffer.append(key+"="+model.get(key).asString()+"\n");
 	    	}
-			FileUtils.writeStringToFile(attrFile, buffer.toString());
+			FileUtils.writeStringToFile(attrFile, buffer.toString(), StandardCharsets.UTF_8);
 			logger.debug("   Saved attr state to "+rootPath+attrFile.getAbsolutePath());
 		}
 

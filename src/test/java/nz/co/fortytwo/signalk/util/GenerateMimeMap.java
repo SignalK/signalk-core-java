@@ -1,6 +1,7 @@
 package nz.co.fortytwo.signalk.util;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 import mjson.Json;
 
@@ -34,7 +35,7 @@ public class GenerateMimeMap {
 				}
 			}
 		}
-		FileUtils.writeStringToFile(new File("./src/main/resources/mime.types"), buffer.toString());
+		FileUtils.writeStringToFile(new File("./src/main/resources/mime.types"), buffer.toString(), StandardCharsets.UTF_8);
 	}
 
 }

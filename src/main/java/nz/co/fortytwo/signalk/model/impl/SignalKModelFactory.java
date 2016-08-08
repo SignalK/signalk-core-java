@@ -27,6 +27,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.NavigableMap;
 import java.util.UUID;
 
@@ -207,7 +208,7 @@ public class SignalKModelFactory {
 			if(modelJson.has(SignalKConstants.CONFIG)){
 				modelJson = modelJson.delAt(SignalKConstants.CONFIG);
 			}
-			FileUtils.writeStringToFile(jsonFile, modelJson.toString());
+			FileUtils.writeStringToFile(jsonFile, modelJson.toString(), StandardCharsets.UTF_8);
 			logger.debug("   Saved model state to "+rootPath+SIGNALK_MODEL_SAVE_FILE);
 		}
 	}
@@ -231,7 +232,7 @@ public class SignalKModelFactory {
 	    	}else{
 	    		buffer.append("{}");
 	    	}
-			FileUtils.writeStringToFile(jsonFile, buffer.toString());
+			FileUtils.writeStringToFile(jsonFile, buffer.toString(), StandardCharsets.UTF_8);
 			logger.debug("   Saved model state to "+rootPath+SIGNALK_CFG_SAVE_FILE);
 		}
 
