@@ -143,7 +143,33 @@ public interface SignalKModel{
 	 * @throws IllegalArgumentException
 	 */
 	boolean putSource(String key, Object val, String ts) throws IllegalArgumentException;
+	
+	/**
+	 * Saves an attr for a key entry.
+	 * @param key
+	 * @param val
+	 * @param ts
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	Attr putAttr(String key, Attr attr) throws IllegalArgumentException;
 
+	/**
+	 * Gets an attr for a key entry. Will recurse back to the first parent that has an attr.
+	 * @param key
+	 * @param val
+	 * @param ts
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	Attr  getAttr(String key) throws IllegalArgumentException;
+
+	/**
+	 * Removes the attr for this key. If recursive is true all subkeys are also removed
+	 * @param key
+	 * @param recursive
+	 */
+	void clearAttr(String key, boolean recursive);
 	
 
 }

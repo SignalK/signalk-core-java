@@ -60,6 +60,8 @@ public class SignalKModelFactory {
 		Util.setDefaults(signalKModel);
 		try {
 			SignalKModelFactory.loadConfig(signalKModel);
+			AttrMapFactory.setAttrDefaults(AttrMapFactory.getInstance());
+			AttrMapFactory.loadConfig(AttrMapFactory.getInstance());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,6 +100,13 @@ public class SignalKModelFactory {
 		signalKModel.getFullData().clear();
 		Util.setDefaults(signalKModel);
 		loadConfig(signalKModel, "motu");
+		AttrMapFactory.setAttrDefaults(AttrMapFactory.getInstance());
+		try {
+			AttrMapFactory.loadConfig(AttrMapFactory.getInstance());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		signalKModel.getFullData().put(ConfigConstants.DEMO, false);
 		return signalKModel;
 	}

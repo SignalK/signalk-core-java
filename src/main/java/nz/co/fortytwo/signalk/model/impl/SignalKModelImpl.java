@@ -45,6 +45,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.math.BigDecimal;
 
 import mjson.Json;
+import nz.co.fortytwo.signalk.model.Attr;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.event.PathEvent;
 import nz.co.fortytwo.signalk.util.SignalKConstants;
@@ -81,6 +82,7 @@ public class SignalKModelImpl  implements SignalKModel {
 	private static Logger logger = LogManager.getLogger(SignalKModelImpl.class);
     private final char separator;
     private final NavigableMap<String,Object> root;
+    private final NavigableMap<String,Attr> attrMap;
     
     private int nextrevision;
 
@@ -93,6 +95,7 @@ public class SignalKModelImpl  implements SignalKModel {
     public SignalKModelImpl() {
         this.separator = '.';
         root = new ConcurrentSkipListMap<String,Object>();
+        this.attrMap = AttrMapFactory.getInstance();
     }
     
     /**
@@ -102,6 +105,7 @@ public class SignalKModelImpl  implements SignalKModel {
     public SignalKModelImpl(NavigableMap<String,Object> root) {
         this.separator = '.';
         this.root = new ConcurrentSkipListMap<String,Object>(root);
+        this.attrMap = AttrMapFactory.getInstance();
     }
     
     
@@ -109,6 +113,7 @@ public class SignalKModelImpl  implements SignalKModel {
 		this.handleMultipleValues=handleMultipleValues;
 		this.separator = '.';
         this.root = new ConcurrentSkipListMap<String,Object>();
+        this.attrMap = AttrMapFactory.getInstance();
 	}
 
 	/**
@@ -395,6 +400,37 @@ public class SignalKModelImpl  implements SignalKModel {
 		doPut(key+ dot+ ALTITUDE, altitude);
 		doPut(key+dot+timestamp,ts);
 		
+	}
+
+	@Override
+	public Attr putAttr(String key, Attr attr) throws IllegalArgumentException {
+		return attrMap.put(key, attr);
+	}
+	
+	@Override
+	public void clearAttr(String key, boolean recursive) {
+		if(recursive){
+			for(String k: attrMap.keySet()){
+				if(k.startsWith(key))attrMap.remove(k);
+			}
+		}else{
+			attrMap.remove(key);
+		}
+	}
+
+	@Override
+	public Attr getAttr(String key) throws IllegalArgumentException {
+		while(true){
+			 if(attrMap.containsKey(key)){ 
+				 return attrMap.get(key);
+			 }
+			 int pos = key.lastIndexOf(".");
+			 if(pos>0){
+				 key=key.substring(0,pos);
+			 }else{
+				 return new Attr();
+			 }
+		}
 	}
 
 	

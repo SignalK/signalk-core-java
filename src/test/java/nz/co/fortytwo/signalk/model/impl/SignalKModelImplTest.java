@@ -30,6 +30,9 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_angleApparen
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionChangeAlarm;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_directionTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_course;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_course_activeRoute;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedApparent;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_wind_speedTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_position;
@@ -39,8 +42,10 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.value;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -49,6 +54,7 @@ import java.io.IOException;
 import java.util.NavigableMap;
 import java.util.SortedMap;
 
+import nz.co.fortytwo.signalk.model.Attr;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.JsonSerializer;
 import nz.co.fortytwo.signalk.util.TestHelper;
@@ -255,6 +261,86 @@ public class SignalKModelImplTest {
 		//TODO: should this fail?
 		
 	}
-
+	@Test
+	public void shouldGetAttr() {
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
+		logger.debug(signalk);
+		Attr attr = signalk.getAttr(vessels_dot_self);
+		logger.debug(attr);
+		assertNotNull(attr);
+		assertEquals("self", attr.getOwner());
+		assertEquals("self", attr.getGroup());
+		assertEquals(755, attr.getMode());
+	}
+	
+	@Test
+	public void shouldGetRecursiveAttr() {
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
+		logger.debug(signalk);
+		Attr attr = signalk.getAttr(vessels_dot_self_dot+nav_course_activeRoute);
+		logger.debug(attr);
+		assertNotNull(attr);
+		assertEquals("self", attr.getOwner());
+		assertEquals("self", attr.getGroup());
+		assertEquals(750, attr.getMode());
+		
+	}
+	@Test
+	public void shouldPutAttr() {
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
+		logger.debug(signalk);
+		Attr attr = new Attr(600,"self","self");
+		signalk.putAttr(vessels_dot_self_dot+nav_course_activeRoute, attr);
+		logger.debug(attr);
+		
+		attr = signalk.getAttr(vessels_dot_self_dot+nav_course_activeRoute);
+		assertEquals("self", attr.getOwner());
+		assertEquals("self", attr.getGroup());
+		assertEquals(600, attr.getMode());
+	}
+	
+	@Test
+	public void shouldClearAttr() {
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
+		logger.debug(signalk);
+		Attr attr = new Attr(600,"self","self");
+		signalk.putAttr(vessels_dot_self_dot+nav_course_activeRoute, attr);
+		logger.debug(attr);
+		
+		attr = signalk.getAttr(vessels_dot_self_dot+nav_course_activeRoute);
+		assertEquals("self", attr.getOwner());
+		assertEquals("self", attr.getGroup());
+		assertEquals(600, attr.getMode());
+		attr=null;
+		signalk.clearAttr(vessels_dot_self_dot+nav_course_activeRoute, false);
+		attr = signalk.getAttr(vessels_dot_self_dot+nav_course_activeRoute);
+		assertNotNull(attr);
+		assertEquals("self", attr.getOwner());
+		assertEquals("self", attr.getGroup());
+		assertEquals(750, attr.getMode());
+	}
+	
+	@Test
+	public void shouldRecursivelyClearAttr() {
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		signalk.putAll(TestHelper.getBasicModel().getFullData());
+		
+		logger.debug(signalk);
+		
+		signalk.clearAttr(vessels_dot_self_dot+nav, true);
+		Attr attr = signalk.getAttr(vessels_dot_self_dot+nav_course);
+		assertNotNull(attr);
+		assertEquals("self", attr.getOwner());
+		assertEquals("self", attr.getGroup());
+		assertEquals(755, attr.getMode());
+	}
 	
 }
