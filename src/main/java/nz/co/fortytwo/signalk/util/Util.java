@@ -33,9 +33,12 @@ import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Properties;
@@ -196,6 +199,24 @@ public class Util {
 		model.getFullData().put(ConfigConstants.ZEROCONF_AUTO, true);
 		model.getFullData().put(ConfigConstants.START_MQTT, true);
 		model.getFullData().put(ConfigConstants.START_STOMP, true);
+		//control config, only local networks
+		Json ips = Json.array();
+		Enumeration<NetworkInterface> interfaces;
+		try {
+			interfaces = NetworkInterface.getNetworkInterfaces();
+			
+			while(interfaces.hasMoreElements()){
+				NetworkInterface i = interfaces.nextElement();
+				for( InterfaceAddress iAddress :i.getInterfaceAddresses()){
+					//ignore IPV6 for now.
+					if(iAddress.getAddress().getAddress().length>4)continue;
+					ips.add(iAddress.getAddress().getHostAddress()+"/"+ iAddress.getNetworkPrefixLength());
+				}
+			}
+			model.getFullData().put(ConfigConstants.SECURITY_CONFIG, ips.toString());
+		} catch (SocketException e) {
+			logger.error(e.getMessage(),e);
+		}
 		//model.getFullData().put(ConfigConstants.CLIENT_WS, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_TCP, null);
 		//model.getFullData().put(ConfigConstants.CLIENT_MQTT, null);
@@ -536,10 +557,15 @@ public class Util {
 				netmask = address.getNetworkPrefixLength();
 			}
 		}
+		return sameNetwork(localAddress, netmask, remoteAddress);
+	}
+	
+	public static boolean sameNetwork(String localAddress, short netmask, String remoteAddress)
+			throws Exception {
 		byte[] a1 = InetAddress.getByName(localAddress).getAddress();
 		byte[] a2 = InetAddress.getByName(remoteAddress).getAddress();
 		byte[] m = InetAddress.getByName(normalizeFromCIDR(netmask)).getAddress();
-		if(logger.isDebugEnabled())logger.debug("sameNetwork?:"+localAddress+","+remoteAddress+","+netmask);
+		if(logger.isDebugEnabled())logger.debug("sameNetwork?:"+localAddress+"/"+normalizeFromCIDR(netmask)+","+remoteAddress+","+netmask);
 		for (int i = 0; i < a1.length; i++){
 			if ((a1[i] & m[i]) != (a2[i] & m[i])){
 				return false;
@@ -548,6 +574,23 @@ public class Util {
 
 		return true;
 
+	}
+	
+	public static boolean inNetworkList(List<String> ipList, String ip) throws Exception{
+		for(String denyIp:ipList){
+			short netmask=0;
+			String[] p = denyIp.split("/");
+			if(p.length>1){
+				netmask=(short) (32-Short.valueOf(p[1]));
+			}
+			if(Util.sameNetwork(p[0], netmask, ip)){
+				if (logger.isDebugEnabled())
+					logger.debug("IP found "+ip+" in list: "+denyIp);
+				return true;
+			}
+			
+		}
+		return false;
 	}
 	
 	/*

@@ -41,6 +41,7 @@ public class ConfigConstants {
 	public static final String OUTPUT_WS = "OUTPUT_WS";
 	public static final String OUTPUT_NMEA = "OUTPUT_NMEA";
 	public static final String OUTPUT_REST = "OUTPUT_REST";
+	public static final String OUTPUT_XMPP = "OUTPUT_XMPP";
 	
 	//misc camel header constants
 	public static final String DESTINATION = "destination";
@@ -84,6 +85,7 @@ public class ConfigConstants {
 	//demo
 	public static final String DEMO = "config.server.demo.start";
 	public static final String STREAM_URL = "config.server.demo.file";
+	public static final String XMPP = "config.server.xmpp";
 //	public static final String SESSIONID = "signalk.session";
 	
 	//servers
@@ -112,6 +114,10 @@ public class ConfigConstants {
 	public static final String ALLOW_INSTALL = "config.server.apps.install.allow";
 	public static final String ALLOW_UPGRADE = "config.server.apps.upgrade.allow";
 	
+	//security
+	public static final String SECURITY_DENY = "config.server.security.deny.ip";
+	public static final String SECURITY_CONFIG = "config.server.security.config.ip";
+	public static final String SECURITY_WHITE = "config.server.security.white.ip";
 //Hawtio
 	public static final String HAWTIO_PORT = "config.hawtio.port";
 	public static final String HAWTIO_AUTHENTICATE = "config.hawtio.authenticationEnabled";

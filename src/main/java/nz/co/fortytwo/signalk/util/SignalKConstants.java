@@ -141,7 +141,10 @@ public class SignalKConstants {
 	public static final String SIGNALK_CONFIG = "/signalk/v1/config";
 	public static final String SIGNALK_LOGGER = "/signalk/v1/logger";
 	public static final String SIGNALK_UPLOAD = "/signalk/v1/upload";
+	public static final String SIGNALK_RESTART = "/signalk/v1/restart";
 	
+	public static final String _SIGNALK_HTTP_TCP_LOCAL = "_signalk-http._tcp.local.";
+	public static final String _SIGNALK_WS_TCP_LOCAL = "_signalk-ws._tcp.local.";
 	//public static final String name = "name";
 	//public static final String mmsi = "mmsi";
 
@@ -661,6 +664,7 @@ public class SignalKConstants {
 	public static final String tanks_wasteWater_id_currentVolume="tanks.wasteWater.*.currentVolume";
 	public static final String tanks_wasteWater_id_name="tanks.wasteWater.*.name";
 	public static final String tanks_wasteWater_id_type="tanks.wasteWater.*.type";
+	
 	
 	
 	
