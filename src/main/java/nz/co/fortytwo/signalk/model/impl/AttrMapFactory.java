@@ -82,7 +82,7 @@ public class AttrMapFactory {
 	}
 	
 	public static void saveConfig(NavigableMap<String, Attr> model, File attrFile ) throws IOException {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (model != null && model.size()>0) {
 			for( String key: model.keySet()){
 				buffer.append(key+"="+model.get(key).asString()+"\n");

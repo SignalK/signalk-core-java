@@ -97,6 +97,7 @@ public class DeltaToMapConverter {
 	//grab values and add
 		Json array = update.at(values);
 		for(Json e : array.asJsonList()){
+			if(e==null || e.isNull() || !e.has(PATH))continue;
 			String key = e.at(PATH).asString();
 			//temp.put(ctx+"."+key, e.at(value).getValue());
 			if(e.has(value)){

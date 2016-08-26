@@ -226,7 +226,7 @@ public class SignalKModelFactory {
 			NavigableMap<String, Object> config = model.getSubMap(SignalKConstants.CONFIG);
 			JsonSerializer ser = new JsonSerializer();
 			ser.setPretty(3);
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 	    	if(config!=null && config.size()>0){
 	    		ser.write(config.entrySet().iterator(),'.',buffer);
 	    	}else{

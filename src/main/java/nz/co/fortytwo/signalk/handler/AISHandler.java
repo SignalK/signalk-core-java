@@ -160,7 +160,8 @@ public class AISHandler {
 						if(StringUtils.isBlank(device))device=UNKNOWN;
 						String ts = Util.getIsoTimeString(packet.getBestTimestamp());
 						String aisVessel = vessels + dot + String.valueOf(vInfo.getUserId())+dot;
-						String srcRef = sources+dot+String.valueOf(vInfo.getUserId())+".ais."+vInfo.getMsgType();
+						//A general rule of sources.protocol.bus.device.data
+						String srcRef = sources+".ais."+device+dot+String.valueOf(vInfo.getUserId())+dot+vInfo.getMsgType();
 						//create ais source entry
 						model.put(srcRef, packet.getStringMessage(),device,ts);
 						
@@ -175,7 +176,9 @@ public class AISHandler {
 						model.put(aisVessel+ nav_courseOverGroundTrue, Math.toRadians(((double) vInfo.getCog()) / 10), srcRef, ts);
 						model.put(aisVessel+ nav_speedOverGround, Util.kntToMs(((double) vInfo.getSog()) / 10), srcRef, ts);
 						model.put(aisVessel+ nav_headingTrue, Math.toRadians(((double) vInfo.getTrueHeading()) / 10), srcRef);
-						if (vInfo.getCallsign() != null) model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), srcRef, ts);
+						if (vInfo.getCallsign() != null) {
+							model.put(aisVessel+ communication_callsignVhf, vInfo.getCallsign(), srcRef, ts);
+						}
 					}
 				}
 			}

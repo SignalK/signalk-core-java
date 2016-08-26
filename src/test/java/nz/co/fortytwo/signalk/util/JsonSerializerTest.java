@@ -65,7 +65,7 @@ public class JsonSerializerTest {
 		assertEquals(null,signalk.get("config.server.security.deny.ip"));
 		
 		//write out
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		ser.write(signalk.getSubMap(SignalKConstants.CONFIG).entrySet().iterator(),'.',buffer);
 		logger.debug(buffer.toString());
 		
@@ -74,7 +74,7 @@ public class JsonSerializerTest {
 		NavigableMap<String, Object> jsonMap = ser.read(buffer.toString());
 		signalk.putAll(jsonMap);
 		//write out again
-		buffer = new StringBuffer();
+		buffer = new StringBuilder();
 		ser.write(signalk.getSubMap(SignalKConstants.CONFIG).entrySet().iterator(),'.',buffer);
 		String jsonMapOut=buffer.toString();
 		logger.debug(jsonMapOut);

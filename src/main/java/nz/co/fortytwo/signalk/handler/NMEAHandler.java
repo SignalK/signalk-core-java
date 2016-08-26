@@ -207,7 +207,8 @@ public class NMEAHandler{
 		}
 		String now = Util.getIsoTimeString();
 		if(StringUtils.isBlank(device))device = UNKNOWN;
-		model.putSource(device+".NMEA0183."+sentence.getSentenceId(),sentence.toSentence(),now);
+		//A general rule of sources.protocol.bus.device.data
+		model.putSource("0183."+device+dot+sentence.getTalkerId()+dot+sentence.getSentenceId(),sentence.toSentence(),now);
 
 		for (SentenceListener sl : listeners.get(DISPATCH_ALL)) {
 			try {

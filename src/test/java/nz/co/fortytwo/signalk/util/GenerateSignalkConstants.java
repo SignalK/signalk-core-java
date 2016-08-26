@@ -323,7 +323,7 @@ public class GenerateSignalkConstants {
 			//map={minItems=2, description="A single position, in x,y order (Lon, Lat)", items=[{"type":"number"},{"type":"number"}], additionalItems=false, type="array"}
 			Json items = map.get("items");
 			if(items==null)return "[]";
-			StringBuffer val = new StringBuffer("[");
+			StringBuilder val = new StringBuilder("[");
 			if(items.isArray()){
 				for(Json item:items.asJsonList()){
 					val.append(getValueForType(item.asJsonMap()));

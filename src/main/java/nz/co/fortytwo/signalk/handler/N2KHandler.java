@@ -173,7 +173,7 @@ public class N2KHandler {
 			}
 			// make a dummy signalk object
 			SignalKModel temp = SignalKModelFactory.getCleanInstance();
-			String sourceRef = target+"sources.n2k."+pgn+dot+n2k.read(srcPath);
+			String sourceRef = target+"sources.n2k."+n2k.read(srcPath)+dot+pgn;
 			
 			String ts = Util.getIsoTimeString();
 			if(StringUtils.isBlank(device))device = UNKNOWN;

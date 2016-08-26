@@ -1274,7 +1274,7 @@ public class Json
 			fullPath="";
 			return "";
 		}
-		StringBuffer path = new StringBuffer();
+		StringBuilder path = new StringBuilder();
 		
 		fullPath = path.append(up().getPath()+"."+getParentKey()).toString();
 		if(fullPath.startsWith("."))fullPath=fullPath.substring(1);

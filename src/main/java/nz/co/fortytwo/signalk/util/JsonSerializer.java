@@ -69,7 +69,7 @@ public class JsonSerializer {
      * @throws IOException
      */
     public String write(SignalKModel signalk) throws IOException {
-    	StringBuffer buffer = new StringBuffer();
+    	StringBuilder buffer = new StringBuilder();
     	if(signalk!=null && signalk.getFullData()!=null){
     		write(signalk.getFullData().entrySet().iterator(),'.',buffer);
     	}else{

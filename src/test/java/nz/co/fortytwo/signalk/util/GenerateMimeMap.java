@@ -24,7 +24,7 @@ public class GenerateMimeMap {
 	public void test() throws Exception {
 		String data = FileUtils.readFileToString(new File("./src/test/resources/samples/mimedb.json"));
 		Json mimeTypes = Json.read(data);
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for(String key: mimeTypes.asJsonMap().keySet()){
 			
 			Json type = mimeTypes.at(key);
