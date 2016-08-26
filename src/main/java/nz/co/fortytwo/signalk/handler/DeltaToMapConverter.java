@@ -79,6 +79,7 @@ public class DeltaToMapConverter {
 			
 				for(Json update: updates.asJsonList()){
 					parseUpdate(temp, update, ctx);
+					
 				}
 			
 			if(logger.isDebugEnabled())logger.debug("DeltaToMapConverter processed diff  "+temp );
