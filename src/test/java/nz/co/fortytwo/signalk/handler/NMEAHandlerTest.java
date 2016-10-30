@@ -37,6 +37,8 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import org.junit.Before;
+
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,8 +46,10 @@ import java.io.IOException;
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
+import nz.co.fortytwo.signalk.util.Util;
 
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager; 
+import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -55,6 +59,11 @@ public class NMEAHandlerTest {
 	private SignalKModel signalkModel=SignalKModelFactory.getMotuTestInstance();
 	
 
+        @Before
+        public void before() throws Exception {
+            Util.getConfig();      
+        }
+    
 	@Test
 	public void shouldPassJson(){
 		 String jStr = "{\"vessels\":{\""+self+"\":{\"environment\":{\"wind\":{\"angleApparent\":0.0000000000,\"directionTrue\":0.0000000000,\"speedApparent\":0.0000000000,\"speedTrue\":20.0000000000}}}}}";
