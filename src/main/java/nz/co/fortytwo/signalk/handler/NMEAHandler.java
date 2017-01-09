@@ -326,7 +326,10 @@ public class NMEAHandler{
 						//TODO: check relative to bow or compass + sen.getSpeedUnit()
 						// relative to bow
 						double angle = sen.getAngle();
-						src.getModel().put(vessels_dot_self_dot + env_wind_angleApparent , Math.toRadians(angle), src.getSourceRef(), src.getNow());
+						// signalk is -180 to 180, negative to port, 0 is bow.
+						double aws = Math.toRadians(angle);
+						if(aws>180d)aws=aws-360d;
+						src.getModel().put(vessels_dot_self_dot + env_wind_angleApparent , aws, src.getSourceRef(), src.getNow());
 						src.getModel().put(vessels_dot_self_dot + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), src.getSourceRef(), src.getNow());
 						//src.getModel().put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
 						//src.getModel().put(vessels_dot_self_dot + env_wind + dot+timestamp , src.getNow());
