@@ -199,7 +199,16 @@ public class Util {
 		model.getFullData().put(ConfigConstants.ZEROCONF_AUTO, true);
 		model.getFullData().put(ConfigConstants.START_MQTT, true);
 		model.getFullData().put(ConfigConstants.START_STOMP, true);
-		//control config, only local networks
+
+		// Instrument ofsets, adjustments, display units
+                model.getFullData().put(ConfigConstants.DEPTH_TRANSDUCER_OFFSET, 0);
+		model.getFullData().put(ConfigConstants.SOG_DISPLAY_UNIT, "kt");
+		model.getFullData().put(ConfigConstants.DEPTH_DISPLAY_UNIT, "ft");
+		model.getFullData().put(ConfigConstants.SOW_DISPLAY_UNIT, "kt");
+		model.getFullData().put(ConfigConstants.ALARM_DEPTH, 6);
+		model.getFullData().put(ConfigConstants.WIND_OFFSET, 170);
+                
+                //control config, only local networks
 		Json ips = Json.array();
 		Enumeration<NetworkInterface> interfaces;
 		try {
