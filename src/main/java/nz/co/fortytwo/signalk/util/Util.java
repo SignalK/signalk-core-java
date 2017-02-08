@@ -201,11 +201,11 @@ public class Util {
 		model.getFullData().put(ConfigConstants.START_STOMP, true);
 
 		// Instrument ofsets, adjustments, display units
-                model.getFullData().put(ConfigConstants.DEPTH_TRANSDUCER_OFFSET, 0);
+                model.getFullData().put(ConfigConstants.DEPTH_TRANSDUCER_OFFSET, "0.4572"); // 1.5 ft for NeutronDance
 		model.getFullData().put(ConfigConstants.SOG_DISPLAY_UNIT, "kt");
 		model.getFullData().put(ConfigConstants.DEPTH_DISPLAY_UNIT, "ft");
 		model.getFullData().put(ConfigConstants.SOW_DISPLAY_UNIT, "kt");
-		model.getFullData().put(ConfigConstants.ALARM_DEPTH, 6);
+		model.getFullData().put(ConfigConstants.ALARM_DEPTH, 1.3716); // 4.5 ft for NeutronDance
 		model.getFullData().put(ConfigConstants.WIND_OFFSET, 170);
                 
                 //control config, only local networks

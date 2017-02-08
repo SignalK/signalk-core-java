@@ -23,6 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import java.text.ParseException;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
@@ -45,6 +46,9 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 
 import net.sf.marineapi.nmea.event.SentenceEvent;
 import net.sf.marineapi.nmea.event.SentenceListener;
@@ -412,6 +416,8 @@ public class NMEAHandler {
                         DepthSentence sen = (DepthSentence) evt.getSentence();
                         // in meters
                         src.getModel().put(vessels_dot_self_dot + env_depth_belowTransducer, sen.getDepth(), src.getSourceRef(), src.getNow());
+//                        Object obj = src.getModel().get(vessels_dot_self_dot + env_depth_belowTransducer+".meta.zones");
+//                        String [] strArr = (String [])obj;
                         logger.info("dbtDepth: " + sen.getDepth());
                     }
                 } catch (DataNotAvailableException e) {

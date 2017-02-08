@@ -132,7 +132,7 @@ public class ConfigConstants {
 	public static final String JOLOKIA_WAR = "config.jolokia.war";
         
         //Instrument Offsets, Display Units, Adjustments
-        public static final String DEPTH_TRANSDUCER_OFFSET = "config.server.instruments.depth.transducerOffset";
+        public static final String DEPTH_TRANSDUCER_OFFSET = "config.server.environment.depth.surfaceToTransducer";
         public static final String SOG_DISPLAY_UNIT = "config.server.instruments.sog.sogUnit";
         public static final String DEPTH_DISPLAY_UNIT = "config.server.instruments.depth.depthUnit";
         public static final String SOW_DISPLAY_UNIT = "config.server.instruments.sow.sowUnit";
