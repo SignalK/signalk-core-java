@@ -33,7 +33,12 @@ public class JsonSerializer {
     		"config.server.client.tcp.connect",
     		"config.server.client.stomp.connect",
     		"config.server.serial.ports",
-                "vessels.urn:mrn:signalk:uuid:849b2c8b-aceb-468d-916d-75bd5109d8df.environment.depth.belowTransducer.meta.zones",                
+                SignalKConstants.vessels_dot_self_dot+
+                    SignalKConstants.env_depth+
+                    SignalKConstants.dot+
+                    SignalKConstants.meta+
+                    SignalKConstants.dot+
+                    SignalKConstants.zones
     	};
     /**
      * Set the ModelPrinter to pretty-print the output

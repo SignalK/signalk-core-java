@@ -34,13 +34,23 @@ public class SignalKConstants {
 	public static final double MTR_TO_FEET = 3.28084;
 	public static final double MTR_TO_FATHOM = 0.546806649;
 	public static final double TWO_PI = 2*Math.PI;
+	public static final String M = "m";             // meters
+	public static final String F = "f";             // fathoms
+	public static final String FT = "ft";           // feet
+	public static final String NM = "n.m.";         // nautical miles        
+	public static final String MS = "m/s";          // meters/sec
+	public static final String KM_PER_HR = "km/hr"; // km/hr
+	public static final String MI_PER_HR = "mi/hr"; // mi/hr
+	public static final String NM_PER_HR = "Kt";    // knots
 	
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
 	public static final String self_str =  "self";
+	public static final String CONFIG = "config";
+        public static final String SIGNALK = "signalk";
 	
 	public static String self = self_str;
-	public static String vessels_dot_self_dot=vessels+dot+self+dot;
+ 	public static String vessels_dot_self_dot=vessels+dot+self+dot;
 	public static String vessels_dot_self=vessels+dot+self;
 	
 	public static final String version = "version";
@@ -102,9 +112,7 @@ public class SignalKConstants {
 	public static final String CONFIG_ACTION = "CONFIG_ACTION";
 	public static final String CONFIG_ACTION_READ = "CONFIG_ACTION_READ";
 	public static final String CONFIG_ACTION_SAVE = "CONFIG_ACTION_SAVE";
-	
-	public static final String CONFIG = "config";
-	
+		
 	public static final String CONTEXT = "context";
 	public static final String UPDATES = "updates";
 	public static final String SUBSCRIBE = "subscribe";
@@ -357,6 +365,9 @@ public class SignalKConstants {
 	public static final String env_current_setTrue="environment.current.setTrue";
 	public static final String env_depth="environment.depth";
 	public static final String env_depth_belowKeel="environment.depth.belowKeel";
+	public static final String env_depth_displayUnit="environment.depth.meta.displayUnit";
+	public static final String env_depth_alarmMethod="environment.depth.meta.alarmMethod";
+	public static final String env_depth_warnMethod="environment.depth.meta.warnMethod";
 	public static final String env_depth_belowSurface="environment.depth.belowSurface";
 	public static final String env_depth_belowTransducer="environment.depth.belowTransducer";
 	public static final String env_depth_surfaceToTransducer="environment.depth.surfaceToTransducer";
@@ -491,8 +502,11 @@ public class SignalKConstants {
 	public static final String nav_racing_timeToStart="navigation.racing.timeToStart";
 	public static final String nav_rateOfTurn="navigation.rateOfTurn";
 	public static final String nav_speedOverGround="navigation.speedOverGround";
+	public static final String nav_sogDisplayUnit="navigation.meta.sogDisplayUnit";
 	public static final String nav_speedThroughWater="navigation.speedThroughWater";
-	public static final String nav_state="navigation.state";
+	public static final String nav_stwDisplayUnit="navigation.meta.stwDisplayUnit";
+
+        public static final String nav_state="navigation.state";
 	public static final String notifications="notifications";
 	public static final String notifications_abandon="notifications.abandon";
 	public static final String notifications_abandon_message="notifications.abandon.message";

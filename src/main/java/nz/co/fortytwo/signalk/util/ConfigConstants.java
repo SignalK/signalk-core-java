@@ -132,12 +132,18 @@ public class ConfigConstants {
 	public static final String JOLOKIA_WAR = "config.jolokia.war";
         
         //Instrument Offsets, Display Units, Adjustments
-        public static final String DEPTH_TRANSDUCER_OFFSET = "config.server.environment.depth.surfaceToTransducer";
-        public static final String SOG_DISPLAY_UNIT = "config.server.instruments.sog.sogUnit";
-        public static final String DEPTH_DISPLAY_UNIT = "config.server.instruments.depth.depthUnit";
-        public static final String SOW_DISPLAY_UNIT = "config.server.instruments.sow.sowUnit";
-        public static final String ALARM_DEPTH = "config.server.instruments.depth.alarmDepth";
-        public static final String WIND_OFFSET = "config.server.instruments.wind.apparentWindOffset";
+        public static final String SURFACE_TO_TRANSDUCER = "config.environment.depth.surfaceToTransducer";
+        public static final String SOG_DISPLAY_UNIT = "config.navigation.meta.sogDisplayUnit";
+        public static final String DEPTH_DISPLAY_UNIT = "config.environment.depth.meta.displayUnit";
+        public static final String STW_DISPLAY_UNIT = "config.navigation.meta.stwDisplayUnit";
+        public static final String DEPTH_ALARM_ZONES = "config.environment.depth.meta.zones";
+        public static final String DEPTH_WARN_METHOD = "config.environment.depth.meta.warnMethod";
+        public static final String DEPTH_ALARM_METHOD = "config.environment.depth.meta.alarmMethod";
+        
+        // This is currently unimplemented as the MEGA compensages for wind ofsets
+        // A command must be issued in terminal mode with the MEGA to set the apparent
+        //  wind offset.     
+        // public static final String WIND_OFFSET = "config.instruments.wind.apparentWindOffset";
 	
 
 	
