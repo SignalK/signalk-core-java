@@ -32,7 +32,13 @@ public class JsonSerializer {
     		"config.server.client.mqtt.connect",
     		"config.server.client.tcp.connect",
     		"config.server.client.stomp.connect",
-    		"config.server.serial.ports"
+    		"config.server.serial.ports",
+                SignalKConstants.vessels_dot_self_dot+
+                    SignalKConstants.env_depth+
+                    SignalKConstants.dot+
+                    SignalKConstants.meta+
+                    SignalKConstants.dot+
+                    SignalKConstants.zones
     	};
     /**
      * Set the ModelPrinter to pretty-print the output
@@ -225,7 +231,7 @@ public class JsonSerializer {
      * @return
      */
     private boolean isJsonArray(String key) {
-		for(String k:arrayKeys){
+                for(String k:arrayKeys){
 			if(k.equals(key)) return true;
 		}
 		return false;
@@ -245,7 +251,7 @@ public class JsonSerializer {
 
     private void jsonNull(String key, Appendable out) throws IOException {
     	//if we have a null array key, we need to output []
-    	if(isJsonArray(key)){
+        if(isJsonArray(key)){
     		out.append("[]");
     	}else{
     		out.append("null");
