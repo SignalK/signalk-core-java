@@ -24,7 +24,20 @@
 
 package nz.co.fortytwo.signalk.util;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.CONFIG;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.KNOTS_TO_MS;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.LIST;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.MS_TO_KNOTS;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.resources;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.self_str;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.sources;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.timestamp;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.version;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +47,6 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -44,19 +56,19 @@ import java.util.NavigableSet;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import mjson.Json;
-import net.sf.marineapi.nmea.sentence.RMCSentence;
-import nz.co.fortytwo.signalk.model.SignalKModel;
-import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
-
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import mjson.Json;
+import net.sf.marineapi.nmea.sentence.RMCSentence;
+import nz.co.fortytwo.signalk.model.SignalKModel;
+import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 
 /**
  * Place for all the left over bits that are used across Signalk
@@ -608,4 +620,6 @@ public class Util {
 	            Integer.toString(mask >>  8 & 0xFF, 10) + "." +
 	            Integer.toString(mask >>  0 & 0xFF, 10);
 	}
+
+	
 }

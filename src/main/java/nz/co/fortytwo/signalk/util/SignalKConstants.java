@@ -35,6 +35,7 @@ public class SignalKConstants {
 	public static final double MTR_TO_FATHOM = 0.546806649;
 	public static final double TWO_PI = 2*Math.PI;
 	
+	
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
 	public static final String self_str =  "self";

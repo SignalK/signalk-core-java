@@ -113,6 +113,7 @@ public class AISHandlerTest{
 		String msg = "!AIVDM,1,1,,B,15Mtu:0000o@05tE`?Ctn@6T06Jd,0*40";
 		model=null;
 		model = processor.handle(msg);
+		log.debug(model);
 		assertNotNull(model);
 		//assertTrue(map.get(Constants.AIS) instanceof AisVesselInfo);
 	}
