@@ -7,7 +7,7 @@
  *
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
  * WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,6 +23,7 @@
  */
 package nz.co.fortytwo.signalk.handler;
 
+import java.text.ParseException;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.UNKNOWN;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowTransducer;
@@ -45,6 +46,9 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 
 import net.sf.marineapi.nmea.event.SentenceEvent;
 import net.sf.marineapi.nmea.event.SentenceListener;
@@ -58,291 +62,329 @@ import net.sf.marineapi.nmea.sentence.RMCSentence;
 import net.sf.marineapi.nmea.sentence.Sentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.VHWSentence;
+import net.sf.marineapi.nmea.sentence.VLWSentence;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.model.impl.SignalKModelFactory;
 import nz.co.fortytwo.signalk.util.ConfigConstants;
+import nz.co.fortytwo.signalk.util.SignalKConstants;
 import nz.co.fortytwo.signalk.util.Util;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
-
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Processes NMEA sentences in the body of a message, firing events to interested listeners
- * Converts the NMEA messages to signalk
- * 
+ * Processes NMEA sentences in the body of a message, firing events to
+ * interested listeners Converts the NMEA messages to signalk
+ *
  * @author robert
- * 
+ *
  */
-public class NMEAHandler{
+public class NMEAHandler {
 
-	private static Logger logger = LogManager.getLogger(NMEAHandler.class);
-	private static final String DISPATCH_ALL = "DISPATCH_ALL";
+    private static Logger logger = LogManager.getLogger(NMEAHandler.class);
+    private static final String DISPATCH_ALL = "DISPATCH_ALL";
 
-	// map of sentence listeners
-	private ConcurrentMap<String, List<SentenceListener>> listeners = new ConcurrentHashMap<String, List<SentenceListener>>();
-	private boolean rmcClock=false;
+    // map of sentence listeners
+    private ConcurrentMap<String, List<SentenceListener>> listeners = new ConcurrentHashMap<String, List<SentenceListener>>();
+    private boolean rmcClock = false;
 
-	public NMEAHandler() {
-		super();
-		// register BVE
-		//SentenceFactory.getInstance().registerParser("BVE", net.sf.marineapi.nmea.parser.BVEParser.class);
-		//SentenceFactory.getInstance().registerParser("XDR", net.sf.marineapi.nmea.parser.CruzproXDRParser.class);
-		try {
-			if("rmc".equals(Util.getConfigProperty(ConfigConstants.CLOCK_source))){
-				rmcClock=true;
-			}
-		} catch (Exception e) {
-			logger.error(e);
-		} 
-		setNmeaListeners();
-	}
+    public NMEAHandler() {
+        super();
+        // register BVE
+        //SentenceFactory.getInstance().registerParser("BVE", net.sf.marineapi.nmea.parser.BVEParser.class);
+        //SentenceFactory.getInstance().registerParser("XDR", net.sf.marineapi.nmea.parser.CruzproXDRParser.class);
+        try {
+            if ("rmc".equals(Util.getConfigProperty(ConfigConstants.CLOCK_source))) {
+                rmcClock = true;
+            }
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        setNmeaListeners();
+    }
 
+    /**
+     * Convert an NMEA string to a signalk json object
+     *
+     * @param bodyStr
+     * @return
+     */
+    public SignalKModel handle(String bodyStr) {
+        return handle(bodyStr, null);
+    }
 
+    /**
+     * Convert an NMEA string to a signalk json object
+     *
+     * @param bodyStr
+     * @return
+     */
+    public SignalKModel handle(String bodyStr, String src) {
+        SignalKModel model = null;
+        if (StringUtils.isNotBlank(bodyStr) && bodyStr.startsWith("$")) {
+            try {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Processing NMEA:[" + bodyStr + "]");
+                }
+                Sentence sentence = SentenceFactory.getInstance().createParser(bodyStr);
+                model = SignalKModelFactory.getCleanInstance();
+                fireSentenceEvent(model, sentence, src);
+                return model;
+            } catch (IllegalArgumentException e) {
+                logger.debug(e.getMessage(), e);
+                logger.info(e.getMessage() + ":" + bodyStr);
+                logger.info("   in hexidecimal : " + Hex.encodeHexString(bodyStr.getBytes()));
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Convert an NMEA string to a signalk json object
-	 * @param bodyStr
-	 * @return
-	 */
-	public SignalKModel handle(String bodyStr) {
-		return handle(bodyStr, null);
-	}
-	/**
-	 * Convert an NMEA string to a signalk json object
-	 * @param bodyStr
-	 * @return
-	 */
-	public SignalKModel handle(String bodyStr, String src) {
-		SignalKModel model = null;
-		if (StringUtils.isNotBlank(bodyStr)&& bodyStr.startsWith("$")) {
-			try {
-				if(logger.isDebugEnabled())logger.debug("Processing NMEA:[" + bodyStr+"]");
-				Sentence sentence = SentenceFactory.getInstance().createParser(bodyStr);
-				model = SignalKModelFactory.getCleanInstance();
-				fireSentenceEvent(model, sentence, src);
-				return model;
-			}catch (IllegalArgumentException e) {
-				logger.debug(e.getMessage(), e);
-				logger.info(e.getMessage() + ":" + bodyStr);
-				logger.info("   in hexidecimal : " + Hex.encodeHexString(bodyStr.getBytes()));
-			}catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return null;
-	}
+    /**
+     * Adds a {@link SentenceListener} that wants to receive all sentences read
+     * by the reader.
+     *
+     * @param listener {@link SentenceListener} to be registered.
+     * @see net.sf.marineapi.nmea.event.SentenceListener
+     */
+    public void addSentenceListener(SentenceListener listener) {
+        registerListener(DISPATCH_ALL, listener);
+    }
 
-	/**
-	 * Adds a {@link SentenceListener} that wants to receive all sentences read
-	 * by the reader.
-	 * 
-	 * @param listener
-	 *            {@link SentenceListener} to be registered.
-	 * @see net.sf.marineapi.nmea.event.SentenceListener
-	 */
-	public void addSentenceListener(SentenceListener listener) {
-		registerListener(DISPATCH_ALL, listener);
-	}
+    /**
+     * Adds a {@link SentenceListener} that is interested in receiving only
+     * sentences of certain type.
+     *
+     * @param sl SentenceListener to add
+     * @param type Sentence type for which the listener is registered.
+     * @see net.sf.marineapi.nmea.event.SentenceListener
+     */
+    public void addSentenceListener(SentenceListener sl, SentenceId type) {
+        registerListener(type.toString(), sl);
+    }
 
-	/**
-	 * Adds a {@link SentenceListener} that is interested in receiving only
-	 * sentences of certain type.
-	 * 
-	 * @param sl
-	 *            SentenceListener to add
-	 * @param type
-	 *            Sentence type for which the listener is registered.
-	 * @see net.sf.marineapi.nmea.event.SentenceListener
-	 */
-	public void addSentenceListener(SentenceListener sl, SentenceId type) {
-		registerListener(type.toString(), sl);
-	}
+    /**
+     * Adds a {@link SentenceListener} that is interested in receiving only
+     * sentences of certain type.
+     *
+     * @param sl SentenceListener to add
+     * @param type Sentence type for which the listener is registered.
+     * @see net.sf.marineapi.nmea.event.SentenceListener
+     */
+    public void addSentenceListener(SentenceListener sl, String type) {
+        registerListener(type, sl);
+    }
 
-	/**
-	 * Adds a {@link SentenceListener} that is interested in receiving only
-	 * sentences of certain type.
-	 * 
-	 * @param sl
-	 *            SentenceListener to add
-	 * @param type
-	 *            Sentence type for which the listener is registered.
-	 * @see net.sf.marineapi.nmea.event.SentenceListener
-	 */
-	public void addSentenceListener(SentenceListener sl, String type) {
-		registerListener(type, sl);
-	}
+    /**
+     * Remove a listener from reader. When removed, listener will not receive
+     * any events from the reader.
+     *
+     * @param sl {@link SentenceListener} to be removed.
+     */
+    public void removeSentenceListener(SentenceListener sl) {
+        for (List<SentenceListener> list : listeners.values()) {
+            if (list.contains(sl)) {
+                list.remove(sl);
+            }
+        }
+    }
 
-	/**
-	 * Remove a listener from reader. When removed, listener will not receive
-	 * any events from the reader.
-	 * 
-	 * @param sl
-	 *            {@link SentenceListener} to be removed.
-	 */
-	public void removeSentenceListener(SentenceListener sl) {
-		for (List<SentenceListener> list : listeners.values()) {
-			if (list.contains(sl)) {
-				list.remove(sl);
-			}
-		}
-	}
+    /**
+     * Dispatch data to all listeners. Puts the nmea string into
+     * SignalKConstants.self.sources.nmea.0183.[sentenceid] Processes the nmea
+     * into signalk position, heading, etc.
+     *
+     * @param map
+     *
+     * @param sentence sentence string.
+     */
+    private void fireSentenceEvent(SignalKModel model, Sentence sentence, String device) {
+        if (!sentence.isValid()) {
+            logger.warn("NMEA Sentence is invalid:" + sentence.toSentence());
+            return;
+        }
+        String now = Util.getIsoTimeString();
+        if (StringUtils.isBlank(device)) {
+            device = UNKNOWN;
+        }
+        //A general rule of sources.protocol.bus.device.data
+        model.putSource("0183." + device + dot + sentence.getTalkerId() + dot + sentence.getSentenceId(), sentence.toSentence(), now);
 
-	/**
-	 * Dispatch data to all listeners.
-	 * Puts the nmea string into SignalKConstants.self.sources.nmea.0183.[sentenceid]
-	 * Processes the nmea into signalk position, heading, etc.
-	 * 
-	 * @param map
-	 * 
-	 * @param sentence
-	 *            sentence string.
-	 */
-	private void fireSentenceEvent(SignalKModel model, Sentence sentence, String device) {
-		if (!sentence.isValid()) {
-			logger.warn("NMEA Sentence is invalid:" + sentence.toSentence());
-			return;
-		}
-		String now = Util.getIsoTimeString();
-		if(StringUtils.isBlank(device))device = UNKNOWN;
-		//A general rule of sources.protocol.bus.device.data
-		model.putSource("0183."+device+dot+sentence.getTalkerId()+dot+sentence.getSentenceId(),sentence.toSentence(),now);
+        for (SentenceListener sl : listeners.get(DISPATCH_ALL)) {
+            try {
+                SentenceEventSource src = new SentenceEventSource(device + ".NMEA0183." + sentence.getSentenceId(), now, model);
+                SentenceEvent se = new SentenceEvent(src, sentence);
+                sl.sentenceRead(se);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
 
-		for (SentenceListener sl : listeners.get(DISPATCH_ALL)) {
-			try {
-				SentenceEventSource src = new SentenceEventSource(device+".NMEA0183."+sentence.getSentenceId(), now,model);
-				SentenceEvent se = new SentenceEvent(src, sentence);
-				sl.sentenceRead(se);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
+    }
 
-	}
+    /**
+     * Registers a SentenceListener to hash map with given key.
+     *
+     * @param type Sentence type to register for
+     * @param sl SentenceListener to register
+     */
+    private void registerListener(String type, SentenceListener sl) {
+        if (listeners.containsKey(type)) {
+            listeners.get(type).add(sl);
+        } else {
+            List<SentenceListener> list = new Vector<SentenceListener>();
+            list.add(sl);
+            listeners.put(type, list);
+        }
+    }
 
-	/**
-	 * Registers a SentenceListener to hash map with given key.
-	 * 
-	 * @param type
-	 *            Sentence type to register for
-	 * @param sl
-	 *            SentenceListener to register
-	 */
-	private void registerListener(String type, SentenceListener sl) {
-		if (listeners.containsKey(type)) {
-			listeners.get(type).add(sl);
-		} else {
-			List<SentenceListener> list = new Vector<SentenceListener>();
-			list.add(sl);
-			listeners.put(type, list);
-		}
-	}
+    /**
+     * Adds NMEA sentence listeners to process NMEA to simple output
+     *
+     * @param processor
+     */
+    private void setNmeaListeners() {
 
-	/**
-	 * Adds NMEA sentence listeners to process NMEA to simple output
-	 * 
-	 * @param processor
-	 */
-	private void setNmeaListeners() {
+        addSentenceListener(new SentenceListener() {
 
-		addSentenceListener(new SentenceListener() {
+            private boolean startLat = true;
+            private boolean startLon = true;
+            double previousLat = 0;
+            double previousLon = 0;
+            double previousSOG = 0;
+            double previousSOW = 0;
+            static final double ALPHA = 1 - 1.0 / 6;
 
-			private boolean startLat = true;
-			private boolean startLon = true;
-			double previousLat = 0;
-			double previousLon = 0;
-			double previousSpeed = 0;
-			static final double ALPHA = 1 - 1.0 / 6;
+            public void sentenceRead(SentenceEvent evt) {
+                SentenceEventSource src = (SentenceEventSource) evt.getSource();
+                try {
 
-			public void sentenceRead(SentenceEvent evt) {
-				SentenceEventSource src = (SentenceEventSource) evt.getSource();
-			
-				try{
-				
-					if (evt.getSentence() instanceof PositionSentence) {
-						PositionSentence sen = (PositionSentence) evt.getSentence();
-	
-						if (startLat) {
-							previousLat = sen.getPosition().getLatitude();
-							startLat = false;
-						}
-						previousLat = Util.movingAverage(ALPHA, previousLat, sen.getPosition().getLatitude());
-						if(logger.isDebugEnabled())logger.debug("lat position:" + sen.getPosition().getLatitude() + ", hemi=" + sen.getPosition().getLatitudeHemisphere());
-	
-						if (startLon) {
-							previousLon = sen.getPosition().getLongitude();
-							startLon = false;
-						}
-						previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
-						src.getModel().putPosition(vessels_dot_self_dot + nav_position, previousLat, previousLon, 0.0, src.getSourceRef(), src.getNow());
-						
-					}
-	
-					if (evt.getSentence() instanceof HeadingSentence) {
-						
-						if (!(evt.getSentence() instanceof VHWSentence)) {
-							
-							HeadingSentence sen = (HeadingSentence) evt.getSentence();
+                    if (evt.getSentence() instanceof PositionSentence) {
+                        PositionSentence sen = (PositionSentence) evt.getSentence();
 
-							if (sen.isTrue()) {
-								try {
-									src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()),src.getSourceRef(),src.getNow());
-								} catch (Exception e) {
-									logger.error(e.getMessage());
-								}
-							} else {
-								src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getHeading()),src.getSourceRef(),src.getNow());
-							}
-						}
-					}
-					
-					if (evt.getSentence() instanceof RMCSentence) {
-						RMCSentence sen = (RMCSentence) evt.getSentence();
-						if(rmcClock)Util.checkTime(sen);
-						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeed()));
-						src.getModel().put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, src.getSourceRef(), src.getNow());
-					}
-					if (evt.getSentence() instanceof VHWSentence) {
-						VHWSentence sen = (VHWSentence) evt.getSentence();
-						//VHW sentence types have both, but true can be empty
-						try {
-							src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundMagnetic , Math.toRadians(sen.getMagneticHeading()), src.getSourceRef(), src.getNow());
-							src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundTrue , Math.toRadians(sen.getHeading()), src.getSourceRef(), src.getNow());
-							
-						} catch (DataNotAvailableException e) {
-							logger.error(e.getMessage());
-						}
-						previousSpeed = Util.movingAverage(ALPHA, previousSpeed, Util.kntToMs(sen.getSpeedKnots()));
-						src.getModel().put(vessels_dot_self_dot + nav_speedOverGround , previousSpeed, src.getSourceRef(), src.getNow());
-					}
-	
-					// MWV wind
-					// Mega sends $IIMVW with 0-360d clockwise from bow, (relative to bow)
-					// Mega value is int+'.0'
-					if (evt.getSentence() instanceof MWVSentence) {
-						MWVSentence sen = (MWVSentence) evt.getSentence();
-						//TODO: check relative to bow or compass + sen.getSpeedUnit()
-						// relative to bow
-						double angle = sen.getAngle();
-						// signalk is -180 to 180, negative to port, 0 is bow.
-						double aws = Math.toRadians(angle);
-						if(aws>180d)aws=aws-360d;
-						src.getModel().put(vessels_dot_self_dot + env_wind_angleApparent , aws, src.getSourceRef(), src.getNow());
-						src.getModel().put(vessels_dot_self_dot + env_wind_speedApparent , Util.kntToMs(sen.getSpeed()), src.getSourceRef(), src.getNow());
-						//src.getModel().put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
-						//src.getModel().put(vessels_dot_self_dot + env_wind + dot+timestamp , src.getNow());
-					}
-					
-					// Cruzpro BVE sentence
-					// TODO: how to deal with multiple engines??
-					/*if (evt.getSentence() instanceof BVESentence) {
+                        if (startLat) {
+                            previousLat = sen.getPosition().getLatitude();
+                            startLat = false;
+                        }
+                        previousLat = Util.movingAverage(ALPHA, previousLat, sen.getPosition().getLatitude());
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("lat position:" + sen.getPosition().getLatitude() + ", hemi=" + sen.getPosition().getLatitudeHemisphere());
+                        }
+
+                        if (startLon) {
+                            previousLon = sen.getPosition().getLongitude();
+                            startLon = false;
+                        }
+                        previousLon = Util.movingAverage(ALPHA, previousLon, sen.getPosition().getLongitude());
+                        src.getModel().putPosition(vessels_dot_self_dot + nav_position, previousLat, previousLon, 0.0, src.getSourceRef(), src.getNow());
+
+                    }
+
+                    if (evt.getSentence() instanceof HeadingSentence) {
+
+//                        if (!(evt.getSentence() instanceof VHWSentence)) {
+                        HeadingSentence sen = (HeadingSentence) evt.getSentence();
+
+                        if (sen.isTrue()) {
+                            try {
+                                src.getModel().put(vessels_dot_self_dot + SignalKConstants.nav_headingTrue, Math.toRadians(sen.getHeading()), src.getSourceRef(), src.getNow());
+                            } catch (Exception e) {
+//                                    logger.error(e.getMessage());
+                            }
+                        } else {
+                            try {
+                                src.getModel().put(vessels_dot_self_dot + SignalKConstants.nav_headingMagnetic, Math.toRadians(sen.getHeading()), src.getSourceRef(), src.getNow());
+                            } catch (Exception e) {
+//                                    logger.error(e.getMessage());
+                            }
+                        }
+//                        }
+                    }
+
+                    if (evt.getSentence() instanceof RMCSentence) {
+                        RMCSentence sen = (RMCSentence) evt.getSentence();
+                        if (rmcClock) {
+                            Util.checkTime(sen);
+                        }
+                        previousSOG = Util.movingAverage(ALPHA, previousSOG, Util.kntToMs(sen.getSpeed()));
+                        src.getModel().put(vessels_dot_self_dot + nav_speedOverGround, previousSOG, src.getSourceRef(), src.getNow());
+                        if (sen.getSpeed() > 0.5) {
+                            src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundTrue, Math.toRadians(sen.getCourse()), src.getSourceRef(), src.getNow());
+                        }
+                        logger.info("rmcCOG: " + sen.getCourse());
+                        logger.info("rmcSOG: " + sen.getSpeed());
+                    }
+
+                    if (evt.getSentence() instanceof VHWSentence) {
+                        VHWSentence sen = (VHWSentence) evt.getSentence();
+//                        //VHW sentence types have both, but true can be empty
+//                        try {
+//                            src.getModel().put(vessels_dot_self_dot + SignalKConstants.nav_headingMagnetic, Math.toRadians(sen.getMagneticHeading()), src.getSourceRef(), src.getNow());
+//                        	logger.info("vhwCOGM: "+sen.getHeading());
+//                        } catch (DataNotAvailableException e) {
+//                            // These are really not errors
+//                            // logger.error(e.getMessage());
+//                        }
+//                        try {
+//                        	src.getModel().put(vessels_dot_self_dot + nav_courseOverGroundTrue, Math.toRadians(sen.getHeading()), src.getSourceRef(), src.getNow());
+//                        	logger.info("vhwCOGT: "+sen.getHeading());
+//                        } catch (DataNotAvailableException e) {
+//                            // These are really not errors
+//                            // logger.error(e.getMessage());
+//                        }
+                        try {
+                            src.getModel().put(vessels_dot_self_dot + SignalKConstants.nav_speedThroughWater, sen.getSpeedKnots(), src.getSourceRef(), src.getNow());
+                            previousSOW = Util.movingAverage(ALPHA, previousSOW, sen.getSpeedKnots());
+                            logger.info("vhwSOW: " + sen.getSpeedKnots());
+                        } catch (DataNotAvailableException e) {
+                            // These are really not errors
+                            // logger.error(e.getMessage());
+                        }
+                    }
+
+                    // MWV wind
+                    // Mega sends $IIMVW with 0-360d clockwise from bow, (relative to bow)
+                    // Mega value is int+'.0'
+                    if (evt.getSentence() instanceof MWVSentence) {
+                        MWVSentence sen = (MWVSentence) evt.getSentence();
+                        //TODO: check relative to bow or compass + sen.getSpeedUnit()
+                        // relative to bow
+                        double angle = sen.getAngle();
+                        logger.info(String.format("mhvAppWind: %4.1f %4.0f", angle, sen.getSpeed()));
+                        try {
+								//	Apparent wind offset should be handled in the MEGA
+//                            double offset = Util.getConfigPropertyDouble(ConfigConstants.WIND_OFFSET);
+//                            if (angle < 0) {
+//                                angle += 360.;
+//                            };
+//                            if (angle > 360){
+//                                angle -= 360.;
+//                            }
+                        } catch (NullPointerException e) {
+                            //do nothing - the offset is zero or undefined
+                        }
+                        // signalk is -180 to 180, negative to port, 0 is bow.
+                        double aws = Math.toRadians(angle);
+//                        if (aws > 180d) {
+//                            aws = aws - 360d;
+//                        }
+                        src.getModel().put(vessels_dot_self_dot + env_wind_angleApparent, aws, src.getSourceRef(), src.getNow());
+                        src.getModel().put(vessels_dot_self_dot + env_wind_speedApparent, Util.kntToMs(sen.getSpeed()), src.getSourceRef(), src.getNow());
+                        //src.getModel().put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
+                        //src.getModel().put(vessels_dot_self_dot + env_wind + dot+timestamp , src.getNow());
+                    }
+
+                    // Cruzpro BVE sentence
+                    // TODO: how to deal with multiple engines??
+                    /*if (evt.getSentence() instanceof BVESentence) {
 						BVESentence sen = (BVESentence) evt.getSentence();
 						if (sen.isFuelGuage()) {
 							src.getModel().put(json, tanks_id_level , sen.getFuelRemaining(), "output");
 							src.getModel().put(json, propulsion_id_fuelUsageRate , sen.getFuelUseRateUnitsPerHour(), "output");
-							
+
 							// map.put(Constants.FUEL_USED, sen.getFuelUsedOnTrip());
 							// src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.tank_level, sen.getFuelRemaining(), "output");
 						}
@@ -352,7 +394,7 @@ public class NMEAHandler{
 							//src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_hours, sen.getEngineHours(), "output");
 							// map.put(Constants.ENGINE_MINUTES, sen.getEngineMinutes());
 							//src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_minutes, sen.getEngineMinutes(), "output");
-	
+
 						}
 						if (sen.isTempGuage()) {
 							src.getModel().put(json, propulsion_id_engineTemperature , sen.getEngineTemp(), "output");
@@ -360,38 +402,40 @@ public class NMEAHandler{
 							//src.getModel().put(tempSignalKConstants.selfNode, SignalKConstants.propulsion_engineVolts, sen.getVoltage(), "output");
 							// map.put(Constants.ENGINE_TEMP_HIGH_ALARM, sen.getHighTempAlarmValue());
 							// map.put(Constants.ENGINE_TEMP_LOW_ALARM, sen.getLowTempAlarmValue());
-	
+
 						}
 						if (sen.isPressureGuage()) {
 							src.getModel().put(json, propulsion_id_oilPressure , sen.getPressure(), "output");
 							// map.put(Constants.ENGINE_PRESSURE_HIGH_ALARM, sen.getHighPressureAlarmValue());
 							// map.put(Constants.ENGINE_PRESSURE_LOW_ALARM, sen.getLowPressureAlarmValue());
-	
+
 						}
-	
+
 					}*/
-					if (evt.getSentence() instanceof DepthSentence) {
-						DepthSentence sen = (DepthSentence) evt.getSentence();
-						// in meters
-						src.getModel().put(vessels_dot_self_dot + env_depth_belowTransducer , sen.getDepth(), src.getSourceRef(), src.getNow());
-					}
-				}catch (DataNotAvailableException e){
-					logger.error(e.getMessage()+":"+evt.getSentence().toSentence());
-					//logger.debug(e.getMessage(),e);
-				}
-				
-			}
+                    if (evt.getSentence() instanceof DepthSentence) {
+                        DepthSentence sen = (DepthSentence) evt.getSentence();
+                        // in meters
+                        src.getModel().put(vessels_dot_self_dot + env_depth_belowTransducer, sen.getDepth(), src.getSourceRef(), src.getNow());
+//                        Object obj = src.getModel().get(vessels_dot_self_dot + env_depth_belowTransducer+".meta.zones");
+//                        String [] strArr = (String [])obj;
+                        logger.info("dbtDepth: " + sen.getDepth());
+                    }
+                } catch (DataNotAvailableException e) {
+                    logger.error(e.getMessage() + ":" + evt.getSentence().toSentence());
+                    //logger.debug(e.getMessage(),e);
+                }
 
+            }
 
-			public void readingStopped() {
-			}
+            public void readingStopped() {
+            }
 
-			public void readingStarted() {
-			}
+            public void readingStarted() {
+            }
 
-			public void readingPaused() {
-			}
-		});
-	}
+            public void readingPaused() {
+            }
+        });
+    }
 
 }
