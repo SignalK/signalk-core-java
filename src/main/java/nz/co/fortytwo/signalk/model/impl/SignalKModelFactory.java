@@ -22,8 +22,10 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
 import java.io.IOException;
@@ -142,8 +144,10 @@ public class SignalKModelFactory {
                 Json temp = Json.read(jsonFile.toURI().toURL());
                 JsonSerializer ser = new JsonSerializer();
                 model.putAll(ser.read(temp));
+                insertMetaToModel(model);
+                removeOtherVessels(model);
                 logger.info("   Saved state loaded from " + rootPath + SIGNALK_MODEL_SAVE_FILE);
-                loadConfig(model);
+                //loadConfig(model);
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
             }
@@ -152,12 +156,23 @@ public class SignalKModelFactory {
         }
     }
     
-    /**
+    private static void removeOtherVessels(SignalKModel model) throws IOException {
+    	String self = (String) model.get(ConfigConstants.UUID);
+        Util.setSelf(self);
+        for(String key:model.getKeys()){
+        	if(key.startsWith(vessels+dot+self))continue;
+        	model.clearAttr(key, false);
+        }
+        save(model);
+		
+	}
+
+	/**
      * Extracts the values for selected ConfigConstants keys and inserts them into the SignalK model
      * using the appropriate SignalKConstants keys.
      * @param model the SignalK model
      */
-    public static void insertConfig(SignalKModel model) {
+    public static void insertMetaToModel(SignalKModel model) {
         
             String self = (String) model.get(ConfigConstants.UUID);
 
@@ -263,97 +278,6 @@ public class SignalKModelFactory {
                 Json temp = Json.read(jsonFile.toURI().toURL());
                 JsonSerializer ser = new JsonSerializer();
                 model.putAll(ser.read(temp));
-                insertConfig(model);
-                
-//                The code below has been moved to insertConfig()
-//
-//                String self = (String) model.get(ConfigConstants.UUID);
-//
-//                Util.setSelf(self);
-//                model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
-//                //load other vessel specifics.
-//                if (model.get(ConfigConstants.MMSI) != null) {impl
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
-//                }
-//                if (model.get(ConfigConstants.NAME) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
-//                }
-//                if (model.get(ConfigConstants.FLAG) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
-//                }
-//                if (model.get(ConfigConstants.PORT) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
-//                }
-//
-//                if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_alarmMethod, model.get(ConfigConstants.DEPTH_ALARM_METHOD));
-//                }
-//
-//                if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_warnMethod, model.get(ConfigConstants.DEPTH_WARN_METHOD));
-//                }
-//
-//                if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_displayUnit, model.get(ConfigConstants.DEPTH_DISPLAY_UNIT));
-//                    String depthDisplayUnit = (String) model.get(ConfigConstants.DEPTH_DISPLAY_UNIT);
-//
-//                    if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
-//                        double offset = ((Double) model.get(ConfigConstants.SURFACE_TO_TRANSDUCER)).doubleValue();
-//                        switch (depthDisplayUnit) {
-//                            case SignalKConstants.M:
-//                                break;
-//                            case SignalKConstants.F:
-//                                offset /= SignalKConstants.MTR_TO_FATHOM;
-//                                break;
-//                            case SignalKConstants.FT:
-//                                offset /= SignalKConstants.MTR_TO_FEET;
-//                                break;
-//                        }
-//                        model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_surfaceToTransducer, offset + "");
-//                    }
-//
-//                    if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
-//                        Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
-//                        Json jArrayElem;
-//                        for (int i = 0; i < zones.asList().size(); i++) {
-//                            double upper = 0.;
-//                            double lower = 0.;
-//                            jArrayElem = zones.at(i);
-//                            switch (depthDisplayUnit) {
-//                                case SignalKConstants.M:
-//                                    break;
-//                                case SignalKConstants.F:
-//                                    upper = jArrayElem.at("upper").asDouble() / SignalKConstants.MTR_TO_FATHOM;
-//                                    lower = jArrayElem.at("lower").asDouble() / SignalKConstants.MTR_TO_FATHOM;
-//                                    break;
-//                                case SignalKConstants.FT:
-//                                    upper = jArrayElem.at("upper").asDouble() / SignalKConstants.MTR_TO_FEET;
-//                                    lower = jArrayElem.at("lower").asDouble() / SignalKConstants.MTR_TO_FEET;
-//                                    break;
-//                            }
-//                            jArrayElem.set("upper", Json.make(upper));
-//                            jArrayElem.set("lower", Json.make(lower));
-//                            zones.set(i, jArrayElem);
-//                        }
-//
-//                        model.getFullData().put(SignalKConstants.vessels_dot_self_dot
-//                            + SignalKConstants.env_depth
-//                            + SignalKConstants.dot
-//                            + SignalKConstants.meta
-//                            + SignalKConstants.dot
-//                            + SignalKConstants.zones, zones);
-//                    }
-//                }
-//
-//                if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot
-//                        + SignalKConstants.nav_sogDisplayUnit, model.get(ConfigConstants.SOG_DISPLAY_UNIT));
-//                }
-//
-//                if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null) {
-//                    model.getFullData().put(SignalKConstants.vessels_dot_self_dot
-//                        + SignalKConstants.nav_stwDisplayUnit, model.get(ConfigConstants.STW_DISPLAY_UNIT));
-//                }
                 logger.info("   Saved config loaded from " + rootPath + SIGNALK_CFG_SAVE_FILE);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
@@ -371,7 +295,6 @@ public class SignalKModelFactory {
             Util.setSelf(SignalKConstants.self);
             model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
             // insert the configuration parameters into the model with the SignalKConstants keys
-            insertConfig(model);
     //        save(model);
         }
     }
