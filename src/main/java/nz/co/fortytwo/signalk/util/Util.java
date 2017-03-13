@@ -199,7 +199,8 @@ public class Util {
         model.getFullData().put(ConfigConstants.START_STOMP, true);
 
         // Instrument ofsets, adjustments, display units
-        model.getFullData().put(ConfigConstants.SURFACE_TO_TRANSDUCER, new Double(0.4572)); // 1.5 ft for NeutronDance
+        model.getFullData().put(ConfigConstants.SURFACE_TO_TRANSDUCER, 0.5); 
+        model.getFullData().put(ConfigConstants.TRANSDUCER_TO_KEEL, 1.5); 
         model.getFullData().put(ConfigConstants.SOG_DISPLAY_UNIT, "kt");
         model.getFullData().put(ConfigConstants.STW_DISPLAY_UNIT, "kt");
         model.getFullData().put(ConfigConstants.DEPTH_DISPLAY_UNIT, "ft");
