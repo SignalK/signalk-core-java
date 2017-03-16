@@ -84,6 +84,8 @@ public class SignalKModelImplTest {
 		signalk.putAll(TestHelper.getBasicModel().getFullData());
 		
 		logger.debug(signalk);
+		int size = signalk.getSubMap(vessels+dot+"self").size();
+		logger.debug("Size:"+size);
 		
 		signalk.putValue("vessels.self.environment.wind.angleApparent", 256.0d);
 		
@@ -93,8 +95,8 @@ public class SignalKModelImplTest {
 		
 		assertEquals(15, signalk.getSubMap(vessels+dot+"self"+dot+env_wind).size());
 //		assertEquals(105, signalk.getSubMap(vessels+dot+"self").size());
-                // now 106 due to addition of speedThroughWater key
-                assertEquals(106, signalk.getSubMap(vessels+dot+"self").size());
+        // now 106 due to addition of speedThroughWater key
+        assertEquals(size, signalk.getSubMap(vessels+dot+"self").size());
 	}
 
 	@Test

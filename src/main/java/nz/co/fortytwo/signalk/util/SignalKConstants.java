@@ -43,6 +43,7 @@ public class SignalKConstants {
 	public static final String MI_PER_HR = "mi/hr"; // mi/hr
 	public static final String NM_PER_HR = "Kt";    // knots
 	
+	
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
 	public static final String self_str =  "self";

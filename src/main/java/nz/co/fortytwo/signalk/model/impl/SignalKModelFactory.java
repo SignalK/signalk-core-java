@@ -22,8 +22,10 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
+import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,8 +145,10 @@ public class SignalKModelFactory {
                 Json temp = Json.read(jsonFile.toURI().toURL());
                 JsonSerializer ser = new JsonSerializer();
                 model.putAll(ser.read(temp));
+                insertMetaToModel(model);
+                removeOtherVessels(model);
                 logger.info("   Saved state loaded from " + rootPath + SIGNALK_MODEL_SAVE_FILE);
-                loadConfig(model);
+                //loadConfig(model);
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
             }
@@ -153,13 +157,24 @@ public class SignalKModelFactory {
         }
     }
 
-    /**
+    private static void removeOtherVessels(SignalKModel model) throws IOException {
+    	String self = (String) model.get(ConfigConstants.UUID);
+        Util.setSelf(self);
+        for(String key:model.getKeys()){
+        	if(key.startsWith(vessels+dot+self))continue;
+        	model.clearAttr(key, false);
+        }
+        save(model);
+		
+	}
+
+	/**
      * Extracts the values for selected ConfigConstants keys and inserts them
      * into the SignalK model using the appropriate SignalKConstants keys.
      *
      * @param model the SignalK model
      */
-    public static void insertConfig(SignalKModel model) {
+    public static void insertMetaToModel(SignalKModel model) {
 
         String self = (String) model.get(ConfigConstants.UUID);
 
@@ -303,7 +318,6 @@ public class SignalKModelFactory {
                 Json temp = Json.read(jsonFile.toURI().toURL());
                 JsonSerializer ser = new JsonSerializer();
                 model.putAll(ser.read(temp));
-                insertConfig(model);
                 logger.info("   Saved config loaded from " + rootPath + SIGNALK_CFG_SAVE_FILE);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
@@ -321,7 +335,6 @@ public class SignalKModelFactory {
             Util.setSelf(SignalKConstants.self);
             model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
             // insert the configuration parameters into the model with the SignalKConstants keys
-            insertConfig(model);
             //        save(model);
         }
     }

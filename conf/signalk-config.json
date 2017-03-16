@@ -1,11 +1,34 @@
 {
    "config": {
+      "environment": {
+         "depth": {
+            "meta": {
+               "alarmMethod": "visual",
+               "displayUnit": "ft",
+               "warnMethod": "visual",
+               "zones": [{"lower":"0.0","upper":"1.5","state":"alarm","message":"Danger"},{"lower":"1.5","upper":"1.65","state":"warn","message":"Shallow Water"},{"lower":"1.65","upper":"9999","state":"normal","message":""}]
+            },
+            "surfaceToTransducer": 0.4572
+         }
+      },
       "hawtio": {
          "authenticationEnabled": false,
          "context": "/hawtio",
          "port": 8000,
          "start": false,
          "war": "./hawtio/hawtio-default-offline-1.4.48.war"
+      },
+      "jolokia": {
+         "authenticationEnabled": false,
+         "context": "/jolokia",
+         "port": 8001,
+         "war": "./hawtio/jolokia-war-1.3.3.war"
+      },
+      "navigation": {
+         "meta": {
+            "sogDisplayUnit": "kt",
+            "stwDisplayUnit": "kt"
+         }
       },
       "server": {
          "apps": {
@@ -24,15 +47,11 @@
             "start": false
          },
          "files": {
-            "cfg": {
-               "dir": "./conf/",
-               "file": "signalk.cfg"
-            },
             "maps": {
-               "dir": "./mapcache"
+               "dir": "./mapcache/"
             },
             "static": {
-               "dir": "./signalk-static"
+               "dir": "./signalk-static/"
             },
             "storage": {
                "root": "./storage/"
@@ -41,44 +60,53 @@
                "usbdrive": "/media/usb0"
             }
          },
+         "security": {
+            "config": {
+               "ip": ["10.1.1.40/8","127.0.0.1/8"]
+            }
+         },
          "serial": {
-            "baud": 38400.0,
+            "baud": 38400,
+            "enable": true,
             "ports": ["/dev/ttyUSB0","/dev/ttyUSB1","/dev/ttyUSB2","/dev/ttyACM0","/dev/ttyACM1","/dev/ttyACM2"]
          },
          "server": {
             "mqtt": {
-               "port": 1883.0,
+               "port": 1883,
                "start": true
             },
             "nmea": {
                "generate0183": true
             },
             "rest": {
-               "port": 8080.0
+               "port": 8080
             },
             "stomp": {
-               "port": 61613.0,
+               "port": 61613,
                "start": true
             },
             "tcp": {
                "nmea": {
-                  "port": 55557.0
+                  "port": 55557
                },
-               "port": 55555.0
+               "port": 55555
             },
             "udp": {
                "nmea": {
-                  "port": 55556.0
+                  "port": 55556
                },
-               "port": 55554.0
+               "port": 55554
             },
             "websocket": {
-               "port": 3000.0
+               "port": 3000
+            },
+            "zeroconf": {
+               "auto": true
             }
          },
          "version": "v1.0.0",
          "vessel": {
-            "uuid": "motu"
+            "uuid": "urn:mrn:signalk:uuid:a3060422-c8d0-4a8a-8813-f886dde75cd2"
          }
       }
    }
