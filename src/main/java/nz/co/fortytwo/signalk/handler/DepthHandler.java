@@ -63,7 +63,7 @@ public class DepthHandler {
         double surfaceToTransducer = 0;
         double transducerToKeel = 0;
         double depthBelowKeel = 0;
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer("");
         try {
             depthBelowTransducer = (double) signalkModel.getValue(vessels_dot_self_dot + env_depth_belowTransducer);
             if (logger.isDebugEnabled()) {
@@ -73,6 +73,8 @@ public class DepthHandler {
             }
         } catch (NullPointerException e) {
             // No depth data available
+            logger.debug("No depth data available");
+            logger.info("No depth data available");
             return;
         }
         try {
@@ -85,6 +87,8 @@ public class DepthHandler {
             signalkModel.put(vessels_dot_self_dot + env_depth_belowSurface, depthBelowSurface, self, Util.getIsoTimeString());
         } catch (NullPointerException e) {
             //no suface to transducer data available
+            logger.debug(sb.toString());
+            return;
         }
         try {
             transducerToKeel = (double) signalkModel.get(vessels_dot_self_dot + env_depth_transducerToKeel);
@@ -95,7 +99,9 @@ public class DepthHandler {
             }
             signalkModel.put(vessels_dot_self_dot + env_depth_belowKeel, depthBelowKeel, self, Util.getIsoTimeString());
         } catch (NullPointerException e) {
-            logger.error(e.getMessage(), e);
+            // No transducerToKeel info available.
+            logger.debug(sb.toString());
+            return;
         }
         logger.debug(sb.toString());
     }
