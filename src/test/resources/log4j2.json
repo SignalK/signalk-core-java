@@ -67,7 +67,7 @@
 			},
 			{
 				"name": "nz.co.fortytwo.signalk.util",
-				"level": "error"
+				"level": "debug"
 			},
 			{
 				"name": "org.apache.camel",

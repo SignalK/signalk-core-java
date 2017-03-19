@@ -48,7 +48,7 @@ public class SignalKConstants {
 	public static final String vessels = "vessels";
 	public static final String self_str =  "self";
 	public static final String CONFIG = "config";
-        public static final String SIGNALK = "signalk";
+    public static final String SIGNALK = "signalk";
 	
 	public static String self = self_str;
  	public static String vessels_dot_self_dot=vessels+dot+self+dot;
@@ -169,20 +169,22 @@ public class SignalKConstants {
 	//temp
 	public static final String env_time_time = "environment.time.time";
 	public static final String env_time_date = "environment.time.date";
-	public static final String env_time_millis = "environment.time.millis";
 	public static final String env_time_utc = "environment.time.utc";
 	public static final String env_timezone = "environment.time.timezone";
 
 	//generated
 	public static final String resources="resources";
 	public static final String resources_charts="resources.charts";
+	public static final String resources_charts_id_bounds="resources.charts.*.bounds";
 	public static final String resources_charts_id_chartFormat="resources.charts.*.chartFormat";
+	public static final String resources_charts_id_chartLayers="resources.charts.*.chartLayers";
 	public static final String resources_charts_id_chartUrl="resources.charts.*.chartUrl";
 	public static final String resources_charts_id_description="resources.charts.*.description";
 	public static final String resources_charts_id_geohash="resources.charts.*.geohash";
 	public static final String resources_charts_id_identifier="resources.charts.*.identifier";
 	public static final String resources_charts_id_name="resources.charts.*.name";
 	public static final String resources_charts_id_region="resources.charts.*.region";
+	public static final String resources_charts_id_scale="resources.charts.*.scale";
 	public static final String resources_charts_id_tilemapUrl="resources.charts.*.tilemapUrl";
 	public static final String resources_notes="resources.notes";
 	public static final String resources_notes_id_description="resources.notes.*.description";
@@ -227,21 +229,14 @@ public class SignalKConstants {
 	public static final String resources_waypoints_id_position_altitude="resources.waypoints.*.position.altitude";
 	public static final String resources_waypoints_id_position_latitude="resources.waypoints.*.position.latitude";
 	public static final String resources_waypoints_id_position_longitude="resources.waypoints.*.position.longitude";
-	
 	public static final String sources="sources";
 	public static final String sources_id_hardwareVersion="sources.*.hardwareVersion";
-	public static final String sources_id_id_manufacturer="sources.*.id.manufacturer";
-	public static final String sources_id_id_manufacturer_hardwareVersion="sources.*.id.manufacturer.hardwareVersion";
-	public static final String sources_id_id_manufacturer_id="sources.*.id.manufacturer.id";
-	public static final String sources_id_id_manufacturer_modelId="sources.*.id.manufacturer.modelId";
-	public static final String sources_id_id_manufacturer_name="sources.*.id.manufacturer.name";
-	public static final String sources_id_id_manufacturer_productId="sources.*.id.manufacturer.productId";
-	public static final String sources_id_id_manufacturer_serialNumber="sources.*.id.manufacturer.serialNumber";
-	public static final String sources_id_id_manufacturer_softwareVersion="sources.*.id.manufacturer.softwareVersion";
 	public static final String sources_id_id_n2k="sources.*.id.n2k";
 	public static final String sources_id_id_n2k_deviceClass="sources.*.id.n2k.deviceClass";
 	public static final String sources_id_id_n2k_deviceFunction="sources.*.id.n2k.deviceFunction";
+	public static final String sources_id_id_n2k_manufacturerId="sources.*.id.n2k.manufacturerId";
 	public static final String sources_id_id_n2k_pgns="sources.*.id.n2k.pgns";
+	public static final String sources_id_id_n2k_productID="sources.*.id.n2k.productID";
 	public static final String sources_id_id_n2k_src="sources.*.id.n2k.src";
 	public static final String sources_id_id_n2k_uniqueId="sources.*.id.n2k.uniqueId";
 	public static final String sources_id_id_sentences="sources.*.id.sentences";
@@ -249,16 +244,12 @@ public class SignalKConstants {
 	public static final String sources_id_installationNote1="sources.*.installationNote1";
 	public static final String sources_id_installationNote2="sources.*.installationNote2";
 	public static final String sources_id_label="sources.*.label";
-	public static final String sources_id_manufacturer="sources.*.manufacturer";
 	public static final String sources_id_manufacturerInfo="sources.*.manufacturerInfo";
-	public static final String sources_id_productClass="sources.*.productClass";
-	public static final String sources_id_productCode="sources.*.productCode";
-	public static final String sources_id_productFunction="sources.*.productFunction";
+	public static final String sources_id_manufacturerName="sources.*.manufacturerName";
 	public static final String sources_id_productName="sources.*.productName";
-	public static final String sources_id_serialNo="sources.*.serialNo";
+	public static final String sources_id_serialNumber="sources.*.serialNumber";
 	public static final String sources_id_softwareVersion="sources.*.softwareVersion";
 	public static final String sources_id_type="sources.*.type";
-
 	public static final String communication="communication";
 	public static final String communication_callsignHf="communication.callsignHf";
 	public static final String communication_callsignVhf="communication.callsignVhf";
@@ -366,13 +357,13 @@ public class SignalKConstants {
 	public static final String env_current_setTrue="environment.current.setTrue";
 	public static final String env_depth="environment.depth";
 	public static final String env_depth_belowKeel="environment.depth.belowKeel";
-	public static final String env_depth_displayUnit="environment.depth.meta.displayUnit";
-	public static final String env_depth_alarmMethod="environment.depth.meta.alarmMethod";
-	public static final String env_depth_warnMethod="environment.depth.meta.warnMethod";
 	public static final String env_depth_belowSurface="environment.depth.belowSurface";
 	public static final String env_depth_belowTransducer="environment.depth.belowTransducer";
 	public static final String env_depth_surfaceToTransducer="environment.depth.surfaceToTransducer";
 	public static final String env_depth_transducerToKeel="environment.depth.transducerToKeel";
+	public static final String env_depth_alarmMethod = "environment.depth.belowTransducer.meta.alarmMethod";
+	public static final String env_depth_warnMethod = "environment.depth.belowTransducer.meta.warnMethod";
+	public static final String env_depth_displayUnit = "environment.depth.belowTransducer.meta.units";
 	public static final String env_heave="environment.heave";
 	public static final String env_inside="environment.inside";
 	public static final String env_inside_engineRoom="environment.inside.engineRoom";
@@ -393,6 +384,7 @@ public class SignalKConstants {
 	public static final String env_outside_dewPointTemperature="environment.outside.dewPointTemperature";
 	public static final String env_outside_heatIndexTemperature="environment.outside.heatIndexTemperature";
 	public static final String env_outside_humidity="environment.outside.humidity";
+	public static final String env_outside_illuminance="environment.outside.illuminance";
 	public static final String env_outside_pressure="environment.outside.pressure";
 	public static final String env_outside_temperature="environment.outside.temperature";
 	public static final String env_outside_theoreticalWindChillTemperature="environment.outside.theoreticalWindChillTemperature";
@@ -403,8 +395,9 @@ public class SignalKConstants {
 	public static final String env_tide_timeHigh="environment.tide.timeHigh";
 	public static final String env_tide_timeLow="environment.tide.timeLow";
 	public static final String env_time="environment.time";
-
-	public static final String env_time_timezone="environment.time.timezone";
+	public static final String env_time_millis="environment.time.millis";
+	public static final String env_time_timezoneOffset="environment.time.timezoneOffset";
+	public static final String env_time_timezoneRegion="environment.time.timezoneRegion";
 	public static final String env_water="environment.water";
 	public static final String env_water_baitWell="environment.water.baitWell";
 	public static final String env_water_baitWell_temperature="environment.water.baitWell.temperature";
@@ -437,34 +430,56 @@ public class SignalKConstants {
 	public static final String nav_attitude_pitch="navigation.attitude.pitch";
 	public static final String nav_attitude_roll="navigation.attitude.roll";
 	public static final String nav_attitude_yaw="navigation.attitude.yaw";
+	
 	public static final String nav_course="navigation.course";
 	public static final String nav_course_activeRoute="navigation.course.activeRoute";
-	public static final String nav_course_activeRoute_estimatedTimeOfArrival="navigation.course.activeRoute.estimatedTimeOfArrival";
-	public static final String nav_course_activeRoute_href="navigation.course.activeRoute.href";
-	public static final String nav_course_activeRoute_startTime="navigation.course.activeRoute.startTime";
-	public static final String nav_course_bearingTrackMagnetic="navigation.course.bearingTrackMagnetic";
-	public static final String nav_course_bearingTrackTrue="navigation.course.bearingTrackTrue";
-	public static final String nav_course_crossTrackError="navigation.course.crossTrackError";
-	public static final String nav_course_nextPoint="navigation.course.nextPoint";
-	public static final String nav_course_nextPoint_bearingMagnetic="navigation.course.nextPoint.bearingMagnetic";
-	public static final String nav_course_nextPoint_bearingTrue="navigation.course.nextPoint.bearingTrue";
-	public static final String nav_course_nextPoint_distance="navigation.course.nextPoint.distance";
-	public static final String nav_course_nextPoint_href="navigation.course.nextPoint.href";
-	public static final String nav_course_nextPoint_position="navigation.course.nextPoint.position";
-	public static final String nav_course_nextPoint_position_latitude="navigation.course.nextPoint.position.latitude";
-	public static final String nav_course_nextPoint_position_longitude="navigation.course.nextPoint.position.longitude";
-	public static final String nav_course_nextPoint_timeToGo="navigation.course.nextPoint.timeToGo";
-	public static final String nav_course_nextPoint_type="navigation.course.nextPoint.type";
-	public static final String nav_course_nextPoint_velocityMadeGood="navigation.course.nextPoint.velocityMadeGood";
-	public static final String nav_course_previousPoint="navigation.course.previousPoint";
-	public static final String nav_course_previousPoint_distance="navigation.course.previousPoint.distance";
-	public static final String nav_course_previousPoint_href="navigation.course.previousPoint.href";
-	public static final String nav_course_previousPoint_position="navigation.course.previousPoint.position";
-	public static final String nav_course_previousPoint_position_latitude="navigation.course.previousPoint.position.latitude";
-	public static final String nav_course_previousPoint_position_longitude="navigation.course.previousPoint.position.longitude";
-	public static final String nav_course_previousPoint_type="navigation.course.previousPoint.type";
+	public static final String nav_courseGreatCircle="navigation.courseGreatCircle";
+	public static final String nav_courseGreatCircle_activeRoute="navigation.courseGreatCircle.activeRoute";
+	public static final String nav_courseGreatCircle_activeRoute_estimatedTimeOfArrival="navigation.courseGreatCircle.activeRoute.estimatedTimeOfArrival";
+	public static final String nav_courseGreatCircle_activeRoute_href="navigation.courseGreatCircle.activeRoute.href";
+	public static final String nav_courseGreatCircle_activeRoute_startTime="navigation.courseGreatCircle.activeRoute.startTime";
+	public static final String nav_courseGreatCircle_bearingTrackMagnetic="navigation.courseGreatCircle.bearingTrackMagnetic";
+	public static final String nav_courseGreatCircle_bearingTrackTrue="navigation.courseGreatCircle.bearingTrackTrue";
+	public static final String nav_courseGreatCircle_crossTrackError="navigation.courseGreatCircle.crossTrackError";
+	public static final String nav_courseGreatCircle_nextPoint="navigation.courseGreatCircle.nextPoint";
+	public static final String nav_courseGreatCircle_nextPoint_bearingMagnetic="navigation.courseGreatCircle.nextPoint.bearingMagnetic";
+	public static final String nav_courseGreatCircle_nextPoint_bearingTrue="navigation.courseGreatCircle.nextPoint.bearingTrue";
+	public static final String nav_courseGreatCircle_nextPoint_distance="navigation.courseGreatCircle.nextPoint.distance";
+	public static final String nav_courseGreatCircle_nextPoint_position="navigation.courseGreatCircle.nextPoint.position";
+	public static final String nav_courseGreatCircle_nextPoint_position_latitude="navigation.courseGreatCircle.nextPoint.position.latitude";
+	public static final String nav_courseGreatCircle_nextPoint_position_longitude="navigation.courseGreatCircle.nextPoint.position.longitude";
+	public static final String nav_courseGreatCircle_nextPoint_timeToGo="navigation.courseGreatCircle.nextPoint.timeToGo";
+	public static final String nav_courseGreatCircle_nextPoint_velocityMadeGood="navigation.courseGreatCircle.nextPoint.velocityMadeGood";
+	public static final String nav_courseGreatCircle_previousPoint="navigation.courseGreatCircle.previousPoint";
+	public static final String nav_courseGreatCircle_previousPoint_distance="navigation.courseGreatCircle.previousPoint.distance";
+	public static final String nav_courseGreatCircle_previousPoint_position="navigation.courseGreatCircle.previousPoint.position";
+	public static final String nav_courseGreatCircle_previousPoint_position_latitude="navigation.courseGreatCircle.previousPoint.position.latitude";
+	public static final String nav_courseGreatCircle_previousPoint_position_longitude="navigation.courseGreatCircle.previousPoint.position.longitude";
 	public static final String nav_courseOverGroundMagnetic="navigation.courseOverGroundMagnetic";
 	public static final String nav_courseOverGroundTrue="navigation.courseOverGroundTrue";
+	public static final String nav_courseRhumbline="navigation.courseRhumbline";
+	public static final String nav_courseRhumbline_activeRoute="navigation.courseRhumbline.activeRoute";
+	public static final String nav_courseRhumbline_activeRoute_estimatedTimeOfArrival="navigation.courseRhumbline.activeRoute.estimatedTimeOfArrival";
+	public static final String nav_courseRhumbline_activeRoute_href="navigation.courseRhumbline.activeRoute.href";
+	public static final String nav_courseRhumbline_activeRoute_startTime="navigation.courseRhumbline.activeRoute.startTime";
+	public static final String nav_courseRhumbline_bearingTrackMagnetic="navigation.courseRhumbline.bearingTrackMagnetic";
+	public static final String nav_courseRhumbline_bearingTrackTrue="navigation.courseRhumbline.bearingTrackTrue";
+	public static final String nav_courseRhumbline_crossTrackError="navigation.courseRhumbline.crossTrackError";
+	public static final String nav_courseRhumbline_nextPoint="navigation.courseRhumbline.nextPoint";
+	public static final String nav_courseRhumbline_nextPoint_bearingMagnetic="navigation.courseRhumbline.nextPoint.bearingMagnetic";
+	public static final String nav_courseRhumbline_nextPoint_bearingTrue="navigation.courseRhumbline.nextPoint.bearingTrue";
+	public static final String nav_courseRhumbline_nextPoint_distance="navigation.courseRhumbline.nextPoint.distance";
+	public static final String nav_courseRhumbline_nextPoint_position="navigation.courseRhumbline.nextPoint.position";
+	public static final String nav_courseRhumbline_nextPoint_position_latitude="navigation.courseRhumbline.nextPoint.position.latitude";
+	public static final String nav_courseRhumbline_nextPoint_position_longitude="navigation.courseRhumbline.nextPoint.position.longitude";
+	public static final String nav_courseRhumbline_nextPoint_timeToGo="navigation.courseRhumbline.nextPoint.timeToGo";
+	public static final String nav_courseRhumbline_nextPoint_velocityMadeGood="navigation.courseRhumbline.nextPoint.velocityMadeGood";
+	public static final String nav_courseRhumbline_previousPoint="navigation.courseRhumbline.previousPoint";
+	public static final String nav_courseRhumbline_previousPoint_distance="navigation.courseRhumbline.previousPoint.distance";
+	public static final String nav_courseRhumbline_previousPoint_position="navigation.courseRhumbline.previousPoint.position";
+	public static final String nav_courseRhumbline_previousPoint_position_latitude="navigation.courseRhumbline.previousPoint.position.latitude";
+	public static final String nav_courseRhumbline_previousPoint_position_longitude="navigation.courseRhumbline.previousPoint.position.longitude";
+
 	public static final String nav_datetime="navigation.datetime";
 	public static final String nav_datetime_gnssTimeSource="navigation.datetime.gnssTimeSource";
 	public static final String nav_destination="navigation.destination";
@@ -482,6 +497,7 @@ public class SignalKConstants {
 	public static final String nav_gnss_satellites="navigation.gnss.satellites";
 	public static final String nav_headingMagnetic="navigation.headingMagnetic";
 	public static final String nav_headingTrue="navigation.headingTrue";
+	public static final String nav_leewayAngle="navigation.leewayAngle";
 	public static final String nav_lights="navigation.lights";
 	public static final String nav_log="navigation.log";
 	public static final String nav_logTrip="navigation.logTrip";
@@ -503,44 +519,24 @@ public class SignalKConstants {
 	public static final String nav_racing_timeToStart="navigation.racing.timeToStart";
 	public static final String nav_rateOfTurn="navigation.rateOfTurn";
 	public static final String nav_speedOverGround="navigation.speedOverGround";
-	public static final String nav_sogDisplayUnit="navigation.meta.sogDisplayUnit";
+	public static final String nav_sogDisplayUnit="navigation.speedOverGround.meta.unit";
 	public static final String nav_speedThroughWater="navigation.speedThroughWater";
-	public static final String nav_stwDisplayUnit="navigation.meta.stwDisplayUnit";
-
-        public static final String nav_state="navigation.state";
+	public static final String nav_speedThroughWaterLongitudinal="navigation.speedThroughWaterLongitudinal";
+	public static final String nav_speedThroughWaterTransverse="navigation.speedThroughWaterTransverse";
+	public static final String nav_stwDisplayUnit="navigation.speedThroughWater.meta.unit";
+	
+	public static final String nav_state="navigation.state";
 	public static final String notifications="notifications";
 	public static final String notifications_abandon="notifications.abandon";
-	public static final String notifications_abandon_message="notifications.abandon.message";
-	public static final String notifications_abandon_method="notifications.abandon.method";
 	public static final String notifications_adrift="notifications.adrift";
-	public static final String notifications_adrift_message="notifications.adrift.message";
-	public static final String notifications_adrift_method="notifications.adrift.method";
 	public static final String notifications_collision="notifications.collision";
-	public static final String notifications_collision_message="notifications.collision.message";
-	public static final String notifications_collision_method="notifications.collision.method";
 	public static final String notifications_fire="notifications.fire";
-	public static final String notifications_fire_message="notifications.fire.message";
-	public static final String notifications_fire_method="notifications.fire.method";
 	public static final String notifications_flooding="notifications.flooding";
-	public static final String notifications_flooding_message="notifications.flooding.message";
-	public static final String notifications_flooding_method="notifications.flooding.method";
 	public static final String notifications_grounding="notifications.grounding";
-	public static final String notifications_grounding_message="notifications.grounding.message";
-	public static final String notifications_grounding_method="notifications.grounding.method";
-	public static final String notifications_id_message="notifications.*.message";
-	public static final String notifications_id_method="notifications.*.method";
 	public static final String notifications_listing="notifications.listing";
-	public static final String notifications_listing_message="notifications.listing.message";
-	public static final String notifications_listing_method="notifications.listing.method";
 	public static final String notifications_mob="notifications.mob";
-	public static final String notifications_mob_message="notifications.mob.message";
-	public static final String notifications_mob_method="notifications.mob.method";
 	public static final String notifications_piracy="notifications.piracy";
-	public static final String notifications_piracy_message="notifications.piracy.message";
-	public static final String notifications_piracy_method="notifications.piracy.method";
 	public static final String notifications_sinking="notifications.sinking";
-	public static final String notifications_sinking_message="notifications.sinking.message";
-	public static final String notifications_sinking_method="notifications.sinking.method";
 	public static final String performance="performance";
 	public static final String performance_beatAngle="performance.beatAngle";
 	public static final String performance_beatAngleTargetSpeed="performance.beatAngleTargetSpeed";
@@ -578,7 +574,6 @@ public class SignalKConstants {
 	public static final String propulsion_id_fuel_rate="propulsion.*.fuel.rate";
 	public static final String propulsion_id_fuel_type="propulsion.*.fuel.type";
 	public static final String propulsion_id_fuel_used="propulsion.*.fuel.used";
-	public static final String propulsion_id_fuelRate="propulsion.*.fuelRate";
 	public static final String propulsion_id_label="propulsion.*.label";
 	public static final String propulsion_id_oilPressure="propulsion.*.oilPressure";
 	public static final String propulsion_id_oilTemperature="propulsion.*.oilTemperature";
@@ -591,7 +586,6 @@ public class SignalKConstants {
 	public static final String propulsion_id_transmission_gearRatio="propulsion.*.transmission.gearRatio";
 	public static final String propulsion_id_transmission_oilPressure="propulsion.*.transmission.oilPressure";
 	public static final String propulsion_id_transmission_oilTemperature="propulsion.*.transmission.oilTemperature";
-	public static final String propulsion_id_waterTemperature="propulsion.*.waterTemperature";
 	public static final String registrations="registrations";
 	public static final String registrations_imo="registrations.imo";
 	public static final String registrations_local="registrations.local";
@@ -627,16 +621,18 @@ public class SignalKConstants {
 	public static final String steering_autopilot="steering.autopilot";
 	public static final String steering_autopilot_backlash="steering.autopilot.backlash";
 	public static final String steering_autopilot_deadZone="steering.autopilot.deadZone";
+	public static final String steering_autopilot_headingSource="steering_autopilot_headingSource";
 	public static final String steering_autopilot_gain="steering.autopilot.gain";
-	public static final String steering_autopilot_headingSource="steering.autopilot.headingSource";
 	public static final String steering_autopilot_maxDriveCurrent="steering.autopilot.maxDriveCurrent";
 	public static final String steering_autopilot_maxDriveRate="steering.autopilot.maxDriveRate";
 	public static final String steering_autopilot_mode="steering.autopilot.mode";
 	public static final String steering_autopilot_portLock="steering.autopilot.portLock";
 	public static final String steering_autopilot_starboardLock="steering.autopilot.starboardLock";
 	public static final String steering_autopilot_state="steering.autopilot.state";
-	public static final String steering_autopilot_targetHeadingMagnetic="steering.autopilot.targetHeadingMagnetic";
-	public static final String steering_autopilot_targetHeadingNorth="steering.autopilot.targetHeadingNorth";
+	public static final String steering_autopilot_target="steering.autopilot.target";
+	public static final String steering_autopilot_target_headingMagnetic="steering.autopilot.target.headingMagnetic";
+	public static final String steering_autopilot_target_headingTrue="steering.autopilot.target.headingTrue";
+	public static final String steering_autopilot_target_windAngleApparent="steering.autopilot.target.windAngleApparent";
 	public static final String steering_rudderAngle="steering.rudderAngle";
 	public static final String steering_rudderAngleTarget="steering.rudderAngleTarget";
 	public static final String tanks="tanks";
@@ -658,12 +654,6 @@ public class SignalKConstants {
 	public static final String tanks_fuel_id_currentVolume="tanks.fuel.*.currentVolume";
 	public static final String tanks_fuel_id_name="tanks.fuel.*.name";
 	public static final String tanks_fuel_id_type="tanks.fuel.*.type";
-	public static final String tanks_fuelWater="tanks.fuelWater";
-	public static final String tanks_fuelWater_id_capacity="tanks.fuelWater.*.capacity";
-	public static final String tanks_fuelWater_id_currentLevel="tanks.fuelWater.*.currentLevel";
-	public static final String tanks_fuelWater_id_currentVolume="tanks.fuelWater.*.currentVolume";
-	public static final String tanks_fuelWater_id_name="tanks.fuelWater.*.name";
-	public static final String tanks_fuelWater_id_type="tanks.fuelWater.*.type";
 	public static final String tanks_liveWell="tanks.liveWell";
 	public static final String tanks_liveWell_id_capacity="tanks.liveWell.*.capacity";
 	public static final String tanks_liveWell_id_currentLevel="tanks.liveWell.*.currentLevel";
@@ -682,11 +672,7 @@ public class SignalKConstants {
 	public static final String tanks_wasteWater_id_currentVolume="tanks.wasteWater.*.currentVolume";
 	public static final String tanks_wasteWater_id_name="tanks.wasteWater.*.name";
 	public static final String tanks_wasteWater_id_type="tanks.wasteWater.*.type";
-	
-	
-	
-	
-	
+
 
 	public SignalKConstants() {
 		super();

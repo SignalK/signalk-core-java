@@ -82,7 +82,8 @@ public class GenerateSignalkConstants {
 				//new File(schemaRoot,"specification/schemas/external/geojson/geometry.json"),
 				new File(schemaRoot,"specification/schemas/groups/environment.json"),
 				new File(schemaRoot,"specification/schemas/groups/tanks.json"),
-				new File(schemaRoot, "specification/schemas/groups/electrical.json")};
+				new File(schemaRoot, "specification/schemas/groups/electrical.json"),
+				new File(schemaRoot, "specification/schemas/groups/navigation.json")};
 		Map<String, Json> defMap=addDefinitions(definitions);
 		
 		//load schema

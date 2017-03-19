@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
+import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import mjson.Json;
@@ -85,6 +86,22 @@ public class JsonSerializer {
 	}
 
     /**
+     * Export the SortedMap model as a json string
+     * @param signalk
+     * @return
+     * @throws IOException
+     */
+    public String write(SortedMap<String,Object> map) throws IOException {
+    	StringBuilder buffer = new StringBuilder();
+    	if(map!=null ){
+    		write(map.entrySet().iterator(),'.',buffer);
+    	}else{
+    		buffer.append("{}");
+    	}
+		return buffer.toString();
+	}
+
+    /**
      * Write the values returned from the specified iterator to the specified output. If
      * no values are included then nothing is written, not even "{}"  and this method returns false.
      * A trailing newline is written only if the output is being pretty-printed.
@@ -143,14 +160,19 @@ public class JsonSerializer {
             if (value== null || "null".equals(value)) {
                 jsonNull(key,out);
             } else if (value instanceof String) {
-                jsonWrite((String)value, out);
+            	if(((String)value).startsWith("{")){
+            		 //out.append(Json.read((String)value).toString());
+            		 out.append((String)value);
+            	}else{
+            		jsonWrite((String)value, out);
+            	}
             } else if (value instanceof Integer) {
                 jsonWrite(((Integer)value).intValue(), out);
             } else if (value instanceof Number) {
                 jsonWrite(s[j], ((Number)value).doubleValue(), out);
             } else if (value instanceof Boolean) {
                 jsonWrite(((Boolean)value).booleanValue(), out);
-            } else if (value instanceof Json && ((Json)value).isArray()) {
+            } else if (value instanceof Json ) {
                 out.append(((Json)value).toString());
             } else  {
                 throw new IllegalStateException("Can't print value of type \""+value.getClass().getName()+"\" for key \""+key+"\"");

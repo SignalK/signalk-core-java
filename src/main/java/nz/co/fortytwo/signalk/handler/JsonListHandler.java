@@ -77,7 +77,6 @@ public class JsonListHandler {
 					||f.getName().startsWith("notifications")
 					||f.getName().startsWith("registrations")
 					||f.getName().startsWith("sails")
-					||f.getName().startsWith("notifications")
 					||f.getName().startsWith("tanks")
 					||f.getName().startsWith("uuid")
 					||f.getName().startsWith("mmsi")

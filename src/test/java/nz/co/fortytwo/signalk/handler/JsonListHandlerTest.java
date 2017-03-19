@@ -57,7 +57,7 @@ public class JsonListHandlerTest {
 //		assertEquals(79,reply.asList().size());
                 //  changed to 81 following the addition of navigation.meta.sogDisplayUnit", and 
                 //                                           navigation.meta.stwDisplayUnit" keys
-		assertEquals(81,reply.asList().size());
+		assertEquals(104,reply.asList().size());
 	}
 	
 	@Test
@@ -68,7 +68,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertEquals(31,reply.asList().size());
+		assertEquals(51,reply.asList().size());
 	}
 	
 	@Test
@@ -79,7 +79,7 @@ public class JsonListHandlerTest {
 		Json reply = processor.handle(json);
 		assertNotNull(reply);
 		logger.debug(reply);
-		assertEquals(31,reply.asList().size());
+		assertEquals(51,reply.asList().size());
 	}
 	@Test
 	public void shouldProduceSpecificPathList() throws Exception {

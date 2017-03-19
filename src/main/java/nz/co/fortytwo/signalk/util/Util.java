@@ -80,18 +80,18 @@ public class Util {
 
     private static Logger logger = LogManager.getLogger(Util.class);
     // private static Properties props;
-    private static SignalKModel model = null;
+    protected static SignalKModel model = null;
     public static SimpleDateFormat sdf = new SimpleDateFormat(
         "yyyy-MM-dd_hh:mm:ss");
     //public static File cfg = null;
     private static boolean timeSet = false;
     public static final double R = 6372800; // In meters
 
-    private static Pattern selfMatch = Pattern.compile("\\.self\\.");
-    private static String dot_self_dot = dot + self + dot;
+    protected static Pattern selfMatch = Pattern.compile("\\.self\\.");
+    protected static String dot_self_dot = dot + self + dot;
 
-    private static Pattern selfEndMatch = Pattern.compile("\\.self$");
-    private static String dot_self = dot + self;
+    protected static Pattern selfEndMatch = Pattern.compile("\\.self$");
+    protected static String dot_self = dot + self;
 
     private static String rootPath = "";
 
@@ -203,7 +203,7 @@ public class Util {
         model.getFullData().put(ConfigConstants.JOLOKIA_CONTEXT, "/jolokia");
         model.getFullData().put(ConfigConstants.JOLOKIA_WAR, "./hawtio/jolokia-war-1.3.3.war");
 
-        model.getFullData().put(ConfigConstants.VERSION, "v1.0.0");
+        model.getFullData().put(ConfigConstants.VERSION, "1.0.0");
         model.getFullData().put(ConfigConstants.ALLOW_INSTALL, true);
         model.getFullData().put(ConfigConstants.ALLOW_UPGRADE, true);
         model.getFullData().put(ConfigConstants.GENERATE_NMEA0183, true);
@@ -260,6 +260,8 @@ public class Util {
         msg.set(self_str, getConfigProperty(ConfigConstants.UUID));
         return msg;
     }
+    
+   
 
     public static String getVersion() {
         return getConfigProperty(ConfigConstants.VERSION);
