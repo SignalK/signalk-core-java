@@ -37,77 +37,87 @@ import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 import nz.co.fortytwo.signalk.util.AlarmManager;
 
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
-
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Scans the signal k model for alarm conditions and sets/unsets alarms
- * 
+ *
  * @author robert
- * 
+ *
  */
 public class AlarmHandler {
 
-	private static Logger logger = LogManager.getLogger(AlarmHandler.class);
-	
-	/**
-	 * Scans the signal k model for alarm conditions and sets/unsets alarms
-	 * Only looks at vessels.self
-	 * @param signalkModel
-	 */
-	public  void handle(SignalKModel signalkModel) {
-		try {
-			for(String key : signalkModel.getKeys()){
-				//we check if there is a key.meta key
-				//only check SignalKConstants.self
-				if(!key.startsWith(vessels_dot_self_dot))continue;
-				if(logger.isDebugEnabled())logger.debug("Checking :"+key);
-				//remove .value
-				key=key.replace(dot+value,"");
-				Object metaZones = signalkModel.get(key+dot+meta+dot+zones);
-				
-				if(metaZones!=null && metaZones instanceof Json && ((Json)metaZones).isArray()){
-					if(logger.isDebugEnabled())logger.debug("Checking zones:"+metaZones);
-					//if zones is empty clear the alarms
-					//String alarmKey = vessels_dot_self_dot+alarms+dot+key.substring(vessels_dot_self_dot.length());
-					//zones object
-					AlarmManager alarmManager = new AlarmManager((Json) metaZones);
-					
-					if (((Json)metaZones).asJsonList().size()==0){
-						//clear all alarms.
-						alarmManager.setAlarm(signalkModel,key, normal,null);
-					}
-					Number val = (Number)signalkModel.getValue(key);
-					if(logger.isDebugEnabled())logger.debug("Checking value:"+val+"="+alarmManager.isAlarm(val));
-					//get key.value
-					if(alarmManager.isAlarm(val)){
-						//set the alarm in vessels.self.alarms.key
-						String msg = (String) signalkModel.get(key+dot+meta+dot+alarmMessage);
-						alarmManager.setAlarm(signalkModel,key, alarm, msg);
-						
-					}
-					if(alarmManager.isWarn(val)){
-						//set the alarm
-						String msg = (String) signalkModel.get(key+dot+meta+dot+warnMessage);
-						alarmManager.setAlarm(signalkModel,key, warn, msg);
-						
-					}
-					if(alarmManager.isNormal(val)){
-						//clear the alarms
-						alarmManager.setAlarm(signalkModel,key, normal,null);
-						
-					}
-				}
-			}
+    private static Logger logger = LogManager.getLogger(AlarmHandler.class);
 
-		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
-		}
-	
-	}
+    /**
+     * Scans the signal k model for alarm conditions and sets/unsets alarms Only
+     * looks at vessels.self
+     *
+     * @param signalkModel
+     */
+    public void handle(SignalKModel signalkModel) {
+        try {
+            for (String key : signalkModel.getKeys()) {
+                //we check if there is a key.meta key
+                //only check SignalKConstants.self
+                if (!key.startsWith(vessels_dot_self_dot)) {
+                    continue;
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Checking :" + key);
+                }
+                //remove .value
+                key = key.replace(dot + value, "");
+                Object metaZones = signalkModel.get(key + dot + meta + dot + zones);
 
-	
+                if (metaZones != null && metaZones instanceof Json && ((Json) metaZones).isArray()) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Checking zones:" + metaZones);
+                    }
+                    //if zones is empty clear the alarms
+                    //String alarmKey = vessels_dot_self_dot+alarms+dot+key.substring(vessels_dot_self_dot.length());
+                    //zones object
+                    AlarmManager alarmManager = new AlarmManager((Json) metaZones);
 
-	
+                    if (((Json) metaZones).asJsonList().size() == 0) {
+                        //clear all alarms.
+                        alarmManager.setAlarm(signalkModel, key, normal, null);
+                    }
+                    Number val = (Number) signalkModel.getValue(key);
+                    Json zone = null;
+                    String msg = "";
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Checking alarm value:" + val + "=" + alarmManager.isAlarm(val));
+                        logger.debug("Checking warn  value:" + val + "=" + alarmManager.isWarn(val));
+                        logger.debug("Checking nomal value:" + val + "=" + alarmManager.isNormal(val));
+                    }
+                    //get key.value
+                    if (alarmManager.isAlarm(val)) {
+                        //set the alarm in vessels.self.alarms.key
+                        zone =  ((Json)metaZones).at(0);
+                        msg = zone.at("message").asString();
+                        alarmManager.setAlarm(signalkModel, key, alarm, msg);
+
+                    }
+                    if (alarmManager.isWarn(val)) {
+                        //set the alarm
+                        zone =  ((Json)metaZones).at(0);
+                        msg = zone.at("message").asString();
+                        alarmManager.setAlarm(signalkModel, key, warn, msg);
+                    }
+                    if (alarmManager.isNormal(val)) {
+                        //clear the alarms
+                        alarmManager.setAlarm(signalkModel, key, normal, null);
+
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+    }
+
 }

@@ -24,9 +24,9 @@ public class AlarmManager {
 	public boolean isNormal(Number value){
 		Double val = value.doubleValue();
 		for(Json zone : zones.asJsonList()){
-			if(normal.equals(zone.at(2).asString())){
-				double low = zone.at(0).asDouble();
-				double high = zone.at(1).asDouble();
+			if(normal.equals(zone.at("state").asString())){
+				double low = zone.at("lower").asDouble();
+				double high = zone.at("upper").asDouble();
 				if(Math.min(low, val)==val)return false;
 				if(Math.max(high, val)==val)return false;
 				if(logger.isDebugEnabled())logger.debug("In normal zone:"+value);
@@ -39,9 +39,9 @@ public class AlarmManager {
 	public boolean isWarn(Number value){
 		Double val = value.doubleValue();
 		for(Json zone : zones.asJsonList()){
-			if(warn.equals(zone.at(2).asString())){
-				double low = zone.at(0).asDouble();
-				double high = zone.at(1).asDouble();
+			if(warn.equals(zone.at("state").asString())){
+				double low = zone.at("lower").asDouble();
+				double high = zone.at("upper").asDouble();
 				if(Math.min(low, val)==val)return false;
 				if(Math.max(high, val)==val)return false;
 				//its between 
@@ -54,10 +54,10 @@ public class AlarmManager {
 	public boolean isAlarm(Number value){
 		Double val = value.doubleValue();
 		for(Json zone : zones.asJsonList()){
-			if(alarm.equals(zone.at(2).asString())){
+			if(alarm.equals(zone.at("state").asString())){
 				if(logger.isDebugEnabled())logger.debug("checking zone:"+zone);
-				double low = zone.at(0).asDouble();
-				double high = zone.at(1).asDouble();
+				double low = zone.at("lower").asDouble();
+				double high = zone.at("upper").asDouble();
 				if(Math.min(low, val)==low && Math.max(high, val)==high){
 					//its between 
 					if(logger.isDebugEnabled())logger.debug("In alarm zone:"+value);

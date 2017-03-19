@@ -366,7 +366,7 @@ public class SignalKConstants {
 	public static final String env_current_setTrue="environment.current.setTrue";
 	public static final String env_depth="environment.depth";
 	public static final String env_depth_belowKeel="environment.depth.belowKeel";
-	public static final String env_depth_displayUnit="environment.depth.meta.displayUnit";
+	public static final String env_depth_meta_displayUnit="environment.depth.meta.displayUnit";
 	public static final String env_depth_alarmMethod="environment.depth.meta.alarmMethod";
 	public static final String env_depth_warnMethod="environment.depth.meta.warnMethod";
 	public static final String env_depth_belowSurface="environment.depth.belowSurface";
