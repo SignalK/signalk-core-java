@@ -362,9 +362,9 @@ public class SignalKConstants {
 	public static final String env_depth_belowTransducer="environment.depth.belowTransducer";
 	public static final String env_depth_surfaceToTransducer="environment.depth.surfaceToTransducer";
 	public static final String env_depth_transducerToKeel="environment.depth.transducerToKeel";
-	public static final String env_depth_alarmMethod = "environment.depth.belowTransducer.meta.alarmMethod";
-	public static final String env_depth_warnMethod = "environment.depth.belowTransducer.meta.warnMethod";
-	public static final String env_depth_displayUnit = "environment.depth.belowTransducer.meta.units";
+	public static final String env_depth_alarmMethod = "environment.depth.belowSurface.meta.alarmMethod";
+	public static final String env_depth_warnMethod = "environment.depth.belowSurface.meta.warnMethod";
+	public static final String env_depth_displayUnit = "environment.depth.belowSurface.meta.units";
 	public static final String env_heave="environment.heave";
 	public static final String env_inside="environment.inside";
 	public static final String env_inside_engineRoom="environment.inside.engineRoom";

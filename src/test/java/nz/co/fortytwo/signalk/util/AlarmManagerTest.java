@@ -32,7 +32,7 @@ public class AlarmManagerTest {
 
 	@Test
 	public void shouldNotBeAlarm() {
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		assertFalse(mgr.isAlarm(30));
 		assertFalse(mgr.isAlarm(0));
@@ -42,7 +42,7 @@ public class AlarmManagerTest {
 	
 	@Test
 	public void shouldBeAlarm() {
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		assertTrue(mgr.isAlarm(55));
 		assertTrue(mgr.isAlarm(50.001));
@@ -50,7 +50,7 @@ public class AlarmManagerTest {
 
 	@Test
 	public void shouldNotBeWarn() {
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		assertFalse(mgr.isWarn(30));
 		assertFalse(mgr.isWarn(0));
@@ -61,7 +61,7 @@ public class AlarmManagerTest {
 	
 	@Test
 	public void shouldBeWarn() {
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		assertTrue(mgr.isWarn(46.7));
 		
@@ -69,7 +69,7 @@ public class AlarmManagerTest {
 	
 	@Test
 	public void shouldNotBeNormal() {
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		assertFalse(mgr.isNormal(-1));
 		assertFalse(mgr.isNormal(0));
@@ -80,7 +80,7 @@ public class AlarmManagerTest {
 	
 	@Test
 	public void shouldBeNormal() {
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		assertTrue(mgr.isNormal(0.001));
 		assertTrue(mgr.isNormal(3.56));
@@ -90,7 +90,7 @@ public class AlarmManagerTest {
 	
 	@Test
 	public void shouldSetAlarm(){
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		Util.setSelf("motu");
@@ -101,7 +101,7 @@ public class AlarmManagerTest {
 	}
 	@Test
 	public void shouldSetAlarmWithNullMessage(){
-		Json zones = Json.read("[[0,45,\"normal\"],[45,50,\"warn\"],[50,99,\"alarm\"]]");
+		Json zones = Json.read("[{\"lower\":0,\"upper\":45,\"state\":\"normal\"},{\"lower\":45,\"upper\":50,\"state\":\"warn\"},{\"lower\":50,\"upper\":99,\"state\":\"alarm\"}]");
 		AlarmManager mgr = new AlarmManager(zones);
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		Util.setSelf("motu");
