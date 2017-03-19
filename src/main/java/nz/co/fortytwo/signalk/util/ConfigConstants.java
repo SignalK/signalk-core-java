@@ -133,6 +133,7 @@ public class ConfigConstants {
         
         //Instrument Offsets, Display Units, Adjustments
         public static final String SURFACE_TO_TRANSDUCER = "config.environment.depth.surfaceToTransducer";
+        public static final String TRANSDUCER_TO_KEEL = "config.environment.depth.transducerToKeel";
         public static final String SOG_DISPLAY_UNIT = "config.navigation.meta.sogDisplayUnit";
         public static final String DEPTH_DISPLAY_UNIT = "config.environment.depth.meta.displayUnit";
         public static final String STW_DISPLAY_UNIT = "config.navigation.meta.stwDisplayUnit";

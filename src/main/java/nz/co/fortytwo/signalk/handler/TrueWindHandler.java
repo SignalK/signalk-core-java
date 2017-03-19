@@ -63,7 +63,7 @@ public class TrueWindHandler {
                 // 0-360 from bow clockwise
 
                 double[] windCalc = calcTrueWindDirection(apparentWindSpeed, apparentDirection, vesselSpeed);
-                logger.info(String.format("App speed, dir: %3.1f %4f",Util.msToKnts(apparentWindSpeed), apparentDirection*360./TWO_PI));
+                logger.info(String.format("App speed, dir, vesselSpeed: %3.1f %4f %2.1f",Util.msToKnts(apparentWindSpeed), apparentDirection*360./TWO_PI, Util.msToKnts(vesselSpeed)));
                 logger.info(String.format("windCalc: %3.1f %4f",Util.msToKnts(windCalc[0]), windCalc[1]*360./TWO_PI));
                 if (windCalc != null) {
 
