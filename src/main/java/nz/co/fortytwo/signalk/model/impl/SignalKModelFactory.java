@@ -53,380 +53,331 @@ import org.apache.logging.log4j.Logger;
  */
 public class SignalKModelFactory {
 
-    private static final String SIGNALK_MODEL_SAVE_FILE = "./conf/self.json";
-    private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
-    private static Logger logger = LogManager.getLogger(SignalKModelFactory.class);
-    private static SignalKModel signalKModel;
-    private static String rootPath = "";
+	private static final String SIGNALK_MODEL_SAVE_FILE = "./conf/self.json";
+	private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
+	private static Logger logger = LogManager.getLogger(SignalKModelFactory.class);
+	private static SignalKModel signalKModel;
+	private static String rootPath = "";
 
-    static {
-        // lolgger is not initialized until after these statements are executedSystem.out.println("SignalKModelFactory static block");
-        rootPath = Util.getRootPath();
-        if (signalKModel == null) {
-            signalKModel = new SignalKModelImpl();
-        }
-        System.out.println("SignalKModelFactory static block Util.setDefaults()");
-        Util.setDefaults(signalKModel);
-        try {
-            System.out.println("SignalKModelFactory static block SignalKModelFactory.loadConfig(signalKModel)");
-            SignalKModelFactory.loadConfig(signalKModel);
-            AttrMapFactory.setAttrDefaults(AttrMapFactory.getInstance());
-            AttrMapFactory.loadConfig(AttrMapFactory.getInstance());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    /**
-     * Get the signalKModel singleton
-     *
-     * @return
-     */
-    public static synchronized SignalKModel getInstance() {
-        // if(signalKModel==null){
-        // signalKModel=new SignalKModelImpl();
-        // }
-        return signalKModel;
-    }
-
-    /**
-     * Returns a different clean instance - used for incoming message creation
-     * and testing! The model returned does not handle multiple values, if
-     * required this must be done manually
-     *
-     * @return
-     */
-    public static synchronized SignalKModel getCleanInstance() {
-        return new SignalKModelImpl(true);
-    }
-
-    /**
-     * Returns the signalk instance cleaned out and configured with self=motu -
-     * only needed for testing!
-     *
-     * @return
-     */
-    public static synchronized SignalKModel getMotuTestInstance() {
-        signalKModel.getFullData().clear();
-        Util.setDefaults(signalKModel);
-        loadConfig(signalKModel, "motu");
-        AttrMapFactory.setAttrDefaults(AttrMapFactory.getInstance());
-        try {
-            AttrMapFactory.loadConfig(AttrMapFactory.getInstance());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        signalKModel.getFullData().put(ConfigConstants.DEMO, false);
-        return signalKModel;
-    }
-
-    /**
-     * Returns a different clean instance - only needed for testing!
-     *
-     * @param root
-     * @return
-     */
-    public static synchronized SignalKModel getWrappedInstance(NavigableMap<String, Object> root) {
-        return new SignalKModelImpl(root);
-    }
-
-    /**
-     *
-     * @param model
-     */
-    public static void load(SignalKModel model) {
-        File jsonFile = new File(rootPath + SIGNALK_MODEL_SAVE_FILE);
-        logger.info("load(signalkModel) Checking for previous state: " + jsonFile.getAbsolutePath());
-        if (jsonFile.exists()) {
-            try {
-                Json temp = Json.read(jsonFile.toURI().toURL());
-                JsonSerializer ser = new JsonSerializer();
-                model.putAll(ser.read(temp));
-                insertMetaToModel(model);
-                removeOtherVessels(model);
-                logger.info("   Saved state loaded from " + rootPath + SIGNALK_MODEL_SAVE_FILE);
-                //loadConfig(model);
-            } catch (Exception ex) {
-                logger.error(ex.getMessage());
-            }
-        } else {
-            logger.info("   Saved state not found");
-        }
-    }
-
-    private static void removeOtherVessels(SignalKModel model) throws IOException {
-    	String self = (String) model.get(ConfigConstants.UUID);
-        Util.setSelf(self);
-        for(String key:model.getKeys()){
-        	if(key.startsWith(vessels+dot+self))continue;
-        	model.clearAttr(key, false);
-        }
-        save(model);
-		
+	static {
+		// lolgger is not initialized until after these statements are
+		// executedSystem.out.println("SignalKModelFactory static block");
+		rootPath = Util.getRootPath();
+		if (signalKModel == null) {
+			signalKModel = new SignalKModelImpl();
+		}
+		System.out.println("SignalKModelFactory static block Util.setDefaults()");
+		Util.setDefaults(signalKModel);
+		try {
+			System.out.println("SignalKModelFactory static block SignalKModelFactory.loadConfig(signalKModel)");
+			SignalKModelFactory.loadConfig(signalKModel);
+			AttrMapFactory.setAttrDefaults(AttrMapFactory.getInstance());
+			AttrMapFactory.loadConfig(AttrMapFactory.getInstance());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	/**
-     * Extracts the values for selected ConfigConstants keys and inserts them
-     * into the SignalK model using the appropriate SignalKConstants keys.
-     *
-     * @param model the SignalK model
-     */
-    public static void insertMetaToModel(SignalKModel model) {
+	 * Get the signalKModel singleton
+	 *
+	 * @return
+	 */
+	public static synchronized SignalKModel getInstance() {
+		// if(signalKModel==null){
+		// signalKModel=new SignalKModelImpl();
+		// }
+		return signalKModel;
+	}
 
-        String self = (String) model.get(ConfigConstants.UUID);
+	/**
+	 * Returns a different clean instance - used for incoming message creation
+	 * and testing! The model returned does not handle multiple values, if
+	 * required this must be done manually
+	 *
+	 * @return
+	 */
+	public static synchronized SignalKModel getCleanInstance() {
+		return new SignalKModelImpl(true);
+	}
 
-        Util.setSelf(self);
-        model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
-        //load other vessel specifics.
-        if (model.get(ConfigConstants.MMSI) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
-        }
-        if (model.get(ConfigConstants.NAME) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
-        }
-        if (model.get(ConfigConstants.FLAG) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
-        }
-        if (model.get(ConfigConstants.PORT) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
-        }
+	/**
+	 * Returns the signalk instance cleaned out and configured with self=motu -
+	 * only needed for testing!
+	 *
+	 * @return
+	 */
+	public static synchronized SignalKModel getMotuTestInstance() {
+		signalKModel.getFullData().clear();
+		Util.setDefaults(signalKModel);
+		loadConfig(signalKModel, "motu");
+		AttrMapFactory.setAttrDefaults(AttrMapFactory.getInstance());
+		try {
+			AttrMapFactory.loadConfig(AttrMapFactory.getInstance());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		signalKModel.getFullData().put(ConfigConstants.DEMO, false);
+		return signalKModel;
+	}
 
-        if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_alarmMethod, model.get(ConfigConstants.DEPTH_ALARM_METHOD));
-        }
+	/**
+	 * Returns a different clean instance - only needed for testing!
+	 *
+	 * @param root
+	 * @return
+	 */
+	public static synchronized SignalKModel getWrappedInstance(NavigableMap<String, Object> root) {
+		return new SignalKModelImpl(root);
+	}
 
-        if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_warnMethod, model.get(ConfigConstants.DEPTH_WARN_METHOD));
-        }
+	/**
+	 *
+	 * @param model
+	 */
+	public static void load(SignalKModel model) {
+		File jsonFile = new File(rootPath + SIGNALK_MODEL_SAVE_FILE);
+		logger.info("load(signalkModel) Checking for previous state: " + jsonFile.getAbsolutePath());
+		if (jsonFile.exists()) {
+			try {
+				Json temp = Json.read(jsonFile.toURI().toURL());
+				JsonSerializer ser = new JsonSerializer();
+				model.putAll(ser.read(temp));
+				// removeOtherVessels(model);
+				
+				logger.info("   Saved state loaded from " + rootPath + SIGNALK_MODEL_SAVE_FILE);
+				// loadConfig(model);
+			} catch (Exception ex) {
+				logger.error(ex.getMessage());
+			}
+		} else {
+			logger.info("   Saved state not found");
+		}
+		insertMetaToModel(model);
+	}
 
-        if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_meta_displayUnit, model.get(ConfigConstants.DEPTH_DISPLAY_UNIT));
-            String depthDisplayUnit = (String) model.get(ConfigConstants.DEPTH_DISPLAY_UNIT);
+	private static void removeOtherVessels(SignalKModel model) throws IOException {
+		String self = (String) model.get(ConfigConstants.UUID);
+		Util.setSelf(self);
+		for (String key : model.getData().keySet()) {
+			if (key.startsWith(vessels + dot + self))
+				continue;
+			model.getFullData().remove(key);
+		}
+		save(model);
 
-            if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
-                double offset = (double) model.get(ConfigConstants.SURFACE_TO_TRANSDUCER);
-                switch (depthDisplayUnit) {
-                    case SignalKConstants.M:
-                        break;
-                    case SignalKConstants.F:
-                        offset /= SignalKConstants.MTR_TO_FATHOM;
-                        break;
-                    case SignalKConstants.FT:
-                        offset /= SignalKConstants.MTR_TO_FEET;
-                        break;
-                }
-                model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_surfaceToTransducer, offset);
-            }
+	}
 
-            if (model.get(ConfigConstants.TRANSDUCER_TO_KEEL) != null) {
-                double offset = (double) model.get(ConfigConstants.TRANSDUCER_TO_KEEL);
-                switch (depthDisplayUnit) {
-                    case SignalKConstants.M:
-                        break;
-                    case SignalKConstants.F:
-                        offset /= SignalKConstants.MTR_TO_FATHOM;
-                        break;
-                    case SignalKConstants.FT:
-                        offset /= SignalKConstants.MTR_TO_FEET;
-                        break;
-                }
-                model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_transducerToKeel, offset);
-            }
+	/**
+	 * Extracts the values for selected ConfigConstants keys and inserts them
+	 * into the SignalK model using the appropriate SignalKConstants keys.
+	 *
+	 * @param model
+	 *            the SignalK model
+	 */
+	public static void insertMetaToModel(SignalKModel model) {
 
-            Double upper = new Double(0);
-            Double lower = new Double(0);
-            if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
-                Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
-                Json jArrayElem;
-                // Set the zones for alarm (0) and warn (1)
-                for (int i = 0; i < zones.asList().size(); i++) {
-                    jArrayElem = zones.at(i);
-                    switch (depthDisplayUnit) {
-                        case SignalKConstants.M:
-                            break;
-                        case SignalKConstants.F:
-                            upper = jArrayElem.at("upper").asDouble() / SignalKConstants.MTR_TO_FATHOM;
-                            lower = jArrayElem.at("lower").asDouble() / SignalKConstants.MTR_TO_FATHOM;
-                            break;
-                        case SignalKConstants.FT:
-                            upper = jArrayElem.at("upper").asDouble() / SignalKConstants.MTR_TO_FEET;
-                            lower = jArrayElem.at("lower").asDouble() / SignalKConstants.MTR_TO_FEET;
-                            break;
-                    }
-                    jArrayElem.set("upper", upper);
-                    jArrayElem.set("lower", lower);
-                    zones.set(i, jArrayElem);
-                }
+		String self = (String) model.get(ConfigConstants.UUID);
+		Util.setSelf(self);
 
-                // Set the normal zone using the settings for the warning zone
-                Json normalZone = Json.object("lower", zones.at(1).at("upper"), "upper", new Double(9999), "state", "normal", "message", "");
-                Json newZones = Json.array(zones.at(0), zones.at(1), normalZone);
+		model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
+		// load other vessel specifics.
+		if (model.get(ConfigConstants.MMSI) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
+		}
+		if (model.get(ConfigConstants.NAME) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
+		}
+		if (model.get(ConfigConstants.FLAG) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
+		}
+		if (model.get(ConfigConstants.PORT) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
+		}
 
-//                // set the zone for normal with the base at the top of warn zone
-//                switch (depthDisplayUnit) {
-//                    case SignalKConstants.M:
-//                        break;
-//                    case SignalKConstants.F:
-//                        zones.at(2).set("lower", new Double(zones.at(1).at("upper").asDouble() / SignalKConstants.MTR_TO_FATHOM));
-//                        zones.at(2).set("upper", new Double(9999. / SignalKConstants.MTR_TO_FATHOM));
-//                        break;
-//                    case SignalKConstants.FT:
-//                        zones.at(2).set("lower", new Double(zones.at(0).at("upper").asDouble() / SignalKConstants.MTR_TO_FEET));
-//                        zones.at(2).set("upper", new Double(9999. / SignalKConstants.MTR_TO_FEET));
-//                        break;
-//                }
+		if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_alarmMethod,
+					model.get(ConfigConstants.DEPTH_ALARM_METHOD));
+		}
 
-                // put the alarm zones in the proper position in the model
-                model.getFullData().put(SignalKConstants.vessels_dot_self_dot
-                    + SignalKConstants.env_depth_belowSurface
-                    + SignalKConstants.dot
-                    + SignalKConstants.meta
-                    + SignalKConstants.dot
-                    + SignalKConstants.zones,
-                     newZones);
-            }
-        }
+		if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_warnMethod,
+					model.get(ConfigConstants.DEPTH_WARN_METHOD));
+		}
 
-        if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot
-                + SignalKConstants.nav_sogDisplayUnit, model.get(ConfigConstants.SOG_DISPLAY_UNIT));
-        }
+		if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_meta_displayUnit,
+					model.get(ConfigConstants.DEPTH_DISPLAY_UNIT));
+		}
 
-        if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot
-                + SignalKConstants.nav_stwDisplayUnit, model.get(ConfigConstants.STW_DISPLAY_UNIT));
-        }
-        logger.info("   Inserted config values into SignalK model");
-    }
+		if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
+			double offset = (double) model.get(ConfigConstants.SURFACE_TO_TRANSDUCER);
+			model.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_surfaceToTransducer, offset,
+					"self");
+		}
 
-    /**
-     * Loads the previous signalk-config.json file if it exists. If it does not
-     * exist, it generates a new random uuid for self and inserts this into the
-     * model.
-     *
-     * @param model the SignalK model.
-     * @throws IOException
-     */
-    public static void loadConfig(SignalKModel model) throws IOException {
-        File jsonFile = new File(rootPath + SIGNALK_CFG_SAVE_FILE);
-        logger.info("loadConfig(signalkModel) Checking for previous config: " + jsonFile.getAbsolutePath());
-        if (jsonFile.exists()) {
-            try {
-                Json temp = Json.read(jsonFile.toURI().toURL());
-                JsonSerializer ser = new JsonSerializer();
-                model.putAll(ser.read(temp));
-                logger.info("   Saved config loaded from " + rootPath + SIGNALK_CFG_SAVE_FILE);
-            } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
-            }
-        } else {
-            logger.info("   Saved config not found, creating default");
-            //write a new one for next time
-            // Get the set of reasonabl defaults - they go in with the ConfigConstants keys
-            Util.setDefaults(model);
-            //create a uuid
-            String self = SignalKConstants.URN_UUID + UUID.randomUUID().toString();
-            //put the new random uuid into the model;
-            model.getFullData().put(ConfigConstants.UUID, self);
-            saveConfig(model);
-            Util.setSelf(SignalKConstants.self);
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
-            // insert the configuration parameters into the model with the SignalKConstants keys
-            //        save(model);
-        }
-    }
+		if (model.get(ConfigConstants.TRANSDUCER_TO_KEEL) != null) {
+			double offset = (double) model.get(ConfigConstants.TRANSDUCER_TO_KEEL);
+			model.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_transducerToKeel, offset,
+					"self");
+		}
 
-    private static void loadConfig(SignalKModel model, String self) {
-        File jsonFile = new File(rootPath + SIGNALK_CFG_SAVE_FILE);
-        logger.info("Checking for previous config: " + jsonFile.getAbsolutePath());
-        if (jsonFile.exists()) {
-            try {
-                Json temp = Json.read(jsonFile.toURI().toURL());
-                JsonSerializer ser = new JsonSerializer();
-                model.putAll(ser.read(temp));
-                model.getFullData().put(ConfigConstants.UUID, self);
-                Util.setSelf(self);
-                logger.info("   Saved config loaded from " + rootPath + SIGNALK_CFG_SAVE_FILE);
-                logger.info("   self set to: " + self);
-            } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
-            }
-        } else {
-            logger.info("   Saved config not found");
-        }
-    }
+		if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
+			Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
 
-    /**
-     * Save the current state of the signalk model
-     *
-     * @param model
-     * @throws IOException
-     */
-    public static void save(SignalKModel model) throws IOException {
-        if (model != null) {
-            File jsonFile = new File(rootPath + SIGNALK_MODEL_SAVE_FILE);
-            JsonSerializer ser = new JsonSerializer();
-            ser.setPretty(3);
-            Json modelJson = ser.writeJson(model);
-            //remove config
-            if (modelJson.has(SignalKConstants.CONFIG)) {
-                modelJson = modelJson.delAt(SignalKConstants.CONFIG);
-            }
-            FileUtils.writeStringToFile(jsonFile, modelJson.toString(), StandardCharsets.UTF_8);
-            logger.info("   Saved model state to " + rootPath + SIGNALK_MODEL_SAVE_FILE);
-        }
-    }
+			// put the alarm zones in the proper position in the model
+			model.getFullData()
+					.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_belowSurface
+							+ SignalKConstants.dot + SignalKConstants.meta + SignalKConstants.dot
+							+ SignalKConstants.zones, zones);
+		}
 
-    /**
-     * Save the current state of the signalk config
-     *
-     * @param model
-     * @throws IOException
-     */
-    public static void saveConfig(SignalKModel model) throws IOException {
-        saveConfig(model, new File(rootPath + SIGNALK_CFG_SAVE_FILE));
-    }
+		if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null){
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.nav_sogDisplayUnit,
+					model.get(ConfigConstants.SOG_DISPLAY_UNIT));
+		}
 
-    /**
-     *
-     * @param model
-     * @param jsonFile
-     * @throws IOException
-     */
-    public static void saveConfig(SignalKModel model, File jsonFile) throws IOException {
-        if (model != null) {
-            NavigableMap<String, Object> config = model.getSubMap(SignalKConstants.CONFIG);
-            JsonSerializer ser = new JsonSerializer();
-            ser.setPretty(3);
-            StringBuilder buffer = new StringBuilder();
-            if (config != null && config.size() > 0) {
-                ser.write(config.entrySet().iterator(), '.', buffer);
-            } else {
-                buffer.append("{}");
-            }
-            
-            FileUtils.writeStringToFile(jsonFile, buffer.toString(), StandardCharsets.UTF_8);
-            logger.debug("   Saved model state to " + rootPath + SIGNALK_CFG_SAVE_FILE);
-        }
+		if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null){
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.nav_stwDisplayUnit,
+					model.get(ConfigConstants.STW_DISPLAY_UNIT));
+		}
+		logger.info("   Inserted config values into SignalK model");
 
-    }
+	}
 
-    public static String writePretty(SignalKModel model) {
+	/**
+	 * Loads the previous signalk-config.json file if it exists. If it does not
+	 * exist, it generates a new random uuid for self and inserts this into the
+	 * model.
+	 *
+	 * @param model
+	 *            the SignalK model.
+	 * @throws IOException
+	 */
+	public static void loadConfig(SignalKModel model) throws IOException {
+		File jsonFile = new File(rootPath + SIGNALK_CFG_SAVE_FILE);
+		logger.info("loadConfig(signalkModel) Checking for previous config: " + jsonFile.getAbsolutePath());
+		if (jsonFile.exists()) {
+			try {
+				Json temp = Json.read(jsonFile.toURI().toURL());
+				JsonSerializer ser = new JsonSerializer();
+				model.putAll(ser.read(temp));
+				String self = (String) model.getFullData().get(ConfigConstants.UUID);
+				Util.setSelf(self);
+				logger.info("   Saved config loaded from " + rootPath + SIGNALK_CFG_SAVE_FILE);
+			} catch (Exception ex) {
+				logger.error(ex.getMessage(), ex);
+			}
+		} else {
+			logger.info("   Saved config not found, creating default");
+			// write a new one for next time
+			// Get the set of reasonabl defaults - they go in with the
+			// ConfigConstants keys
+			Util.setDefaults(model);
+			// create a uuid
+			String self = SignalKConstants.URN_UUID + UUID.randomUUID().toString();
+			// put the new random uuid into the model;
+			model.getFullData().put(ConfigConstants.UUID, self);
+			saveConfig(model);
+			Util.setSelf(self);
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
+			// insert the configuration parameters into the model with the
+			// SignalKConstants keys
+			// save(model);
+		}
+	}
 
-        StringBuilder buffer = null;
-        if (model != null) {
-            JsonSerializer ser = new JsonSerializer();
-            ser.setPretty(3);
-            buffer = new StringBuilder();
-            try {
-                buffer.append(ser.write(model));
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(SignalKModelFactory.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return buffer.toString();
-    }
+	private static void loadConfig(SignalKModel model, String self) {
+		File jsonFile = new File(rootPath + SIGNALK_CFG_SAVE_FILE);
+		logger.info("Checking for previous config: " + jsonFile.getAbsolutePath());
+		if (jsonFile.exists()) {
+			try {
+				Json temp = Json.read(jsonFile.toURI().toURL());
+				JsonSerializer ser = new JsonSerializer();
+				model.putAll(ser.read(temp));
+				model.getFullData().put(ConfigConstants.UUID, self);
+				Util.setSelf(self);
+				logger.info("   Saved config loaded from " + rootPath + SIGNALK_CFG_SAVE_FILE);
+				logger.info("   self set to: " + self);
+			} catch (Exception ex) {
+				logger.error(ex.getMessage(), ex);
+			}
+		} else {
+			logger.info("   Saved config not found");
+		}
+	}
+
+	/**
+	 * Save the current state of the signalk model
+	 *
+	 * @param model
+	 * @throws IOException
+	 */
+	public static void save(SignalKModel model) throws IOException {
+		if (model != null) {
+			File jsonFile = new File(rootPath + SIGNALK_MODEL_SAVE_FILE);
+			JsonSerializer ser = new JsonSerializer();
+			ser.setPretty(3);
+			Json modelJson = ser.writeJson(model);
+			// remove config
+			if (modelJson.has(SignalKConstants.CONFIG)) {
+				modelJson = modelJson.delAt(SignalKConstants.CONFIG);
+			}
+			FileUtils.writeStringToFile(jsonFile, modelJson.toString(), StandardCharsets.UTF_8);
+			logger.info("   Saved model state to " + rootPath + SIGNALK_MODEL_SAVE_FILE);
+		}
+	}
+
+	/**
+	 * Save the current state of the signalk config
+	 *
+	 * @param model
+	 * @throws IOException
+	 */
+	public static void saveConfig(SignalKModel model) throws IOException {
+		saveConfig(model, new File(rootPath + SIGNALK_CFG_SAVE_FILE));
+	}
+
+	/**
+	 *
+	 * @param model
+	 * @param jsonFile
+	 * @throws IOException
+	 */
+	public static void saveConfig(SignalKModel model, File jsonFile) throws IOException {
+		if (model != null) {
+			NavigableMap<String, Object> config = model.getSubMap(SignalKConstants.CONFIG);
+			JsonSerializer ser = new JsonSerializer();
+			ser.setPretty(3);
+			StringBuilder buffer = new StringBuilder();
+			if (config != null && config.size() > 0) {
+				ser.write(config.entrySet().iterator(), '.', buffer);
+			} else {
+				buffer.append("{}");
+			}
+
+			FileUtils.writeStringToFile(jsonFile, buffer.toString(), StandardCharsets.UTF_8);
+			logger.debug("   Saved model state to " + rootPath + SIGNALK_CFG_SAVE_FILE);
+		}
+
+	}
+
+	public static String writePretty(SignalKModel model) {
+
+		StringBuilder buffer = null;
+		if (model != null) {
+			JsonSerializer ser = new JsonSerializer();
+			ser.setPretty(3);
+			buffer = new StringBuilder();
+			try {
+				buffer.append(ser.write(model));
+			} catch (IOException ex) {
+				java.util.logging.Logger.getLogger(SignalKModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return buffer.toString();
+	}
 }

@@ -477,7 +477,11 @@ public class Util {
         if (node != null && node.size() > 0) {
             addNodeToTemp(signalkModel, temp, node);
         } else {
-            temp.getFullData().put(p, signalkModel.get(p));
+        	try{
+        		temp.getFullData().put(p, signalkModel.get(p));
+        	}catch(Exception e){
+        		logger.error("Key: "+p+", "+e.getMessage(), e);
+        	}
         }
 
     }
