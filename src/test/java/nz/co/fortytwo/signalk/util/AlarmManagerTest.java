@@ -6,6 +6,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.notifications;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.message;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundMagnetic;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.nav_courseOverGroundTrue;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -105,10 +106,10 @@ public class AlarmManagerTest {
 		AlarmManager mgr = new AlarmManager(zones);
 		SignalKModel model = SignalKModelFactory.getCleanInstance();
 		Util.setSelf("motu");
-		mgr.setAlarm(model, vessels_dot_self_dot+nav_courseOverGroundMagnetic, alarm, null);
+		mgr.setAlarm(model, vessels_dot_self_dot+nav_courseOverGroundTrue, alarm, null);
 		logger.debug(model);
-		assertEquals(alarm, model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundMagnetic+dot+alarmState));
-		assertEquals("", model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundMagnetic+dot+message));
+		assertEquals(alarm, model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundTrue+dot+alarmState));
+		assertEquals("", model.get(vessels_dot_self_dot+notifications+dot+nav_courseOverGroundTrue+dot+message));
 	}
 
 }

@@ -96,14 +96,22 @@ public class AlarmHandler {
                     if (alarmManager.isAlarm(val)) {
                         //set the alarm in vessels.self.alarms.key
                         zone =  ((Json)metaZones).at(0);
-                        msg = zone.at("message").asString();
+                        if(zone.has("message")){
+                        	msg = zone.at("message").asString();
+                        }else{
+                        	msg=alarm;
+                        }
                         alarmManager.setAlarm(signalkModel, key, alarm, msg);
 
                     }
                     if (alarmManager.isWarn(val)) {
                         //set the alarm
                         zone =  ((Json)metaZones).at(0);
-                        msg = zone.at("message").asString();
+                        if(zone.has("message")){
+                        	msg = zone.at("message").asString();
+                        }else{
+                        	msg=warn;
+                        }
                         alarmManager.setAlarm(signalkModel, key, warn, msg);
                     }
                     if (alarmManager.isNormal(val)) {
