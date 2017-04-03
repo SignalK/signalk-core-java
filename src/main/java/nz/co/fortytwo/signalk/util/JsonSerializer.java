@@ -381,6 +381,24 @@ public class JsonSerializer {
     	}
 		return map;
 	}
+    
+    /**
+     * Convert a json object to a flattened map of key/json pairs
+     * 
+     * @param json
+     * @return NavigableMap useable in the signalk model
+     */
+    public NavigableMap<String, Json> readToJsonMap(Json json) {
+		//get keys and recurse
+    	ConcurrentSkipListMap<String, Json> map = new ConcurrentSkipListMap<String, Json>();
+    	if(json.has(SignalKConstants.vessels) || json.has(SignalKConstants.CONFIG)){
+    		recurseJsonMapFull(json,map,"");
+    	}
+    	if(json.has(SignalKConstants.UPDATES)){
+    		recurseJsonMapFull(json,map,"");
+    	}
+		return map;
+	}
 
 
 
@@ -397,6 +415,23 @@ public class JsonSerializer {
 				map.put(prefix+entry.getKey(), entry.getValue().toString());
 			}else{
 				recurseJsonFull(entry.getValue(), map, prefix+entry.getKey()+".");
+			}
+		}
+		
+	}
+	
+	private void recurseJsonMapFull(Json json, ConcurrentSkipListMap<String, Json> map, String prefix) {
+		for(Entry<String, Json> entry: json.asJsonMap().entrySet()){
+			if(entry.getValue().isPrimitive()){
+				map.put(prefix+entry.getKey(), entry.getValue());
+			}else if(entry.getValue().isNull()){
+				//we need to add null as string since null cant be used in a ConcurrentSkipList
+				map.put(prefix+entry.getKey(), entry.getValue());
+				
+			}else if(entry.getValue().isArray()){
+				map.put(prefix+entry.getKey(), entry.getValue());
+			}else{
+				recurseJsonMapFull(entry.getValue(), map, prefix+entry.getKey()+".");
 			}
 		}
 		
