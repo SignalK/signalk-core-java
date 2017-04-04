@@ -22,7 +22,7 @@
  */
 package nz.co.fortytwo.signalk.model.impl;
 
-import static nz.co.fortytwo.signalk.util.SignalKConstants.dot;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.*;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.mmsi;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.name;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels;
@@ -55,6 +55,8 @@ public class SignalKModelFactory {
 
 	private static final String SIGNALK_MODEL_SAVE_FILE = "./conf/self.json";
 	private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
+	private static final String SIGNALK_RESOURCES_SAVE_FILE = "./conf/signalk-resources.json";
+	
 	private static Logger logger = LogManager.getLogger(SignalKModelFactory.class);
 	private static SignalKModel signalKModel;
 	private static String rootPath = "";
@@ -140,6 +142,7 @@ public class SignalKModelFactory {
 	 */
 	public static void load(SignalKModel model) {
 		File jsonFile = new File(rootPath + SIGNALK_MODEL_SAVE_FILE);
+		File resourceFile = new File(rootPath + SIGNALK_RESOURCES_SAVE_FILE);
 		logger.info("load(signalkModel) Checking for previous state: " + jsonFile.getAbsolutePath());
 		if (jsonFile.exists()) {
 			try {
@@ -155,6 +158,22 @@ public class SignalKModelFactory {
 			}
 		} else {
 			logger.info("   Saved state not found");
+		}
+		//now load resources
+		if (resourceFile.exists()) {
+			try {
+				Json temp = Json.read(resourceFile.toURI().toURL());
+				JsonSerializer ser = new JsonSerializer();
+				model.putAll(ser.read(temp));
+				// removeOtherVessels(model);
+				
+				logger.info("   Saved resources loaded from " + rootPath + SIGNALK_RESOURCES_SAVE_FILE);
+				// loadConfig(model);
+			} catch (Exception ex) {
+				logger.error(ex.getMessage());
+			}
+		} else {
+			logger.info("   Saved resources not found");
 		}
 		insertMetaToModel(model);
 	}
@@ -328,6 +347,15 @@ public class SignalKModelFactory {
 			}
 			FileUtils.writeStringToFile(jsonFile, modelJson.toString(), StandardCharsets.UTF_8);
 			logger.info("   Saved model state to " + rootPath + SIGNALK_MODEL_SAVE_FILE);
+			
+			//now save resources separately
+			if (modelJson.has(vessels)) modelJson = modelJson.delAt(vessels);
+			if (modelJson.has(aircraft)) modelJson = modelJson.delAt(aircraft);
+			if (modelJson.has(sar)) modelJson = modelJson.delAt(sar);
+			//keep atons
+			File resourceFile = new File(rootPath + SIGNALK_RESOURCES_SAVE_FILE);
+			FileUtils.writeStringToFile(resourceFile, modelJson.toString(), StandardCharsets.UTF_8);
+			logger.info("   Saved model resources to " + rootPath + SIGNALK_RESOURCES_SAVE_FILE);
 		}
 	}
 

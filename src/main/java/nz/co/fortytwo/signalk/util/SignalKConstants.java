@@ -46,6 +46,8 @@ public class SignalKConstants {
 	
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
+	public static final String aircraft = "aircraft";
+	public static final String sar = "sar";
 	public static final String self_str =  "self";
 	public static final String CONFIG = "config";
     public static final String SIGNALK = "signalk";
