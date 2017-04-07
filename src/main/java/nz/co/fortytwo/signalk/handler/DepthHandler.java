@@ -77,7 +77,8 @@ public class DepthHandler {
             return;
         }
         try {
-            surfaceToTransducer = (double)  SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_surfaceToTransducer);
+//            surfaceToTransducer = (double)  SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_surfaceToTransducer);
+            surfaceToTransducer = ((Double)  signalkModel.get(vessels_dot_self_dot + env_depth_surfaceToTransducer)).doubleValue();
             depthBelowSurface = surfaceToTransducer + depthBelowTransducer;
             if (logger.isDebugEnabled()) {
                 sb.append("\n\tsurfaceToTransducer: " + surfaceToTransducer);
@@ -91,7 +92,8 @@ public class DepthHandler {
             return;
         }
         try {
-            transducerToKeel = (double)  SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_transducerToKeel);
+//            transducerToKeel = (double)  SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_transducerToKeel);
+            transducerToKeel = ((Double)  signalkModel.get(vessels_dot_self_dot + env_depth_transducerToKeel)).doubleValue();
             depthBelowKeel = depthBelowTransducer - transducerToKeel;
             if (logger.isDebugEnabled()) {
                 sb.append("\n\ttransducerToKeel: " + transducerToKeel);
