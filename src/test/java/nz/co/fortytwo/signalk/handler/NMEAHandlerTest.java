@@ -96,7 +96,8 @@ public class NMEAHandlerTest {
 		 NMEAHandler processor = new NMEAHandler();
 		 SignalKModel model = processor.handle(nmea1);
 		 logger.debug("Returned signalk tree:"+model);
-		 assertEquals(Math.toRadians(338.0),model.getValue(vessels_dot_self_dot +env_wind_angleApparent));
+                 //SignalK is -Pi/Pi with bow = 0
+		 assertEquals(Math.toRadians(338.0d - 360.0d),(double)model.getValue(vessels_dot_self_dot +env_wind_angleApparent), 0.0000000001);
 		 assertEquals(6.898640400000001,model.getValue(vessels_dot_self_dot +env_wind_speedApparent));
 	}
 	@Test
