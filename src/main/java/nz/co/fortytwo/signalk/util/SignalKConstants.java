@@ -1,21 +1,21 @@
 /*
- * 
+ *
  * Copyright (C) 2012-2014 R T Huitema. All Rights Reserved.
  * Web: www.42.co.nz
  * Email: robert@42.co.nz
  * Author: R T Huitema
- * 
+ *
  * This file is part of the signalk-server-java project
- * 
+ *
  * This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
  * WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,23 +37,23 @@ public class SignalKConstants {
 	public static final String M = "m";             // meters
 	public static final String F = "f";             // fathoms
 	public static final String FT = "ft";           // feet
-	public static final String NM = "n.m.";         // nautical miles        
+	public static final String NM = "n.m.";         // nautical miles
 	public static final String MS = "m/s";          // meters/sec
 	public static final String KM_PER_HR = "km/hr"; // km/hr
 	public static final String MI_PER_HR = "mi/hr"; // mi/hr
 	public static final String NM_PER_HR = "Kt";    // knots
-	
-	
+
+
 	public static final String dot = ".";
 	public static final String vessels = "vessels";
 	public static final String self_str =  "self";
 	public static final String CONFIG = "config";
     public static final String SIGNALK = "signalk";
-	
+
 	public static String self = self_str;
  	public static String vessels_dot_self_dot=vessels+dot+self+dot;
 	public static String vessels_dot_self=vessels+dot+self;
-	
+
 	public static final String version = "version";
 	public static final String timestamp = "timestamp";
 	public static final String sourceRef = "$source";
@@ -64,9 +64,9 @@ public class SignalKConstants {
 	public static final String LATITUDE = "latitude";
 	public static final String LONGITUDE = "longitude";
 	public static final String ALTITUDE = "altitude";
-	
-	
-	
+
+
+
 	public static final String meta = "meta";
 	public static final String zones = "zones";
 	public static final String attr = "_attr";
@@ -77,33 +77,33 @@ public class SignalKConstants {
 	public static final String message = "message";
 	public static final String warn = "warn";
 	public static final String normal = "normal";
-	
+
 	public static final String type = "type";
 	public static final String label = "label";
 	public static final String routes = "routes";
 	public static final String key= "key";
 	public static final String currentTrack = "currentTrack";
-	
-	
+
+
 	public static final String websocketUrl="signalk-ws";
 	public static final String restUrl="signalk-http";
-	
+
 	public static final String signalkTcpPort = "signalk-tcp";
 	public static final String signalkUdpPort = "signalk-udp";
 	public static final String nmeaTcpPort = "nmea-tcp";
 	public static final String nmeaUdpPort = "nmea-udp";
-	
+
 	public static final String stompPort = "stomp";
 	public static final String mqttPort = "mqtt";
-	
-	
-	
+
+
+
 	public static final String MSG_TYPE = "MSG_TYPE";
 	public static final String SERIAL = "SERIAL";
 	public static final String DEMO = "DEMO";
 	public static final String EXTERNAL_IP = "EXTERNAL_IP";
 	public static final String INTERNAL_IP = "INTERNAL_IP";
-	
+
 	public static final String MSG_SERIAL_PORT = "MSG_SERIAL_PORT";
 	public static final String MSG_SRC_BUS = "MSG_SRC_BUS";
 	public static final String MSG_SRC_IP = "MSG_SRC_IP";
@@ -113,7 +113,7 @@ public class SignalKConstants {
 	public static final String CONFIG_ACTION = "CONFIG_ACTION";
 	public static final String CONFIG_ACTION_READ = "CONFIG_ACTION_READ";
 	public static final String CONFIG_ACTION_SAVE = "CONFIG_ACTION_SAVE";
-		
+
 	public static final String CONTEXT = "context";
 	public static final String UPDATES = "updates";
 	public static final String SUBSCRIBE = "subscribe";
@@ -128,7 +128,7 @@ public class SignalKConstants {
 	//public static final String SRC = "src";
 	//public static final String PGN = "pgn";
 	//public static final String value = "value";
-	
+
 	public static final String PATH = "path";
 	public static final String PERIOD = "period";
 	public static final String MIN_PERIOD = "minPeriod";
@@ -140,9 +140,9 @@ public class SignalKConstants {
 	public static final String POLICY_FIXED = "fixed";
 	public static final String POLICY_INSTANT = "instant";
 	public static final String POLICY_IDEAL = "ideal";
-	
+
 	public static final String N2K_MESSAGE = "N2K_MESSAGE";
-	
+
 	public static final String URN_UUID = "urn:mrn:signalk:uuid:";
 	public static final String SIGNALK_DISCOVERY = "/signalk";
 	public static final String SIGNALK_AUTH = "/signalk/v1/auth";
@@ -154,7 +154,7 @@ public class SignalKConstants {
 	public static final String SIGNALK_LOGGER = "/signalk/v1/logger";
 	public static final String SIGNALK_UPLOAD = "/signalk/v1/upload";
 	public static final String SIGNALK_RESTART = "/signalk/v1/restart";
-	
+
 	public static final String _SIGNALK_HTTP_TCP_LOCAL = "_signalk-http._tcp.local.";
 	public static final String _SIGNALK_WS_TCP_LOCAL = "_signalk-ws._tcp.local.";
 	//public static final String name = "name";
@@ -164,8 +164,8 @@ public class SignalKConstants {
 	public static final String uuid="uuid";
 	public static final String vessels_id = "vessels.*";
 	public static final String pgn = "pgn";
-	
-	
+
+
 	//temp
 	public static final String env_time_time = "environment.time.time";
 	public static final String env_time_date = "environment.time.date";
@@ -357,7 +357,7 @@ public class SignalKConstants {
 	public static final String env_current_setTrue="environment.current.setTrue";
 	public static final String env_depth="environment.depth";
 	public static final String env_depth_belowKeel="environment.depth.belowKeel";
-	
+
 	public static final String env_depth_belowSurface="environment.depth.belowSurface";
 	public static final String env_depth_belowTransducer="environment.depth.belowTransducer";
 	public static final String env_depth_surfaceToTransducer="environment.depth.surfaceToTransducer";
@@ -432,7 +432,7 @@ public class SignalKConstants {
 	public static final String nav_attitude_pitch="navigation.attitude.pitch";
 	public static final String nav_attitude_roll="navigation.attitude.roll";
 	public static final String nav_attitude_yaw="navigation.attitude.yaw";
-	
+
 	public static final String nav_course="navigation.course";
 	public static final String nav_course_activeRoute="navigation.course.activeRoute";
 	public static final String nav_courseGreatCircle="navigation.courseGreatCircle";
@@ -526,7 +526,7 @@ public class SignalKConstants {
 	public static final String nav_speedThroughWaterLongitudinal="navigation.speedThroughWaterLongitudinal";
 	public static final String nav_speedThroughWaterTransverse="navigation.speedThroughWaterTransverse";
 	public static final String nav_stwDisplayUnit="navigation.speedThroughWater.meta.unit";
-	
+
 	public static final String nav_state="navigation.state";
 	public static final String notifications="notifications";
 	public static final String notifications_abandon="notifications.abandon";
@@ -561,6 +561,7 @@ public class SignalKConstants {
 	public static final String propulsion_id_boostPressure="propulsion.*.boostPressure";
 	public static final String propulsion_id_coolantPressure="propulsion.*.coolantPressure";
 	public static final String propulsion_id_coolantTemperature="propulsion.*.coolantTemperature";
+	public static final String propulsion_engine_coolantTemperature="propulsion.engine.coolantTemperature";
 	public static final String propulsion_id_drive="propulsion.*.drive";
 	public static final String propulsion_id_drive_propeller="propulsion.*.drive.propeller";
 	public static final String propulsion_id_drive_thrustAngle="propulsion.*.drive.thrustAngle";
