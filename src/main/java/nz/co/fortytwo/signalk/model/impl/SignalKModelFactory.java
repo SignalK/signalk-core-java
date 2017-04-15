@@ -197,75 +197,120 @@ public class SignalKModelFactory {
 	 * @param model
 	 *            the SignalK model
 	 */
-	public static void insertMetaToModel(SignalKModel model) {
+ public static void insertMetaToModel(SignalKModel model) {
 
-		String self = (String) model.get(ConfigConstants.UUID);
-		Util.setSelf(self);
+        String self = (String) model.get(ConfigConstants.UUID);
 
-		model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
-		// load other vessel specifics.
-		if (model.get(ConfigConstants.MMSI) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
-		}
-		if (model.get(ConfigConstants.NAME) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
-		}
-		if (model.get(ConfigConstants.FLAG) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
-		}
-		if (model.get(ConfigConstants.PORT) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
-		}
+        Util.setSelf(self);
+        model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
+        //load other vessel specifics.
+        if (model.get(ConfigConstants.MMSI) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
+        }
+        if (model.get(ConfigConstants.NAME) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
+        }
+        if (model.get(ConfigConstants.FLAG) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
+        }
+        if (model.get(ConfigConstants.PORT) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
+        }
 
-		if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_alarmMethod,
-					model.get(ConfigConstants.DEPTH_ALARM_METHOD));
-		}
+        if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_alarmMethod, model.get(ConfigConstants.DEPTH_ALARM_METHOD));
+        }
 
-		if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_warnMethod,
-					model.get(ConfigConstants.DEPTH_WARN_METHOD));
-		}
+        if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_warnMethod, model.get(ConfigConstants.DEPTH_WARN_METHOD));
+        }
 
-		if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_meta_displayUnit,
-					model.get(ConfigConstants.DEPTH_DISPLAY_UNIT));
-		}
+        if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_meta_displayUnit, model.get(ConfigConstants.DEPTH_DISPLAY_UNIT));
+            String depthDisplayUnit = (String) model.get(ConfigConstants.DEPTH_DISPLAY_UNIT);
 
-		if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
-			double offset = (double) model.get(ConfigConstants.SURFACE_TO_TRANSDUCER);
-			model.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_surfaceToTransducer, offset,
-					"self");
-		}
+            if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
+                double offset = (double) model.get(ConfigConstants.SURFACE_TO_TRANSDUCER);
+                switch (depthDisplayUnit) {
+                    case SignalKConstants.M:
+                        break;
+                    case SignalKConstants.F:
+                        offset /= SignalKConstants.MTR_TO_FATHOM;
+                        break;
+                    case SignalKConstants.FT:
+                        offset /= SignalKConstants.MTR_TO_FEET;
+                        break;
+                }
+                model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_surfaceToTransducer, offset);
+            }
 
-		if (model.get(ConfigConstants.TRANSDUCER_TO_KEEL) != null) {
-			double offset = (double) model.get(ConfigConstants.TRANSDUCER_TO_KEEL);
-			model.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_transducerToKeel, offset,
-					"self");
-		}
+            if (model.get(ConfigConstants.TRANSDUCER_TO_KEEL) != null) {
+                double offset = (double) model.get(ConfigConstants.TRANSDUCER_TO_KEEL);
+                switch (depthDisplayUnit) {
+                    case SignalKConstants.M:
+                        break;
+                    case SignalKConstants.F:
+                        offset /= SignalKConstants.MTR_TO_FATHOM;
+                        break;
+                    case SignalKConstants.FT:
+                        offset /= SignalKConstants.MTR_TO_FEET;
+                        break;
+                }
+                model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_transducerToKeel, offset);
+            }
 
-		if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
-			Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
+            Double upper = new Double(0);
+            Double lower = new Double(0);
+            if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
+                Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
+                Json jArrayElem;
+                // Set the zones for alarm (0) and warn (1)
+                for (int i = 0; i < zones.asList().size(); i++) {
+                    jArrayElem = zones.at(i);
+                    switch (depthDisplayUnit) {
+                        case SignalKConstants.M:
+                            break;
+                        case SignalKConstants.F:
+                            upper = jArrayElem.at("upper").asDouble() / SignalKConstants.MTR_TO_FATHOM;
+                            lower = jArrayElem.at("lower").asDouble() / SignalKConstants.MTR_TO_FATHOM;
+                            break;
+                        case SignalKConstants.FT:
+                            upper = jArrayElem.at("upper").asDouble() / SignalKConstants.MTR_TO_FEET;
+                            lower = jArrayElem.at("lower").asDouble() / SignalKConstants.MTR_TO_FEET;
+                            break;
+                    }
+                    jArrayElem.set("upper", upper);
+                    jArrayElem.set("lower", lower);
+                    zones.set(i, jArrayElem);
+                }
 
-			// put the alarm zones in the proper position in the model
-			model.getFullData()
-					.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_belowSurface
-							+ SignalKConstants.dot + SignalKConstants.meta + SignalKConstants.dot
-							+ SignalKConstants.zones, zones);
-		}
+                // Set the normal zone using the settings for the warning zone
+                Json normalZone = Json.object("lower", zones.at(1).at("upper"), "upper", new Double(9999), "state", "normal", "message", "");
+                Json newZones = Json.array(zones.at(0), zones.at(1), normalZone);
 
-		if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null){
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.nav_sogDisplayUnit,
-					model.get(ConfigConstants.SOG_DISPLAY_UNIT));
-		}
+                // put the alarm zones in the proper position in the model
+                model.getFullData().put(SignalKConstants.vessels_dot_self_dot
+                    + SignalKConstants.env_depth_belowSurface
+                    + SignalKConstants.dot
+                    + SignalKConstants.meta
+                    + SignalKConstants.dot
+                    + SignalKConstants.zones,
+                     newZones);
+            }
+        }
 
-		if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null){
-			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.nav_stwDisplayUnit,
-					model.get(ConfigConstants.STW_DISPLAY_UNIT));
-		}
-		logger.info("   Inserted config values into SignalK model");
+        if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot
+                + SignalKConstants.nav_sogDisplayUnit, model.get(ConfigConstants.SOG_DISPLAY_UNIT));
+        }
 
-	}
+        if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot
+                + SignalKConstants.nav_stwDisplayUnit, model.get(ConfigConstants.STW_DISPLAY_UNIT));
+        }
+        logger.info("   Inserted config values into SignalK model");
+    }
+
 
 	/**
 	 * Loads the previous signalk-config.json file if it exists. If it does not

@@ -366,11 +366,11 @@ public class NMEAHandler {
                         } catch (NullPointerException e) {
                             //do nothing - the offset is zero or undefined
                         }
-                        // signalk is -180 to 180, negative to port, 0 is bow.
+                        // signalk is -PI to PI, negative to port, 0 is bow.
                         double aws = Math.toRadians(angle);
-//                        if (aws > 180d) {
-//                            aws = aws - 360d;
-//                        }
+                        if (aws > Math.PI) {
+                            aws = aws - 2.*Math.PI;
+                        }
                         src.getModel().put(vessels_dot_self_dot + env_wind_angleApparent, aws, src.getSourceRef(), src.getNow());
                         src.getModel().put(vessels_dot_self_dot + env_wind_speedApparent, Util.kntToMs(sen.getSpeed()), src.getSourceRef(), src.getNow());
                         //src.getModel().put(vessels_dot_self_dot + env_wind+dot+source,vessels_dot_self_dot+"sources.nmea.0183"+dot+sen.getSentenceId());
