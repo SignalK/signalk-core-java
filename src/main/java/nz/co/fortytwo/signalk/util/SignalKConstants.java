@@ -563,7 +563,7 @@ public class SignalKConstants {
 	public static final String propulsion_id_boostPressure="propulsion.*.boostPressure";
 	public static final String propulsion_id_coolantPressure="propulsion.*.coolantPressure";
 	public static final String propulsion_id_coolantTemperature="propulsion.*.coolantTemperature";
-	public static final String propulsion_engine_coolantTemperature="propulsion.engine.coolantTemperature";
+
 	public static final String propulsion_id_drive="propulsion.*.drive";
 	public static final String propulsion_id_drive_propeller="propulsion.*.drive.propeller";
 	public static final String propulsion_id_drive_thrustAngle="propulsion.*.drive.thrustAngle";

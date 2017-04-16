@@ -31,7 +31,6 @@ import net.sf.marineapi.nmea.sentence.RMCSentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.TalkerId;
 import net.sf.marineapi.nmea.sentence.VHWSentence;
-import net.sf.marineapi.nmea.sentence.VLWSentence;
 import net.sf.marineapi.nmea.sentence.VTGSentence;
 import net.sf.marineapi.nmea.util.CompassPoint;
 import net.sf.marineapi.nmea.util.DataStatus;
@@ -43,7 +42,6 @@ import net.sf.marineapi.nmea.util.Units;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
 public class NMEA0183Producer {
-
     private SentenceFactory sf = SentenceFactory.getInstance();
     private static Logger logger = LogManager.getLogger(NMEA0183Producer.class);
     // RMC,GLL, GGA = position
