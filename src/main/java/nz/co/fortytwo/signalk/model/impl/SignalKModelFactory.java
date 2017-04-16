@@ -55,8 +55,8 @@ public class SignalKModelFactory {
 
 	private static final String SIGNALK_MODEL_SAVE_FILE = "./conf/self.json";
 	private static final String SIGNALK_CFG_SAVE_FILE = "./conf/signalk-config.json";
-	private static final String SIGNALK_RESOURCES_SAVE_FILE = "./conf/signalk-resources.json";
-	
+	private static final String SIGNALK_RESOURCES_SAVE_FILE = "./conf/resources.json";
+
 	private static Logger logger = LogManager.getLogger(SignalKModelFactory.class);
 	private static SignalKModel signalKModel;
 	private static String rootPath = "";
@@ -149,8 +149,8 @@ public class SignalKModelFactory {
 				Json temp = Json.read(jsonFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				// removeOtherVessels(model);
-				
+				removeOtherVessels(model);
+
 				logger.info("   Saved state loaded from " + rootPath + SIGNALK_MODEL_SAVE_FILE);
 				// loadConfig(model);
 			} catch (Exception ex) {
@@ -159,14 +159,14 @@ public class SignalKModelFactory {
 		} else {
 			logger.info("   Saved state not found");
 		}
-		//now load resources
+		// now load resources
 		if (resourceFile.exists()) {
 			try {
 				Json temp = Json.read(resourceFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
 				// removeOtherVessels(model);
-				
+
 				logger.info("   Saved resources loaded from " + rootPath + SIGNALK_RESOURCES_SAVE_FILE);
 				// loadConfig(model);
 			} catch (Exception ex) {
@@ -178,13 +178,15 @@ public class SignalKModelFactory {
 		insertMetaToModel(model);
 	}
 
-	private static void removeOtherVessels(SignalKModel model) throws IOException {
+	public static void removeOtherVessels(SignalKModel model) throws IOException {
 		String self = (String) model.get(ConfigConstants.UUID);
 		Util.setSelf(self);
 		for (String key : model.getData().keySet()) {
-			if (key.startsWith(vessels + dot + self))
-				continue;
-			model.getFullData().remove(key);
+			if (key.startsWith(vessels)) {
+				if (key.startsWith(vessels + dot + self) || key.startsWith(vessels + dot + "self"))
+					continue;
+				model.getFullData().remove(key);
+			}
 		}
 		save(model);
 
@@ -197,72 +199,72 @@ public class SignalKModelFactory {
 	 * @param model
 	 *            the SignalK model
 	 */
- public static void insertMetaToModel(SignalKModel model) {
+	public static void insertMetaToModel(SignalKModel model) {
 
-        String self = (String) model.get(ConfigConstants.UUID);
+		String self = (String) model.get(ConfigConstants.UUID);
 
-        Util.setSelf(self);
-        model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
-        //load other vessel specifics.
-        if (model.get(ConfigConstants.MMSI) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
-        }
-        if (model.get(ConfigConstants.NAME) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
-        }
-        if (model.get(ConfigConstants.FLAG) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
-        }
-        if (model.get(ConfigConstants.PORT) != null) {
-            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
-        }
+		Util.setSelf(self);
+		model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "uuid", self);
+		// load other vessel specifics.
+		if (model.get(ConfigConstants.MMSI) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + mmsi, model.get(ConfigConstants.MMSI));
+		}
+		if (model.get(ConfigConstants.NAME) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + name, model.get(ConfigConstants.NAME));
+		}
+		if (model.get(ConfigConstants.FLAG) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "flag", model.get(ConfigConstants.FLAG));
+		}
+		if (model.get(ConfigConstants.PORT) != null) {
+			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + "port", model.get(ConfigConstants.PORT));
+		}
 
-        if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
+		if (model.get(ConfigConstants.DEPTH_ALARM_METHOD) != null) {
 			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_alarmMethod,
 					model.get(ConfigConstants.DEPTH_ALARM_METHOD));
-        }
+		}
 
-        if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
+		if (model.get(ConfigConstants.DEPTH_WARN_METHOD) != null) {
 			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_warnMethod,
 					model.get(ConfigConstants.DEPTH_WARN_METHOD));
-        }
+		}
 
-        if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
+		if (model.get(ConfigConstants.DEPTH_DISPLAY_UNIT) != null) {
 			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_meta_displayUnit,
 					model.get(ConfigConstants.DEPTH_DISPLAY_UNIT));
 		}
 
-            if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
+		if (model.get(ConfigConstants.SURFACE_TO_TRANSDUCER) != null) {
 			double offset = (double) model.get(ConfigConstants.SURFACE_TO_TRANSDUCER);
 			model.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_surfaceToTransducer, offset,
 					"self");
-            }
+		}
 
-            if (model.get(ConfigConstants.TRANSDUCER_TO_KEEL) != null) {
+		if (model.get(ConfigConstants.TRANSDUCER_TO_KEEL) != null) {
 			double offset = (double) model.get(ConfigConstants.TRANSDUCER_TO_KEEL);
 			model.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_transducerToKeel, offset,
 					"self");
-            }
-            
-            if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
-                Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
-                // put the alarm zones in the proper position in the model
+		}
+
+		if (model.get(ConfigConstants.DEPTH_ALARM_ZONES) != null) {
+			Json zones = Json.read(model.get(ConfigConstants.DEPTH_ALARM_ZONES).toString());
+			// put the alarm zones in the proper position in the model
 			model.getFullData()
 					.put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.env_depth_belowSurface
 							+ SignalKConstants.dot + SignalKConstants.meta + SignalKConstants.dot
 							+ SignalKConstants.zones, zones);
-        }
+		}
 
-        if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null) {
+		if (model.get(ConfigConstants.SOG_DISPLAY_UNIT) != null) {
 			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.nav_sogDisplayUnit,
 					model.get(ConfigConstants.SOG_DISPLAY_UNIT));
-        }
+		}
 
-        if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null) {
+		if (model.get(ConfigConstants.STW_DISPLAY_UNIT) != null) {
 			model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.nav_stwDisplayUnit,
 					model.get(ConfigConstants.STW_DISPLAY_UNIT));
-        }
-        logger.info("   Inserted config values into SignalK model");
+		}
+		logger.info("   Inserted config values into SignalK model");
 
 	}
 
@@ -346,12 +348,15 @@ public class SignalKModelFactory {
 			}
 			FileUtils.writeStringToFile(jsonFile, modelJson.toString(), StandardCharsets.UTF_8);
 			logger.info("   Saved model state to " + rootPath + SIGNALK_MODEL_SAVE_FILE);
-			
-			//now save resources separately
-			if (modelJson.has(vessels)) modelJson = modelJson.delAt(vessels);
-			if (modelJson.has(aircraft)) modelJson = modelJson.delAt(aircraft);
-			if (modelJson.has(sar)) modelJson = modelJson.delAt(sar);
-			//keep atons
+
+			// now save resources separately
+			if (modelJson.has(vessels))
+				modelJson = modelJson.delAt(vessels);
+			if (modelJson.has(aircraft))
+				modelJson = modelJson.delAt(aircraft);
+			if (modelJson.has(sar))
+				modelJson = modelJson.delAt(sar);
+			// keep atons
 			File resourceFile = new File(rootPath + SIGNALK_RESOURCES_SAVE_FILE);
 			FileUtils.writeStringToFile(resourceFile, modelJson.toString(), StandardCharsets.UTF_8);
 			logger.info("   Saved model resources to " + rootPath + SIGNALK_RESOURCES_SAVE_FILE);

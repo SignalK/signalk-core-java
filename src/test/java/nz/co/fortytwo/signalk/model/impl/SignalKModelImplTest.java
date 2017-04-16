@@ -162,6 +162,22 @@ public class SignalKModelImplTest {
 		assertEquals(dirTrue,256.3,0.000001);
 	}
 	
+	@Test
+	public void shouldRemoveOtherVessels() throws IOException {
+		SignalKModel signalk = SignalKModelFactory.getMotuTestInstance();
+		
+		//signalk = Util.populateModel(signalk, new File("src/test/resources/samples/basicModel.txt"));
+		signalk.put(vessels_dot_self_dot+ env_wind_directionTrue,256.3,"dummy",Util.getIsoTimeString());
+		signalk.put(vessels+".anothervessel."+ env_wind_directionTrue,256.3,"dummy",Util.getIsoTimeString());
+		logger.debug(signalk);
+		assertNotNull(signalk.getValue(vessels+".anothervessel."+  env_wind_directionTrue));
+		
+		SignalKModelFactory.removeOtherVessels(signalk);
+		assertNull(signalk.getValue(vessels+".anothervessel."+  env_wind_directionTrue));
+		
+		Double dirTrue = (Double) signalk.getValue(vessels_dot_self_dot+ env_wind_directionTrue);
+		assertEquals(256.3,dirTrue,0.000001);
+	}
 	
 	@Test
 	public void shouldSetLeaf() {
