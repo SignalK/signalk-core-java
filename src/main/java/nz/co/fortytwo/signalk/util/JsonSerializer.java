@@ -172,7 +172,9 @@ public class JsonSerializer {
                 jsonWrite(s[j], ((Number)value).doubleValue(), out);
             } else if (value instanceof Boolean) {
                 jsonWrite(((Boolean)value).booleanValue(), out);
-            } else if (value instanceof Json ) {
+            } else if (value instanceof List ) {
+                out.append(Json.array(((List)value).toArray()).toString());
+            }else if (value instanceof Json ) {
                 out.append(((Json)value).toString());
             } else  {
                 throw new IllegalStateException("Can't print value of type \""+value.getClass().getName()+"\" for key \""+key+"\"");

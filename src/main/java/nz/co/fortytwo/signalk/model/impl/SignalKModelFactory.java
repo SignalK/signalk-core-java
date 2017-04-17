@@ -165,10 +165,8 @@ public class SignalKModelFactory {
 				Json temp = Json.read(resourceFile.toURI().toURL());
 				JsonSerializer ser = new JsonSerializer();
 				model.putAll(ser.read(temp));
-				// removeOtherVessels(model);
 
 				logger.info("   Saved resources loaded from " + rootPath + SIGNALK_RESOURCES_SAVE_FILE);
-				// loadConfig(model);
 			} catch (Exception ex) {
 				logger.error(ex.getMessage());
 			}
