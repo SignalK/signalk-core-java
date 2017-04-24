@@ -1,7 +1,4 @@
 package nz.co.fortytwo.signalk.util;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.source;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.sourceRef;
-
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -15,12 +12,16 @@ import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import mjson.Json;
 import nz.co.fortytwo.signalk.model.SignalKModel;
 
 
 public class JsonSerializer {
 
+	private static Logger logger = LogManager.getLogger(JsonSerializer.class);
     private String indent=null;
     private StringBuilder curindent = new StringBuilder();
     private DecimalFormat[] df = new DecimalFormat[12]; // Up to 12dp for a number.
@@ -123,6 +124,7 @@ public class JsonSerializer {
             Map.Entry<String,Object> e = iterator.next();
             String key = e.getKey();
             Object value = e.getValue();
+            if(logger.isDebugEnabled())logger.debug(key+"="+value);
             if (!begun) {
                 jsonBegin(out);
                 begun = true;
@@ -176,6 +178,8 @@ public class JsonSerializer {
                 out.append(Json.array(((List)value).toArray()).toString());
             }else if (value instanceof Json ) {
                 out.append(((Json)value).toString());
+            }else if (value instanceof Map ) {
+                out.append((Json.make((Map)value)).toString());
             } else  {
                 throw new IllegalStateException("Can't print value of type \""+value.getClass().getName()+"\" for key \""+key+"\"");
             }
