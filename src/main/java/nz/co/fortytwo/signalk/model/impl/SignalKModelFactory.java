@@ -229,6 +229,60 @@ public class SignalKModelFactory {
                 model.get(ConfigConstants.DEPTH_WARN_METHOD));
         }
 
+        if (model.get(ConfigConstants.ENGINE_TEMP_ALARM_METHOD) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.propulsion_engine_coolantTemperature_meta_alarmMethod,
+                model.get(ConfigConstants.ENGINE_TEMP_ALARM_METHOD));
+        }
+
+        if (model.get(ConfigConstants.ENGINE_TEMP_WARN_METHOD) != null) {
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.propulsion_engine_coolantTemperature_meta_warnMethod,
+                model.get(ConfigConstants.ENGINE_TEMP_WARN_METHOD));
+        }
+
+        if (model.get(ConfigConstants.ENGINE_TEMP_USER_UNIT) != null) {
+            String engineTempUserUnit = (String) model.get(ConfigConstants.ENGINE_TEMP_USER_UNIT);
+            model.getFullData().put(SignalKConstants.vessels_dot_self_dot + SignalKConstants.propulsion_engine_coolantTemperature_meta_unit,
+                model.get(ConfigConstants.ENGINE_TEMP_USER_UNIT));
+        
+
+        Double upper = new Double(0);
+        Double lower = new Double(0);
+            if (model.get(ConfigConstants.ENGINE_TEMP_ALARM_ZONES) != null) {
+                Json zones = Json.read(model.get(ConfigConstants.ENGINE_TEMP_ALARM_ZONES).toString());
+                Json jArrayElem;
+                // Set the zones for alarm (0) and warn (1)
+                for (int i = 0; i < zones.asList().size(); i++) {
+                    jArrayElem = zones.at(i);
+                    
+                    // switch from user units to SignalK units
+                    switch (engineTempUserUnit) {
+                        case SignalKConstants.CENT:
+                            break;
+                        case SignalKConstants.FAHR:
+                            upper = Util.fahrToC(jArrayElem.at("upper").asDouble());
+                            lower = Util.fahrToC(jArrayElem.at("lower").asDouble());
+                            break;
+                    }
+                    jArrayElem.set("upper", upper);
+                    jArrayElem.set("lower", lower);
+                    zones.set(i, jArrayElem);
+                }
+
+                // Set the normal zone using the settings for the warning zone
+                Json normalZone = Json.object("lower", 0., "upper", zones.at(1).at("lower"), "state", "normal", "message", "");
+                Json newZones = Json.array(zones.at(0), zones.at(1), normalZone);
+
+                // put the alarm zones in the proper position in the model
+                model.getFullData().put(SignalKConstants.vessels_dot_self_dot
+                    + SignalKConstants.propulsion_engine_coolantTemperature
+                    + SignalKConstants.dot
+                    + SignalKConstants.meta
+                    + SignalKConstants.dot
+                    + SignalKConstants.zones,
+                    newZones);
+            }
+        }
+
         // insert surfaceToTranducer, transducerToKeel and depth zones  into model
         // after converting from user units to SignalK units.
 

@@ -42,6 +42,8 @@ public class SignalKConstants {
 	public static final String KM_PER_HR = "km/hr"; // km/hr
 	public static final String MI_PER_HR = "mi/hr"; // mi/hr
 	public static final String NM_PER_HR = "Kt";    // knots
+        public static final String FAHR = "F";
+        public static final String CENT = "C";
 
 
 	public static final String dot = ".";
@@ -562,6 +564,10 @@ public class SignalKConstants {
 	public static final String propulsion_id_boostPressure="propulsion.*.boostPressure";
 	public static final String propulsion_id_coolantPressure="propulsion.*.coolantPressure";
 	public static final String propulsion_id_coolantTemperature="propulsion.*.coolantTemperature";
+	public static final String propulsion_engine_coolantTemperature="propulsion.engine.coolantTemperature";
+	public static final String propulsion_engine_coolantTemperature_meta_unit="propulsion.engine.coolantTemperature.meta.unit";
+	public static final String propulsion_engine_coolantTemperature_meta_alarmMethod = "propulsion.engine.coolantTemperature.meta.alarmMethod";
+	public static final String propulsion_engine_coolantTemperature_meta_warnMethod = "propulsion.engine.coolantTemperature.meta.warnMethod";
 
 	public static final String propulsion_id_drive="propulsion.*.drive";
 	public static final String propulsion_id_drive_propeller="propulsion.*.drive.propeller";
