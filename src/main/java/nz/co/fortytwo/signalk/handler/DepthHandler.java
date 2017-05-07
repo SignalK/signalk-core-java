@@ -29,7 +29,7 @@ import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowKeel;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_surfaceToTransducer;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_transducerToKeel;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_belowSurface;
-import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_meta_displayUnit;
+import static nz.co.fortytwo.signalk.util.SignalKConstants.env_depth_meta_userUnit;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.self;
 import static nz.co.fortytwo.signalk.util.SignalKConstants.vessels_dot_self_dot;
 import nz.co.fortytwo.signalk.model.SignalKModel;
@@ -77,8 +77,7 @@ public class DepthHandler {
             return;
         }
         try {
-//            surfaceToTransducer = (double)  SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_surfaceToTransducer);
-            surfaceToTransducer = ((Double)  signalkModel.get(vessels_dot_self_dot + env_depth_surfaceToTransducer)).doubleValue();
+            surfaceToTransducer = ((Double)SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_surfaceToTransducer)).doubleValue();
             depthBelowSurface = surfaceToTransducer + depthBelowTransducer;
             if (logger.isDebugEnabled()) {
                 sb.append("\n\tsurfaceToTransducer: " + surfaceToTransducer);
@@ -92,8 +91,7 @@ public class DepthHandler {
             return;
         }
         try {
-//            transducerToKeel = (double)  SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_transducerToKeel);
-            transducerToKeel = ((Double)  signalkModel.get(vessels_dot_self_dot + env_depth_transducerToKeel)).doubleValue();
+            transducerToKeel = ((Double)SignalKModelFactory.getInstance().getValue(vessels_dot_self_dot + env_depth_transducerToKeel)).doubleValue();
             depthBelowKeel = depthBelowTransducer - transducerToKeel;
             if (logger.isDebugEnabled()) {
                 sb.append("\n\ttransducerToKeel: " + transducerToKeel);

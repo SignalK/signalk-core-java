@@ -42,6 +42,8 @@ public class SignalKConstants {
 	public static final String KM_PER_HR = "km/hr"; // km/hr
 	public static final String MI_PER_HR = "mi/hr"; // mi/hr
 	public static final String NM_PER_HR = "Kt";    // knots
+        public static final String FAHR = "F";
+        public static final String CENT = "C";
 
 
 	public static final String dot = ".";
@@ -364,10 +366,9 @@ public class SignalKConstants {
 	public static final String env_depth_belowTransducer="environment.depth.belowTransducer";
 	public static final String env_depth_surfaceToTransducer="environment.depth.surfaceToTransducer";
 	public static final String env_depth_transducerToKeel="environment.depth.transducerToKeel";
-	public static final String env_depth_meta_displayUnit="environment.depth.belowSurface.meta.displayUnit";
 	public static final String env_depth_alarmMethod = "environment.depth.belowSurface.meta.alarmMethod";
 	public static final String env_depth_warnMethod = "environment.depth.belowSurface.meta.warnMethod";
-	public static final String env_depth_displayUnit = "environment.depth.belowSurface.meta.units";
+	public static final String env_depth_meta_userUnit = "environment.depth.meta.userUnit";
 	public static final String env_heave="environment.heave";
 	public static final String env_inside="environment.inside";
 	public static final String env_inside_engineRoom="environment.inside.engineRoom";
@@ -563,6 +564,10 @@ public class SignalKConstants {
 	public static final String propulsion_id_boostPressure="propulsion.*.boostPressure";
 	public static final String propulsion_id_coolantPressure="propulsion.*.coolantPressure";
 	public static final String propulsion_id_coolantTemperature="propulsion.*.coolantTemperature";
+	public static final String propulsion_engine_coolantTemperature="propulsion.engine.coolantTemperature";
+	public static final String propulsion_engine_coolantTemperature_meta_unit="propulsion.engine.coolantTemperature.meta.unit";
+	public static final String propulsion_engine_coolantTemperature_meta_alarmMethod = "propulsion.engine.coolantTemperature.meta.alarmMethod";
+	public static final String propulsion_engine_coolantTemperature_meta_warnMethod = "propulsion.engine.coolantTemperature.meta.warnMethod";
 
 	public static final String propulsion_id_drive="propulsion.*.drive";
 	public static final String propulsion_id_drive_propeller="propulsion.*.drive.propeller";

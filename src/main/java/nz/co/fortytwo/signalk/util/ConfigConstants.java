@@ -135,13 +135,17 @@ public class ConfigConstants {
         public static final String SURFACE_TO_TRANSDUCER = "config.environment.depth.surfaceToTransducer";
         public static final String TRANSDUCER_TO_KEEL = "config.environment.depth.transducerToKeel";
         public static final String SOG_DISPLAY_UNIT = "config.navigation.meta.sogDisplayUnit";
-        public static final String DEPTH_DISPLAY_UNIT = "config.environment.depth.meta.displayUnit";
+        public static final String DEPTH_USER_UNIT = "config.environment.depth.meta.userUnit";
         public static final String STW_DISPLAY_UNIT = "config.navigation.meta.stwDisplayUnit";
         public static final String DEPTH_ALARM_ZONES = "config.environment.depth.meta.zones";
         public static final String DEPTH_WARN_METHOD = "config.environment.depth.meta.warnMethod";
         public static final String DEPTH_ALARM_METHOD = "config.environment.depth.meta.alarmMethod";
+        public static final String ENGINE_TEMP_USER_UNIT = "config.propulsion.engine.coolantTemperature.meta.userUnit";
+        public static final String ENGINE_TEMP_ALARM_ZONES = "config.propulsion.engine.coolantTemperature.meta.zones";
+        public static final String ENGINE_TEMP_ALARM_METHOD = "config.propulsion.engine.coolantTemperature.meta.alarmMethod";
+        public static final String ENGINE_TEMP_WARN_METHOD = "config.propulsion.engine.coolantTemperature.meta.warnMethod";
         
-        // This is currently unimplemented as the MEGA compensages for wind ofsets
+        // This is currently unimplemented as the MEGA compensates for wind offsets
         // A command must be issued in terminal mode with the MEGA to set the apparent
         //  wind offset.     
         // public static final String WIND_OFFSET = "config.instruments.wind.apparentWindOffset";

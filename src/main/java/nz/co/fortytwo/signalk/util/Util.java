@@ -216,15 +216,24 @@ public class Util {
         model.getFullData().put(ConfigConstants.TRANSDUCER_TO_KEEL, 1.5); 
         model.getFullData().put(ConfigConstants.SOG_DISPLAY_UNIT, "kt");
         model.getFullData().put(ConfigConstants.STW_DISPLAY_UNIT, "kt");
-        model.getFullData().put(ConfigConstants.DEPTH_DISPLAY_UNIT, "ft");
+        model.getFullData().put(ConfigConstants.DEPTH_USER_UNIT, "ft");
         model.getFullData().put(ConfigConstants.DEPTH_ALARM_METHOD, "visual");
         model.getFullData().put(ConfigConstants.DEPTH_WARN_METHOD, "visual");
+        model.getFullData().put(ConfigConstants.ENGINE_TEMP_USER_UNIT, "F");
+        model.getFullData().put(ConfigConstants.ENGINE_TEMP_ALARM_METHOD, "visual");
+        model.getFullData().put(ConfigConstants.ENGINE_TEMP_WARN_METHOD, "visual");
 
-        // construct the depth zones
-        Json alarmZone = Json.object("lower", "0.0", "upper", "1.5", "state", "alarm", "message", "Danger");
-        Json warnZone = Json.object("lower", "1.5", "upper", "1.65", "state", "warn", "message", "Shallow Water");
-        Json normalZone = Json.object("lower", "1.65", "upper", "9999", "state", "normal", "message", "");
+        // construct the engine temperature zones
+        Json alarmZone = Json.object("lower", "190", "upper", "250", "state", "alarm", "message", "Danger");
+        Json warnZone = Json.object("lower", "180", "upper", "190", "state", "warn", "message", "Shallow Water");
+        Json normalZone = Json.object("lower", "0", "upper", "180", "state", "normal", "message", "");
         Json zones = Json.array(alarmZone, warnZone, normalZone);
+        model.getFullData().put(ConfigConstants.ENGINE_TEMP_ALARM_ZONES, zones);
+
+        alarmZone = Json.object("lower", "0.0", "upper", "6.0", "state", "alarm", "message", "Danger");
+        warnZone = Json.object("lower", "6.0", "upper", "9.0", "state", "warn", "message", "Shallow Water");
+        normalZone = Json.object("lower", "1.65", "upper", "9999", "state", "normal", "message", "");
+        zones = Json.array(alarmZone, warnZone, normalZone);
         model.getFullData().put(ConfigConstants.DEPTH_ALARM_ZONES, zones);
 //		model.getFullData().put(ConfigConstants.WIND_OFFSET, 170);
 
@@ -371,6 +380,14 @@ public class Util {
         return fathoms / SignalKConstants.MTR_TO_FATHOM;
     }
 
+    public static double cToFahr(double c) {
+        return c * (9. / 5.) * c + 32.;
+    }
+
+    public static double fahrToC(double f) {
+        return (f - 32.) * 5. / 9.;
+    }
+    
     /**
      * Convert a distance in ft to meters
      *
