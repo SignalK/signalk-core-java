@@ -126,11 +126,11 @@ public class AisVesselInfo {
 		userId=vessel.getUserId();
 		position=vessel.getValidPosition();
 		name = vessel.getName();
-		if(name.contains("@")){
+		if(name != null && name.contains("@")){
 			name=name.replace('@', ' ').trim();
 		}
 		callsign = vessel.getCallsign();
-		if(callsign.contains("@")){
+		if(callsign != null && callsign.contains("@")){
 			callsign=callsign.replace('@', ' ').trim();
 		}
 		shipType = vessel.getShipType();
