@@ -2,6 +2,9 @@
 Signalk core
 ============
 
+__DEPRECATED: Replced by https://github.com/SignalK/artemis-server__
+__ See https://github.com/SignalK/signalk-java for installation of the artemis-server__
+
 This project contains the  major SignalK related functionality from the Signalk-server-java project without the reliance on Apache Camel and the servers network IO capabilities. It should make reuse of the core functionality easier in other projects.
 
 This project was ripped from the server project with minimal thought to the ideal api etc due to my time constraints. There is currently a lot of legacy method names and patterns that suited the server, and the code is fairly rough as a result. It needs refactoring and work to make it better. Pull requests with improvements are welcome.
